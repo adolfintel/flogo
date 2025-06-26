@@ -913,19 +913,24 @@ function variablesEditor_confirmEditVariable(v) {
         errorFlash(v.flogo_name.edit)
         return
     }
+    v.flogo_name.edit.innerText = name
     const type = v.flogo_type.edit.value
     let val = null
     try {
         if (v.flogo_val.edit.flogo_init.checked) {
-            val = v.flogo_val.edit.flogo_initVal.innerText.trim()
+            val = v.flogo_val.edit.flogo_initVal.innerText
             switch (type) {
                 case "integer":
                 case "real": {
+                    val = val.trim()
+                    v.flogo_val.edit.flogo_initVal.innerText = val
                     if (val === "") throw ""
                     val = Number(val)
                 }
                 break
                 case "boolean": {
+                    val = val.trim()
+                    v.flogo_val.edit.flogo_initVal.innerText = val
                     if (val !== "false" && val !== "true") throw ""
                     val = val === "true"
                 }
