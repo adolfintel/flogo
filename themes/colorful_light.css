@@ -1,0 +1,66 @@
+:root {
+    --browser-theme-color: #2063ff;
+    --ui-color-background1: #ffffff;
+    --ui-color-background2: #eeeeee;
+    --ui-color-text: #000000;
+    --ui-color-accent1: #2063ff;
+    --ui-color-accent2: #ff5500;
+    --ui-color-border1: #00000040;
+    --ui-color-border2: #00000060;
+    --ui-color-disabled: #808080;
+    --ui-color-form-background: #d0d0d0;
+    --ui-color-form-text: #000000;
+    --ui-color-form-border: #00000040;
+    --ui-color-form-border-selected: #00000090;
+    --ui-color-form-disabled: #c0c0c0;
+    --flowchart-Assign-color1: #e03830;
+    --flowchart-Assign-color2: #000000;
+    --flowchart-Output-color1: #20a060;
+    --flowchart-Output-color2: #000000;
+    --flowchart-Input-color1: #e8b810;
+    --flowchart-Input-color2: #000000;
+    --flowchart-If-color1: #2c94e0;
+    --flowchart-If-color2: #000000;
+    --flowchart-DoWhile-color1: #8a58cc;
+    --flowchart-DoWhile-color2: #000000;
+    --flowchart-While-color1: #8a58cc;
+    --flowchart-While-color2: #000000;
+    --flowchart-For-color1: #ac64c0;
+    --flowchart-For-color2: #000000;
+    --flowchart-Breakpoint-color1: #f08020;
+    --flowchart-Breakpoint-color2: #000000;
+    --flowchart-Comment-color1: #808080;
+    --flowchart-Comment-color2: #000000;
+    --flowchart-Error-color1: #ff0000;
+    --flowchart-Error-color2: #000000;
+    --flowchart-Round-color1: #d82888;
+    --flowchart-Round-color2: #000000;
+    --flowchart-Block-outline-thickness: 1.25;
+    --flowchart-Block-highlight-color: #ff8020;
+    --flowchart-Line-color: #000000;
+    --flowchart-Line-selected-color: #ff8020;
+    --flowchart-scrollbar-color: #00000060;
+}
+
+#bar,
+#bar * {
+    color: var(--ui-color-text-accent) !important;
+}
+
+#bar {
+    background: #aa00ff;
+    border-bottom: var(--ui-measure-border-thick) solid #00000040;
+}
+
+div.expander {
+    color: #ffffff;
+    border-width: var(--ui-measure-border-thick);
+}
+
+#log div.message {
+    color: #ffffff;
+}
+
+#man {
+    background: #ffffff;
+}

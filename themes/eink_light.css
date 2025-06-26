@@ -1,0 +1,76 @@
+:root {
+    --browser-theme-color: #ffffff;
+    --ui-color-background1: #ffffff;
+    --ui-color-background2: #ffffff;
+    --ui-color-text: #000000;
+    --ui-color-accent1: #000000;
+    --ui-color-accent2: #404040;
+    --ui-color-border1: #00000040;
+    --ui-color-border2: #00000060;
+    --ui-color-disabled: #808080;
+    --ui-color-form-background: #d0d0d0;
+    --ui-color-form-text: #000000;
+    --ui-color-form-border: #00000040;
+    --ui-color-form-border-selected: #00000080;
+    --ui-color-form-disabled: #c0c0c0;
+    --flowchart-Assign-color2: #000000;
+    --flowchart-Assign-color1: transparent;
+    --flowchart-Output-color2: #000000;
+    --flowchart-Output-color1: transparent;
+    --flowchart-Input-color2: #000000;
+    --flowchart-Input-color1: transparent;
+    --flowchart-If-color2: #000000;
+    --flowchart-If-color1: transparent;
+    --flowchart-DoWhile-color2: #000000;
+    --flowchart-DoWhile-color1: transparent;
+    --flowchart-While-color2: #000000;
+    --flowchart-While-color1: transparent;
+    --flowchart-For-color2: #000000;
+    --flowchart-For-color1: transparent;
+    --flowchart-Breakpoint-color2: #000000;
+    --flowchart-Breakpoint-color1: transparent;
+    --flowchart-Comment-color2: #000000;
+    --flowchart-Error-color1: #c0c0c0;
+    --flowchart-Error-color2: #000000;
+    --flowchart-Round-color1: transparent;
+    --flowchart-Round-color2: #000000;
+    --flowchart-Block-outline-thickness: 1.25;
+    --flowchart-Block-highlight-color: #c0c0c0;
+    --flowchart-Line-color: #000000;
+    --flowchart-Line-selected-color: #a0a0a0;
+    --flowchart-Block-text-color: #000000;
+    --insert-Wide-columnWidth: 7;
+    --flowchart-scrollbar-color: #00000060;
+}
+
+#bar {
+    background: #ffffff;
+    color: #000000;
+}
+
+#bar button[disabled] {
+    color: #808080 !important;
+}
+
+#settings {
+    --ui-color-background1: #ffffff;
+    --ui-color-background2: #e0e0e0;
+}
+
+#variablesExpander,
+#consoleExpander {
+    background: #ffffff;
+    border: var(--ui-measure-border-medium) solid #000000;
+}
+
+#variablesExpander {
+    border-left: none;
+}
+
+#consoleExpander {
+    border-right: none;
+}
+
+#man thead {
+    background: #c0c0c0;
+}

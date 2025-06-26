@@ -1,0 +1,106 @@
+:root {
+    --browser-theme-color: #202020;
+    --ui-color-background1: #202020;
+    --ui-color-form-background: #404040a0;
+    --ui-color-form-disabled: #808080a0;
+}
+
+#bar {
+    background: url('colors.webp');
+    background-size: cover;
+}
+
+div.popup {
+    border: var(--ui-measure-border-thick) solid #ffffff20;
+    border-radius: var(--ui-measure-border-radius);
+    background: #00000040;
+    backdrop-filter: blur(1rem);
+    transition: transform 0.3s, opacity 0.3s, display 0.3s allow-discrete;
+    transform: scale(0.975);
+    opacity: 0;
+}
+
+div.popup.visible {
+    transform: scale(1);
+    opacity: 1;
+
+    @starting-style {
+        /*Note: this only works properly in chromium-based browsers*/
+        transform: scale(1.025);
+        opacity: 0;
+    }
+}
+
+#flowchartArea {
+    transition: left 0.5s, right 0.5s;
+}
+
+#variablesArea {
+    transition: left 0.3s, display 0.3s allow-discrete;
+}
+
+body.small #variablesArea {
+    left: -20rem;
+}
+
+body.small #variablesArea.expanded {
+    left: 0;
+
+    @starting-style {
+        /*Note: this only works properly in chromium-based browsers*/
+        left: -20rem;
+    }
+}
+
+#variablesExpander {
+    transition: left 0.3s;
+}
+
+#consoleArea {
+    transition: right 0.3s, display 0.3s allow-discrete;
+}
+
+body.small #consoleArea {
+    right: -25rem;
+}
+
+body.small #consoleArea.expanded {
+    right: 0;
+
+    @starting-style {
+        right: -25rem;
+    }
+}
+
+#consoleExpander {
+    transition: right 0.3s;
+}
+
+#settings_backdrop {
+    transition: background 0.3s, backdrop-filter 0.5s, display 0.5s allow-discrete;
+    background: transparent;
+    backdrop-filter: blur(0rem);
+}
+
+#settings_backdrop.active {
+    background: #00000040;
+
+    /*backdrop-filter:blur(1rem);*/
+    @starting-style {
+        background: transparent;
+        backdrop-filter: blur(0rem);
+    }
+}
+
+#settings {
+    transition: opacity 0.5s, display 0.5s allow-discrete;
+    opacity: 0;
+}
+
+#settings.visible {
+    opacity: 1;
+
+    @starting-style {
+        opacity: 0;
+    }
+}

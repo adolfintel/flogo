@@ -1,0 +1,26 @@
+{
+    "name": "Flogo",
+    "short_name": "Flogo",
+    "id": "flogo",
+    "description": "Create and run programs using flow charts",
+    "icons": [
+        {
+            "src": "images/pwaicon_mono.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "monochrome maskable"
+        },
+        {
+            "src": "images/pwaicon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable any"
+        }
+    ],
+    "start_url": "/",
+    "scope": ".",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color":"#000000",
+    "theme_color":"#4080ff"
+}
