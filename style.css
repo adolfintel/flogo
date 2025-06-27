@@ -975,12 +975,13 @@ div.settings_tab.selected {
 
 #man table,
 #man table>*>*>* {
-    border: var(--ui-measure-border-medium) solid var(--ui-color-accent2);
+    border: var(--ui-measure-border-medium) solid var(--ui-color-accent1);
     padding: var(--ui-measure-spacer-small);
 }
 
 #man thead {
-    background: var(--ui-color-accent2);
+    background: var(--ui-color-accent1);
+    color: var(--ui-color-accent1);
 }
 
 #man tbody>tr>td:first-child {
@@ -990,6 +991,7 @@ div.settings_tab.selected {
 
 #man code {
     font-family: "Roboto Mono";
+    opacity: 0.7;
 }
 
 #man a {
@@ -1011,8 +1013,8 @@ div.settings_tab.selected {
 #man_close {
     background: var(--ui-color-accent2);
     position: absolute;
-    top: var(--ui-measure-spacer-large);
-    right: var(--ui-measure-spacer-large);
+    top: calc(var(--ui-measure-spacer-large)*2);
+    right: calc(var(--ui-measure-spacer-large)*2);
 }
 
 #man_logo {
@@ -1020,6 +1022,17 @@ div.settings_tab.selected {
     max-width: 25rem;
     display: block;
     margin: 0 auto;
+}
+
+#man h2 {
+    text-align: center;
+    background: var(--ui-color-accent1);
+    padding: var(--ui-measure-spacer-small);
+    color: var(--ui-color-text-accent);
+}
+
+#man h3 {
+    text-align: center;
 }
 
 /* MISC */

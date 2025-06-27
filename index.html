@@ -474,8 +474,8 @@
                 </li>
             </ul>
             <a name="variables"></a>
-            <h1>Variables and types</h1>
-            <h2>Variables</h2>
+            <h2>Variables and types</h2>
+            <h3>Variables</h3>
             <p>
                 Variables can be used to store data needed for your program to work.<br>
                 Each variable has a name, a type and optionally an initial value.
@@ -486,8 +486,8 @@
             <p>
                 Variable names are case-sensitive.
             </p>
-            <h2>Data types</h2>
-            <h3>Integer</h3>
+            <h3>Data types</h3>
+            <h4>Integer</h4>
             <p>
                 Can be used to store integer numbers, positive or negative.<br>
                 If a real number is stored into an integer, the decimal digits are lost.
@@ -495,35 +495,35 @@
             <p>
                 Valid values for an integer are <code>-9007199254740991</code> to <code>9007199254740991</code>.
             </p>
-            <h3>Real</h3>
+            <h4>Real</h4>
             <p>
                 Can be used to store real numbers, positive or negative.
             </p>
             <p>
                 Real numbers don't have a valid range, but they lose accuracy the larger they become.
             </p>
-            <h3>String</h3>
+            <h4>String</h4>
             <p>
                 Can be used to store text.
             </p>
-            <h3>Boolean</h3>
+            <h4>Boolean</h4>
             <p>
                 Can store a value that's either <code>true</code> or <code>false</code>.
             </p>
             <a name="instructions"></a>
-            <h1>Instructions</h1>
-            <h3>Input</h3>
+            <h2>Instructions</h2>
+            <h4>Input</h4>
             <p>
                 Reads a value from the user and stores it in a variable
             </p>
-            <h3>Output</h3>
+            <h4>Output</h4>
             <p>
                 Evaluates an expression and shows the result to the user
             </p>
             <p>
                 The text of several Output instructions can be concatenated by disabling the New Line option for all outputs except the last one.
             </p>
-            <h3>Assign</h3>
+            <h4>Assign</h4>
             <p>
                 Evaluates an expression and stores the result in a variable
             </p>
@@ -531,7 +531,7 @@
                 Note: some automatic type casting can happen. For instance, if the expression returns an integer number and you're trying to store it in a real variable, or if the expressions returns a number and you're trying to store it in a string variable.<br>
                 Errors happen only if the types are incompatible, such as an expression evaluating as a string but you're trying to store the result in a real variable.
             </p>
-            <h3>If</h3>
+            <h4>If</h4>
             <p>
                 Evaluates an expression executes the True or False branch depending on the result.<br>
                 In addition to mathematical operators and functions, the condition can also contain comparisons and logical operators.
@@ -539,7 +539,7 @@
             <p>
                 Note that the expression must evaluate to a boolean value, no automatic type casting is done.
             </p>
-            <h3>Do-While</h3>
+            <h4>Do-While</h4>
             <p>
                 Repeats the instructions inside it until the condition at the end becomes false.<br>
                 The condition is checked at the end of each loop, so the contents of the loop will always be executed at least once; this makes it useful for things like input validation.
@@ -547,7 +547,7 @@
             <p>
                 Note that like in the If instruction, the condition must evaluate to a boolean value, no automatic type casting is done.
             </p>
-            <h3>While</h3>
+            <h4>While</h4>
             <p>
                 Repeats the instructions inside it until the condition at the top becomes false.<br>
                 The condition is checked at the beginning of each loop, so it's possible for the loop to not be executed at all if the condition is immediately false.
@@ -555,7 +555,7 @@
             <p>
                 Note that like in the If instruction, the condition must evaluate to a boolean value, no automatic type casting is done.
             </p>
-            <h3>For</h3>
+            <h4>For</h4>
             <p>
                 A for loop repeats the instructions inside it like a While loop, but it also handles a variable (usually a counter) automatically, incrementing or decrementing it at the end of each loop.
             </p>
@@ -579,16 +579,16 @@
             <p>
                 Note: the from-to range is inclusive.
             </p>
-            <h3>Comment</h3>
+            <h4>Comment</h4>
             <p>
                 Comments have no effect on the program, they are useful to store notes or to document how things work.
             </p>
-            <h3>Breakpoint</h3>
+            <h4>Breakpoint</h4>
             <p>
                 Automatically pauses execution of the program. Useful for debugging.
             </p>
             <a name="expressions"></a>
-            <h1>Expressions</h1>
+            <h2>Expressions</h2>
             <p>
                 Expressions can be used to write mathematical expressions, conditions and conditions.
             </p>
@@ -609,7 +609,7 @@
                 The following tables list all the operators included in Flogo in order of precedence. Round parenthesis can be used to alter the order of evaluation of the expression (e.g. <code>n/(a+1)</code>); parenthesis can also be nested.
             </p>
             <a name="operators1"></a>
-            <h2>Mathematical operators</h2>
+            <h3>Mathematical operators</h3>
             <table>
                 <thead>
                     <tr>
@@ -649,7 +649,7 @@
                 </tbody>
             </table>
             <a name="operators2"></a>
-            <h2>Comparison operators</h2>
+            <h3>Comparison operators</h3>
             <table>
                 <thead>
                     <tr>
@@ -685,7 +685,7 @@
                 </tbody>
             </table>
             <a name="operators3"></a>
-            <h2>Logical operators</h2>
+            <h3>Logical operators</h3>
             <table>
                 <thead>
                     <tr>
@@ -709,8 +709,8 @@
                 </tbody>
             </table>
             <a name="functions"></a>
-            <h2>Built-in functions</h2>
-            <h3>Mathematics</h3>
+            <h3>Built-in functions</h3>
+            <h4>Mathematics</h4>
             <table>
                 <thead>
                     <tr>
@@ -777,7 +777,7 @@
                     </tr>
                 </tbody>
             </table>
-            <h3>Strings</h3>
+            <h4>Strings</h4>
             <table>
                 <thead>
                     <tr>
@@ -817,7 +817,7 @@
                 </tbody>
             </table>
             <a name="constants"></a>
-            <h2>Built-in constants</h2>
+            <h3>Built-in constants</h3>
             <table>
                 <thead>
                     <tr>
