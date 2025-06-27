@@ -74,3 +74,11 @@
 #man thead {
     background: #c0c0c0;
 }
+
+#man_close {
+    background: #c0c0c0;
+}
+
+#editor2>div:hover {
+    background: #c0c0c0;
+}
