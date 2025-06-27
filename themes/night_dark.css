@@ -1,0 +1,41 @@
+:root {
+    --browser-theme-color: #3c83f6;
+    --ui-color-background1: #1a1a25;
+    --ui-color-background2: #2f2f50;
+    --ui-color-accent1: #3c83f6;
+    --ui-color-accent2: #f64f3c;
+    --ui-color-form-background: #393840;
+    --flowchart-Assign-color1: #808020;
+    --flowchart-Assign-color2: #ffff40;
+    --flowchart-Output-color1: #208020;
+    --flowchart-Output-color2: #40ff40;
+    --flowchart-Input-color1: #204080;
+    --flowchart-Input-color2: #40a0ff;
+    --flowchart-If-color1: #804040;
+    --flowchart-If-color2: #ffc0c0;
+    --flowchart-DoWhile-color1: #804020;
+    --flowchart-DoWhile-color2: #ff8000;
+    --flowchart-While-color1: #804020;
+    --flowchart-While-color2: #ff8000;
+    --flowchart-For-color1: #804020;
+    --flowchart-For-color2: #ff8000;
+    --flowchart-Breakpoint-color1: #801010;
+    --flowchart-Breakpoint-color2: #ff2020;
+    --flowchart-Comment-dashLength: 15;
+    --flowchart-Error-color2: #f6923c;
+    --flowchart-Block-outline-thickness: 1.25;
+    --flowchart-Line-thickness: 1.75;
+    --flowchart-Line-arrow-size: 5;
+    --flowchart-Line-font-size: 11;
+    --flowchart-Line-selected-color: #ffff40;
+    --flowchart-Padding-base: 8;
+    --flowchart-Padding-spaceBetweenInstructions: 22;
+}
+
+#variablesArea *[contenteditable] {
+    background: #393840;
+}
+
+#man {
+    background: #000000;
+}
