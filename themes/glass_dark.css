@@ -75,32 +75,3 @@ body.small #consoleArea.expanded {
 #consoleExpander {
     transition: right 0.3s;
 }
-
-#settings_backdrop {
-    transition: background 0.3s, backdrop-filter 0.5s, display 0.5s allow-discrete;
-    background: transparent;
-    backdrop-filter: blur(0rem);
-}
-
-#settings_backdrop.active {
-    background: #00000040;
-
-    /*backdrop-filter:blur(1rem);*/
-    @starting-style {
-        background: transparent;
-        backdrop-filter: blur(0rem);
-    }
-}
-
-#settings {
-    transition: opacity 0.5s, display 0.5s allow-discrete;
-    opacity: 0;
-}
-
-#settings.visible {
-    opacity: 1;
-
-    @starting-style {
-        opacity: 0;
-    }
-}

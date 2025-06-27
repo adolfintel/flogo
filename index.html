@@ -381,7 +381,7 @@
             <button id="yesno_no" class="important">No</button>
         </div>
     </div>
-    <div id="settings">
+    <div id="settings" class="popup noAutoClose">
         <div id="settings_tabSelector">
             <div for="program_metadata" onclick="settings_selectTab('program_metadata')">Program</div>
             <div for="settings_style" onclick="settings_selectTab('settings_style')">Style</div>
@@ -397,7 +397,7 @@
             </div>
             <div id="metadata_buttons">
                 <button class="important" onclick="settings_updateMetadata()">Save</button>
-                <button onclick="closeSettings()">Close</button>
+                <button onclick="closePopup(true)">Close</button>
             </div>
         </div>
         <div id="settings_style" class="settings_tab">
@@ -421,7 +421,7 @@
             </div>
 
             <div id="style_buttons">
-                <button onclick="closeSettings()">Close</button>
+                <button onclick="closePopup(true)">Close</button>
             </div>
         </div>
         <div id="settings_advanced" class="settings_tab">
@@ -438,7 +438,7 @@
                 </div>
             </div>
             <div id="advanced_buttons">
-                <button onclick="closeSettings()">Close</button>
+                <button onclick="closePopup(true)">Close</button>
             </div>
         </div>
         <div id="settings_about" class="settings_tab">
@@ -450,11 +450,10 @@
                 <div><a href="https://fdossena.com/?p=flogo/index.frag" target="_blank">Source code</a> | <a href="https://github.com/adolfintel/flogo" target="_blank">GitHub</a></div>
             </div>
             <div id="about_buttons">
-                <button onclick="closeSettings()">Close</button>
+                <button onclick="closePopup(true)">Close</button>
             </div>
         </div>
     </div>
-    <div id="settings_backdrop"></div>
     <div id="man" class="popup noAutoClose">
         <!--TODO: add some examples-->
         <div id="man_contents">

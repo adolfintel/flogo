@@ -1065,8 +1065,7 @@ function updateBar() {
 }
 
 function runProgram() {
-    closePopup()
-    closeSettings()
+    closePopup(true)
     document.getElementById("variablesArea").classList.add("noedit")
     const state = interpreter.getState()
     if (state === STATE_STOPPED || state === STATE_CRASHED) {
@@ -1077,8 +1076,7 @@ function runProgram() {
 }
 
 function stopProgram() {
-    closePopup()
-    closeSettings()
+    closePopup(true)
     document.getElementById("input").disabled = true
     document.getElementById("input_send").disabled = true
     document.getElementById("variablesArea").classList.remove("noedit")
@@ -1119,8 +1117,7 @@ function setProgramExecutionMode() {
 }
 
 function newProgram() {
-    closePopup()
-    closeSettings()
+    closePopup(true)
     const realNewProgram = () => {
         const state = interpreter.getState()
         if (state === STATE_RUNNING || state === STATE_PAUSED) {
@@ -1144,8 +1141,7 @@ function newProgram() {
 }
 
 function loadProgram() {
-    closePopup()
-    closeSettings()
+    closePopup(true)
     const realLoadProgram = () => {
         const state = interpreter.getState()
         if (state === STATE_RUNNING || state === STATE_PAUSED) {
@@ -1179,8 +1175,7 @@ function loadProgram() {
 }
 
 function saveProgram() {
-    closePopup()
-    closeSettings()
+    closePopup(true)
     const state = interpreter.getState()
     if (state === STATE_RUNNING || state === STATE_PAUSED) {
         stopProgram()
@@ -1204,8 +1199,7 @@ function saveToHistory() {
 }
 
 function undo() {
-    closePopup()
-    closeSettings()
+    closePopup(true)
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
     if (undoHistoryPtr <= 1) return
@@ -1216,8 +1210,7 @@ function undo() {
 }
 
 function redo() {
-    closePopup()
-    closeSettings()
+    closePopup(true)
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
     if (undoHistoryPtr <= 0 || undoHistoryPtr >= undoHistory.length) return
@@ -1234,8 +1227,6 @@ function openSettings() {
     if (state === STATE_RUNNING || state === STATE_PAUSED) {
         stopProgram()
     }
-    document.getElementById("settings_backdrop").classList.add("active")
-    document.getElementById("settings").classList.add("visible")
     settings_selectTab("program_metadata")
     document.getElementById("metadata_title").value = metadata.title
     document.getElementById("metadata_author").value = metadata.author
@@ -1247,6 +1238,7 @@ function openSettings() {
     document.getElementById("settings_fps").checked = localStorage.showFps === "true"
     document.getElementById("settings_allowZoomOnFlowchart").checked = _allowZoomOnFlowchart
     document.getElementById("settings_altTurboTSlice").checked = _altTurboTSlice
+    showPopup("settings")
 }
 
 function settings_selectTab(id) {
@@ -1256,15 +1248,10 @@ function settings_selectTab(id) {
     document.querySelectorAll("#settings_tabSelector > div[for=" + id + "]").forEach((e) => e.classList.add("selected"))
 }
 
-function closeSettings() {
-    document.getElementById("settings").classList.remove("visible")
-    document.getElementById("settings_backdrop").classList.remove("active")
-}
-
 function settings_updateMetadata() {
-    metadata.title = document.getElementById("metadata_title").value
-    metadata.author = document.getElementById("metadata_author").value
-    closeSettings()
+    metadata.title = document.getElementById("metadata_title").value.trim()
+    metadata.author = document.getElementById("metadata_author").value.trim()
+    closePopup(true)
 }
 
 function settings_setTheme() {

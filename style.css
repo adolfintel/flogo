@@ -880,22 +880,15 @@ div.variable:not(.editing) .edit {
 
 /* SETTINGS */
 #settings {
-    position: fixed;
-    z-index: 9999;
-    display: none;
     width: 100%;
     max-width: 35rem;
     max-height: 35rem;
     background: var(--ui-color-background2);
-    overflow: auto;
+    overflow-y: auto;
     border: var(--ui-measure-border-thick) solid var(--ui-color-border1);
     top: 50vh;
     left: 50vw;
     transform: translate(-50%, -50%);
-}
-
-#settings.visible {
-    display: block;
 }
 
 #settings_tabSelector {
@@ -920,6 +913,7 @@ div.settings_tab {
     background: var(--ui-color-background1);
     padding: var(--ui-measure-spacer-medium);
     display: none;
+    overflow-x: auto;
 }
 
 div.settings_tab.selected {
