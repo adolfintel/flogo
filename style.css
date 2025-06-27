@@ -981,7 +981,7 @@ div.settings_tab.selected {
 
 #man thead {
     background: var(--ui-color-accent1);
-    color: var(--ui-color-accent1);
+    color: var(--ui-color-text-accent);
 }
 
 #man tbody>tr>td:first-child {
