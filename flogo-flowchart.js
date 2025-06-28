@@ -51,14 +51,14 @@ let _allowZoomOnFlowchart = false
 
 function _makeArrowHighlightable(arrow) {
     arrow.on("mouseover", () => {
-        if (_selectionMode) return
+        if (_selectionMode || arrow.flogo_forceHighlighted) return
         const intState = interpreter.getState()
         if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
         arrow.stroke(LINE_SELECTED_COLOR)
         arrow.fill(LINE_SELECTED_COLOR)
     })
     arrow.on("mouseout", () => {
-        if (_selectionMode) return
+        if (_selectionMode || arrow.flogo_forceHighlighted) return
         const intState = interpreter.getState()
         if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
         arrow.stroke(LINE_COLOR)
@@ -363,7 +363,7 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        a.on("click tap", (e) => _dispatchInsert(this, 0, e))
+        a.on("click tap", (e) => _dispatchInsert(this, 0, e, a))
         _makeArrowHighlightable(a)
         group.add(a)
     }
@@ -382,7 +382,7 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        a.on("click tap", (e) => _dispatchInsert(this, i + 1, e))
+        a.on("click tap", (e) => _dispatchInsert(this, i + 1, e, a))
         _makeArrowHighlightable(a)
         group.add(a)
     }
@@ -535,7 +535,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        tArrowIn.on("click tap", (e) => _dispatchInsert(this.trueBranch, 0, e))
+        tArrowIn.on("click tap", (e) => _dispatchInsert(this.trueBranch, 0, e, tArrowIn))
         _makeArrowHighlightable(tArrowIn)
         group.add(tArrowIn)
         const tArrowOut = new Konva.Arrow({
@@ -549,7 +549,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        tArrowOut.on("click tap", (e) => _dispatchInsert(this.trueBranch, this.trueBranch.body.length, e))
+        tArrowOut.on("click tap", (e) => _dispatchInsert(this.trueBranch, this.trueBranch.body.length, e, tArrowOut))
         _makeArrowHighlightable(tArrowOut)
         group.add(tArrowOut)
     } else {
@@ -564,7 +564,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        tArrowLoop.on("click tap", (e) => _dispatchInsert(this.trueBranch, 0, e))
+        tArrowLoop.on("click tap", (e) => _dispatchInsert(this.trueBranch, 0, e, tArrowLoop))
         _makeArrowHighlightable(tArrowLoop)
         group.add(tArrowLoop)
     }
@@ -580,7 +580,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        fArrowIn.on("click tap", (e) => _dispatchInsert(this.falseBranch, 0, e))
+        fArrowIn.on("click tap", (e) => _dispatchInsert(this.falseBranch, 0, e, fArrowIn))
         _makeArrowHighlightable(fArrowIn)
         group.add(fArrowIn)
         const fArrowOut = new Konva.Arrow({
@@ -594,7 +594,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        fArrowOut.on("click tap", (e) => _dispatchInsert(this.falseBranch, this.falseBranch.body.length, e))
+        fArrowOut.on("click tap", (e) => _dispatchInsert(this.falseBranch, this.falseBranch.body.length, e, fArrowOut))
         _makeArrowHighlightable(fArrowOut)
         group.add(fArrowOut)
     } else {
@@ -618,7 +618,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        fArrowLoop.on("click tap", (e) => _dispatchInsert(this.falseBranch, 0, e))
+        fArrowLoop.on("click tap", (e) => _dispatchInsert(this.falseBranch, 0, e, fArrowLoop))
         _makeArrowHighlightable(fArrowLoop)
         group.add(fArrowLoop)
     }
@@ -712,7 +712,7 @@ DoWhile.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowIn.on("click tap", (e) => _dispatchInsert(this.body, 0, e))
+        arrowIn.on("click tap", (e) => _dispatchInsert(this.body, 0, e, arrowIn))
         _makeArrowHighlightable(arrowIn)
         group.add(arrowIn)
         const arrowToCond = new Konva.Arrow({
@@ -726,7 +726,7 @@ DoWhile.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowToCond.on("click tap", (e) => _dispatchInsert(this.body, this.body.body.length, e))
+        arrowToCond.on("click tap", (e) => _dispatchInsert(this.body, this.body.body.length, e, arrowToCond))
         _makeArrowHighlightable(arrowToCond)
         group.add(arrowToCond)
     } else {
@@ -751,7 +751,7 @@ DoWhile.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        loopArrow.on("click tap", (e) => _dispatchInsert(this.body, 0, e))
+        loopArrow.on("click tap", (e) => _dispatchInsert(this.body, 0, e, loopArrow))
         _makeArrowHighlightable(loopArrow)
         group.add(loopArrow)
     }
@@ -858,7 +858,7 @@ While.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowIn.on("click tap", (e) => _dispatchInsert(this.body, 0, e))
+        arrowIn.on("click tap", (e) => _dispatchInsert(this.body, 0, e, arrowIn))
         _makeArrowHighlightable(arrowIn)
         group.add(arrowIn)
         const arrowToTop = new Konva.Arrow({
@@ -881,7 +881,7 @@ While.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowToTop.on("click tap", (e) => _dispatchInsert(this.body, this.body.body.length, e))
+        arrowToTop.on("click tap", (e) => _dispatchInsert(this.body, this.body.body.length, e, arrowToTop))
         _makeArrowHighlightable(arrowToTop)
         group.add(arrowToTop)
     } else {
@@ -907,7 +907,7 @@ While.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        loopArrow.on("click tap", (e) => _dispatchInsert(this.body, 0, e))
+        loopArrow.on("click tap", (e) => _dispatchInsert(this.body, 0, e, loopArrow))
         _makeArrowHighlightable(loopArrow)
         group.add(loopArrow)
     }
@@ -1015,7 +1015,7 @@ For.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowIn.on("click tap", (e) => _dispatchInsert(this.body, 0, e))
+        arrowIn.on("click tap", (e) => _dispatchInsert(this.body, 0, e, arrowIn))
         _makeArrowHighlightable(arrowIn)
         group.add(arrowIn)
         const arrowToTop = new Konva.Arrow({
@@ -1038,7 +1038,7 @@ For.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowToTop.on("click tap", (e) => _dispatchInsert(this.body, this.body.body.length, e))
+        arrowToTop.on("click tap", (e) => _dispatchInsert(this.body, this.body.body.length, e, arrowToTop))
         _makeArrowHighlightable(arrowToTop)
         group.add(arrowToTop)
     } else {
@@ -1064,7 +1064,7 @@ For.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        loopArrow.on("click tap", (e) => _dispatchInsert(this.body, 0, e))
+        loopArrow.on("click tap", (e) => _dispatchInsert(this.body, 0, e, loopArrow))
         _makeArrowHighlightable(loopArrow)
         group.add(loopArrow)
     }
@@ -1139,12 +1139,20 @@ function _dispatchEdit2(instruction, evt, parent, posInParent) {
     }
 }
 
-function _dispatchInsert(instruction, pos, evt) {
+function _dispatchInsert(instruction, pos, evt, arrow) {
     if (_selectionMode) return
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
     if (typeof ui_insert !== "undefined") {
-        ui_insert(instruction, pos, evt)
+        arrow.flogo_forceHighlighted = true
+        arrow.stroke(LINE_SELECTED_COLOR)
+        arrow.fill(LINE_SELECTED_COLOR)
+        const callback = () => {
+            arrow.flogo_forceHighlighted = false
+            arrow.stroke(LINE_COLOR)
+            arrow.fill(LINE_COLOR)
+        }
+        ui_insert(instruction, pos, evt, callback)
     } else {
         console.log("Insert " + instruction.constructor.name + " @ " + pos)
     }

@@ -315,13 +315,15 @@ function insert_preparePopups() {
     }
 }
 
-function ui_insert(instruction, pos, evt) {
+function ui_insert(instruction, pos, evt, callback) {
     const clientX = _extractCoordFromEvent(evt.evt, "clientX")
     const clientY = _extractCoordFromEvent(evt.evt, "clientY")
     const pw = document.getElementById("insertWide")
     const pt = document.getElementById("insertTall")
     insert_targetIstruction = instruction
     insert_targetPos = pos
+    pw.flogo_closeCallback = callback
+    pt.flogo_closeCallback = callback
     const wBounds = {
         width: window.innerWidth,
         height: window.innerHeight
@@ -1346,6 +1348,7 @@ function closePopup(all = false) {
     document.querySelectorAll("div.popup.visible").forEach((e) => {
         if (all === true || !e.classList.contains("noAutoClose")) {
             e.classList.remove("visible")
+            if (typeof e.flogo_closeCallback !== "undefined") e.flogo_closeCallback()
         }
     })
     if (document.querySelectorAll("div.popup.visible").length === 0) {
