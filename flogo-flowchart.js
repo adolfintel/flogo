@@ -1592,7 +1592,7 @@ function loadFlowchartThemeFromCSS(callback) {
     LINE_SELECTED_COLOR = _getCSSVal("--flowchart-Line-selected-color", "#ff0000")
     PADDING_BASE = Number(_getCSSVal("--flowchart-Padding-base", 10))
     MINVIS = PADDING_BASE * 2
-    SPACE_BETWEEN_INSTRUCTIONS = Number(_getCSSVal("--flowchart-Padding-spaceBetweenInstructions", 30))
+    SPACE_BETWEEN_INSTRUCTIONS = Number(_getCSSVal("--flowchart-Padding-spaceBetweenInstructions", 24))
     BLOCK_TEXT_MAX_WIDTH = Number(_getCSSVal("--flowchart-Block-text-maxWidth", 25)) * BLOCK_FONT_SIZE
     ROUND_MIN_WIDTH = Number(_getCSSVal("--flowchart-Round-text-minWidth", 7)) * BLOCK_FONT_SIZE
     COMMENT_TEXT_MAX_LENGTH = Number(_getCSSVal("--flowchart-Comment-text-maxLength", 250))

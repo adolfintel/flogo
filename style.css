@@ -81,7 +81,7 @@
     --flowchart-Line-selected-color: #ff0000;
     --flowchart-Block-text-color: #ffffff;
     --flowchart-Padding-base: 10;
-    --flowchart-Padding-spaceBetweenInstructions: 30;
+    --flowchart-Padding-spaceBetweenInstructions: 24;
     --flowchart-Block-text-maxWidth: 25;
     --flowchart-Round-text-minWidth: 7;
     --flowchart-scrollbar-thickness: 6;
