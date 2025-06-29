@@ -505,8 +505,8 @@ If.prototype.createDrawable = function() {
     condition.flogo_connX = rect.width() / 2
     const t = this.trueBranch.createDrawable(true, true)
     const f = this.falseBranch.createDrawable(true, true)
-    const tPad = t.flogo_width < LINE_FONT_SIZE * 5 ? LINE_FONT_SIZE * 3 : PADDING_BASE
-    const fPad = f.flogo_width < LINE_FONT_SIZE * 5 ? LINE_FONT_SIZE * 3 : PADDING_BASE
+    const minTPad = LINE_FONT_SIZE * 4,
+        minFPad = LINE_FONT_SIZE * 4
     const group = new Konva.Group({
         x: 0,
         y: 0,
@@ -518,16 +518,24 @@ If.prototype.createDrawable = function() {
     group.add(t)
     f.x(0)
     f.y(condition.flogo_height + PADDING_BASE)
-    condition.x(f.flogo_width + fPad)
+    if (f.flogo_width - f.flogo_connX + PADDING_BASE - condition.flogo_width / 2 >= minFPad) {
+        condition.x(f.flogo_width - condition.flogo_width / 2 + PADDING_BASE)
+    } else {
+        condition.x(f.flogo_width + minFPad - f.flogo_connX)
+    }
     condition.y(0)
-    t.x(condition.x() + condition.flogo_width + tPad)
+    if (t.flogo_connX + PADDING_BASE - condition.flogo_width / 2 >= minTPad) {
+        t.x(condition.x() + condition.flogo_width / 2 + PADDING_BASE)
+    } else {
+        t.x(condition.x() + condition.flogo_width - t.flogo_connX + minTPad)
+    }
     t.y(condition.flogo_height + PADDING_BASE)
     const endY = Math.max(t.y() + t.flogo_height, f.y() + f.flogo_height) + SPACE_BETWEEN_INSTRUCTIONS
     if (this.trueBranch.body.length > 0) {
         const tArrowIn = new Konva.Arrow({
             x: condition.x() + condition.flogo_width,
             y: condition.flogo_height / 2,
-            points: [0, 0, t.flogo_connX + tPad, 0, t.flogo_connX + tPad, condition.flogo_height / 2 + PADDING_BASE],
+            points: [0, 0, t.x() + t.flogo_connX - (condition.x() + condition.flogo_width), 0, t.x() + t.flogo_connX - (condition.x() + condition.flogo_width), condition.flogo_height / 2 + PADDING_BASE],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -541,7 +549,7 @@ If.prototype.createDrawable = function() {
         const tArrowOut = new Konva.Arrow({
             x: t.x() + t.flogo_connX,
             y: t.y() + t.flogo_height,
-            points: [0, 0, 0, endY - (t.y() + t.flogo_height), -(t.flogo_connX + tPad + condition.flogo_width / 2), endY - (t.y() + t.flogo_height)],
+            points: [0, 0, 0, endY - (t.y() + t.flogo_height), -(t.flogo_connX + (t.x() - (condition.x() + condition.flogo_width / 2))), endY - (t.y() + t.flogo_height)],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -556,7 +564,7 @@ If.prototype.createDrawable = function() {
         const tArrowLoop = new Konva.Arrow({
             x: condition.x() + condition.flogo_width,
             y: condition.flogo_height / 2,
-            points: [0, 0, t.flogo_connX + tPad, 0, t.flogo_connX + tPad, endY - condition.flogo_height / 2, -condition.flogo_width / 2, endY - condition.flogo_height / 2],
+            points: [0, 0, t.flogo_connX + minTPad, 0, t.flogo_connX + minTPad, endY - condition.flogo_height / 2, -condition.flogo_width / 2, endY - condition.flogo_height / 2],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -572,7 +580,7 @@ If.prototype.createDrawable = function() {
         const fArrowIn = new Konva.Arrow({
             x: condition.x(),
             y: condition.flogo_height / 2,
-            points: [0, 0, -(f.flogo_width - f.flogo_connX + fPad), 0, -(f.flogo_width - f.flogo_connX + fPad), condition.flogo_height / 2 + PADDING_BASE],
+            points: [0, 0, -(condition.x() - f.flogo_connX), 0, -(condition.x() - f.flogo_connX), condition.flogo_height / 2 + PADDING_BASE],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -604,11 +612,11 @@ If.prototype.createDrawable = function() {
             points: [
                 0,
                 0,
-                -(f.flogo_width - f.flogo_connX + fPad),
+                -(f.flogo_width - f.flogo_connX + minFPad),
                 0,
-                -(f.flogo_width - f.flogo_connX + fPad),
+                -(f.flogo_width - f.flogo_connX + minFPad),
                 endY - condition.flogo_height / 2,
-                condition.x() + condition.flogo_width / 2 - fPad,
+                condition.x() + condition.flogo_width / 2 - minFPad,
                 endY - condition.flogo_height / 2,
             ],
             pointerLength: LINE_ARROW_SIZE,
