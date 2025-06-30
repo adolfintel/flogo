@@ -440,16 +440,17 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
         mainGroup.add(startBlock)
         mainGroup.add(endBlock)
         mainGroup.add(group)
-        if (group.flogo_width <= startBlock.flogo_width) {
+        if (group.flogo_connX - startBlock.flogo_width / 2 < 0) {
             group.x(startBlock.flogo_width / 2 - group.flogo_connX)
-            mainGroup.flogo_width = Math.max(startBlock.flogo_width, group.x() + group.flogo_width)
         } else {
             startBlock.x(group.flogo_connX - startBlock.flogo_width / 2)
             endBlock.x(group.flogo_connX - startBlock.flogo_width / 2)
-            mainGroup.flogo_width = group.flogo_width
         }
         group.y(startBlock.flogo_height)
         endBlock.y(group.y() + group.flogo_height)
+        const leftMostX = Math.min(startBlock.x(), group.x()),
+            rightMostX = Math.max(startBlock.x() + startBlock.flogo_width, group.x() + group.flogo_width)
+        mainGroup.flogo_width = rightMostX - leftMostX
         mainGroup.flogo_height = endBlock.y() + endBlock.flogo_height
         mainGroup.flogo_connX = startBlock.x() + startBlock.flogo_width / 2
         mainGroup.flogo_highlightable = null
