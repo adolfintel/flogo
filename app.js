@@ -3,6 +3,8 @@
  * Other important files are flogo.js (the main interpreter for programs), flogo-flowchart.js (flowchart drawing)
  */
 
+const enableWorkaroundsForWebKitBecauseItFuckingSucks = bowser.parse(navigator.userAgent).engine.name === "WebKit"
+
 //-------- INSERT POPUP --------
 
 let insertWide_stage = null
@@ -363,6 +365,10 @@ function ui_insert(instruction, pos, evt, callback) {
         p = pt
     }
     showPopup(p)
+    if (enableWorkaroundsForWebKitBecauseItFuckingSucks) {
+        insertTall_stage.draw()
+        insertWide_stage.draw()
+    }
     pBounds = p.getBoundingClientRect()
     if (pBounds.x + pBounds.width >= wBounds.width) {
         p.style.left = wBounds.width - pBounds.width + "px"
