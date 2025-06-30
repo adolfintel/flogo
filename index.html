@@ -47,7 +47,7 @@
     <script type="text/javascript" src="flogo-flowchart.js"></script>
     <script type="text/javascript" src="app.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="stylesheet" type="text/css" href="lib/breeze-icons/icons.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/material-design-icons/sharp.css">
     <style type="text/css">
         #loadOverlay {
             position: fixed;
@@ -142,7 +142,7 @@
     </div>
     <div id="errorScreen">
         <p id="error_title">
-            <i class="icon icon_tools-report-bug"></i>
+            <span class="icon material-icons-sharp">sentiment_very_dissatisfied</span>
             Bomboclaat!
         </p>
         <p>
@@ -169,20 +169,19 @@
     <div id="fontLoadForcer"></div>
     <div id="bar">
         <span class="group">
-            <button id="newProgram" title="New" onclick="newProgram()"><i class="icon icon_document-new"></i></button>
-            <button id="loadProgram" title="Load" onclick="loadProgram()"><i class="icon icon_document-open-folder"></i></button>
-            <button id="saveProgram" title="Save" onclick="saveProgram()"><i class="icon icon_document-save"></i></button>
+            <button id="newProgram" title="New" onclick="newProgram()"><span class="icon material-icons-sharp">note_add</span></button>
+            <button id="loadProgram" title="Load" onclick="loadProgram()"><span class="icon material-icons-sharp">folder_open</span></button>
+            <button id="saveProgram" title="Save" onclick="saveProgram()"><span class="icon material-icons-sharp">save_as</span></button>
             <input type="file" id="filePicker" accept=".flogo,application/json">
         </span>
         <span class="separator"></span>
         <span class="group">
-            <button id="runProgram" title="Run" onclick="runProgram()"><i class="icon icon_media-playback-start"></i></button>
-            <button id="pauseProgram" title="Pause" onclick="pauseProgram()"><i class="icon icon_media-playback-pause"></i></button>
-            <button id="stopProgram" title="Stop" onclick="stopProgram()"><i class="icon icon_media-playback-stop"></i></button>
+            <button id="runProgram" title="Run" onclick="runProgram()"><span class="icon material-icons-sharp">play_arrow</span></button>
+            <button id="pauseProgram" title="Pause" onclick="pauseProgram()"><span class="icon material-icons-sharp">pause</span></button>
+            <button id="stopProgram" title="Stop" onclick="stopProgram()"><span class="icon material-icons-sharp">stop</span></button>
         </span>
         <span class="group">
-            <label for="executionMode"><i class="icon icon_exception"></i></label>
-            <select id="executionMode" title="Execution mode" onchange="setProgramExecutionMode()">
+            <span class="icon material-icons-sharp">bolt</span><select id="executionMode" title="Execution mode" onchange="setProgramExecutionMode()">
                 <option value="turbo">Turbo</option>
                 <option value="normal" selected>Normal</option>
                 <option value="slow">Slow</option>
@@ -191,12 +190,12 @@
         </span>
         <span class="separator"></span>
         <span class="group">
-            <button id="undo" title="Undo" onclick="undo()"><i class="icon icon_edit-undo"></i></button>
-            <button id="redo" title="Redo" onclick="redo()"><i class="icon icon_edit-redo"></i></button>
+            <button id="undo" title="Undo" onclick="undo()"><span class="icon material-icons-sharp">undo</span></button>
+            <button id="redo" title="Redo" onclick="redo()"><span class="icon material-icons-sharp">redo</span></button>
         </span>
         <span class="group floatRight">
-            <button id="openManual" title="Documentation" onclick="openManual()"><i class="icon icon_question"></i></button>
-            <button id="openSettings" title="Settings" onclick="openSettings()"><i class="icon icon_configure"></i></button>
+            <button id="openManual" title="Documentation" onclick="openManual()"><span class="icon material-icons-sharp">question_mark</span></button>
+            <button id="openSettings" title="Settings" onclick="openSettings()"><span class="icon material-icons-sharp">settings</span></button>
         </span>
     </div>
     <div id="fps"></div>
@@ -207,27 +206,27 @@
             <div id="variableList"></div>
         </div>
     </div>
-    <div id="variablesExpander" onclick="toggleVariablesArea()" class="expander"><i id="variablesExpander_icon" class="icon icon_format-list-unordered"></i><span class="text">Variables</span></div>
+    <div id="variablesExpander" onclick="toggleVariablesArea()" class="expander"><span id="variablesExpander_icon" class="icon material-icons-sharp">list</span><span class="text">Variables</span></div>
     <div id="consoleArea">
         <div id="logWrapper">
             <div class="sideHeader">
                 Console
-                <button onclick="console_save()" title="Save text"><i id="variablesExpander_icon" class="icon icon_edit-download"></i></button>
+                <button onclick="console_save()" title="Save text"><span class="icon material-icons-sharp">download</span></button>
             </div>
             <div id="log"></div>
         </div>
         <div id="inputArea">
             <textarea id="input" onkeydown="input_keypressed(event)" disabled></textarea>
-            <button id="input_send" disabled><i class="icon icon_document-send" style="font-size:1.75em"></i></button>
+            <button id="input_send" disabled><span class="icon material-icons-sharp">send</span></button>
         </div>
     </div>
-    <div id="consoleExpander" onclick="toggleConsoleArea()" class="expander"><i id="consoleExpander_icon" class="icon icon_dialog-messages"></i><span class="text">Console</span></div>
+    <div id="consoleExpander" onclick="toggleConsoleArea()" class="expander"><span id="consoleExpander_icon" class="icon material-icons-sharp">chat_bubble</span><span class="text">Console</span></div>
     <div id="popupBackdrop" onclick="closePopup()"></div>
     <div id="insertWide" class="popup"></div>
     <div id="insertTall" class="popup"></div>
     <div id="crash" class="popup">
         <div class="autoVert">
-            <div id="crash_title"><i class="icon icon_tools-report-bug"></i>Prorgam crashed!</div>
+            <div id="crash_title"><span class="icon material-icons-sharp">report_problem</span>Prorgam crashed!</div>
             <div id="crash_details"></div>
         </div>
         <div id="crash_buttons">
@@ -236,7 +235,7 @@
     </div>
     <div id="loadError" class="popup">
         <div class="autoVert">
-            <div id="loadError_title"><i class="icon icon_vcs-remove-cvs-cervisia"></i>Loading failed</div>
+            <div id="loadError_title"><span class="icon material-icons-sharp">file_download_off</span>Loading failed</div>
             <div id="loadError_details"></div>
         </div>
         <div id="loadError_buttons">
@@ -366,14 +365,14 @@
         </div>
     </div>
     <div id="editor2" class="popup">
-        <div id="editor2_edit"><i class="icon icon_document-edit"></i>Edit</div>
-        <div id="editor2_cut"><i class="icon icon_edit-cut"></i>Cut</div>
-        <div id="editor2_copy"><i class="icon icon_edit-copy"></i>Copy</div>
-        <div id="editor2_delete"><i class="icon icon_edit-delete"></i>Delete</div>
+        <div id="editor2_edit"><span class="icon material-icons-sharp">create</span>Edit</div>
+        <div id="editor2_cut"><span class="icon material-icons-sharp">content_cut</span>Cut</div>
+        <div id="editor2_copy"><span class="icon material-icons-sharp">content_copy</span>Copy</div>
+        <div id="editor2_delete"><span class="icon material-icons-sharp">delete</span>Delete</div>
     </div>
     <div id="yesno" class="popup">
         <div class="autoVert">
-            <div id="yesno_title"><i class="icon icon_edit-delete-shred"></i><span id="yesno_title_text"></span></div>
+            <div id="yesno_title"><span class="icon material-icons-sharp">delete_forever</span><span id="yesno_title_text"></span></div>
             <div id="yesno_details"></div>
         </div>
         <div id="yesno_buttons">
@@ -838,7 +837,7 @@
                 </tbody>
             </table>
         </div>
-        <button id="man_close" onclick="closePopup(true)"><i class="icon icon_window-close"></i></button>
+        <button id="man_close" onclick="closePopup(true)"><span class="icon material-icons-sharp">close</span></button>
     </div>
     <script type="text/javascript">
         initApp()

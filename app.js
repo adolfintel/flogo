@@ -57,8 +57,8 @@ function prepare_insertWide() {
         x: 0,
         y: label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL,
         width: INSERT_WIDE_COLUMN_WIDTH,
-        text: "edit-paste",
-        fontFamily: "icons",
+        text: "paste",
+        fontFamily: "Material Icons Sharp",
         fontSize: INSERT_FONT_SIZE * 2,
         fill: LINE_COLOR,
         align: "center",
@@ -187,8 +187,8 @@ function prepare_insertTall() {
     let paste = new Konva.Text({
         x: 0,
         y: label.height() + TALL_INSERT_SPACE_BELOW_LABEL,
-        text: "edit-paste",
-        fontFamily: "icons",
+        text: "paste",
+        fontFamily: "Material Icons Sharp",
         fontSize: INSERT_FONT_SIZE * 2,
         fill: LINE_COLOR,
         align: "center",
@@ -777,7 +777,7 @@ function variablesEditor_createVariable(name) {
     btns.className = "buttonGroup"
     const delBtn = document.createElement("button")
     delBtn.className = "danger vis"
-    delBtn.appendChild(makeIcon("icon_edit-delete"))
+    delBtn.appendChild(makeIcon("delete"))
     delBtn.title = "Delete"
     delBtn.onclick = () => {
         variablesEditor_deleteVariable(v)
@@ -785,7 +785,7 @@ function variablesEditor_createVariable(name) {
     btns.appendChild(delBtn)
     const editBtn = document.createElement("button")
     editBtn.className = "vis"
-    editBtn.appendChild(makeIcon("icon_document-edit"))
+    editBtn.appendChild(makeIcon("edit"))
     editBtn.title = "Modify"
     editBtn.onclick = () => {
         variablesEditor_editVariable(v)
@@ -793,7 +793,7 @@ function variablesEditor_createVariable(name) {
     btns.appendChild(editBtn)
     const cancelEditBtn = document.createElement("button")
     cancelEditBtn.className = "edit"
-    cancelEditBtn.appendChild(makeIcon("icon_window-close"))
+    cancelEditBtn.appendChild(makeIcon("close"))
     cancelEditBtn.title = "Cancel"
     cancelEditBtn.onclick = () => {
         variablesEditor_cancelEditVariable(v)
@@ -801,7 +801,7 @@ function variablesEditor_createVariable(name) {
     btns.appendChild(cancelEditBtn)
     const confirmEditBtn = document.createElement("button")
     confirmEditBtn.className = "important edit"
-    confirmEditBtn.appendChild(makeIcon("icon_document-save"))
+    confirmEditBtn.appendChild(makeIcon("save"))
     confirmEditBtn.title = "Confirm"
     confirmEditBtn.onclick = () => {
         variablesEditor_confirmEditVariable(v)
@@ -987,7 +987,7 @@ function variablesEditor_makeAddBtn() {
     b.id = "newVariable"
     b.className = "important"
     b.innerText = "New"
-    b.prepend(makeIcon("icon_list-add"))
+    b.prepend(makeIcon("add"))
     b.onclick = () => {
         const list = document.getElementById("variableList")
         list.removeChild(b)
@@ -1373,9 +1373,10 @@ function disableSpellcheck(element) {
 }
 
 function makeIcon(name) {
-    const i = document.createElement("i")
-    i.className = "icon " + name
-    return i
+    const s = document.createElement("span")
+    s.className = "icon material-icons-sharp"
+    s.innerText = name
+    return s
 }
 
 function errorFlash(element) {

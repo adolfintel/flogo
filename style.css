@@ -42,7 +42,8 @@
     --ui-measure-spacer-small: 0.25rem;
     --ui-measure-spacer-medium: 0.5rem;
     --ui-measure-spacer-large: 0.75rem;
-    --ui-measure-form-padding-base: 0.25rem 0.5rem;
+    --ui-measure-form-padding-base: 0.4rem 0.55rem;
+    --ui-measure-form-padding-small: 0.3rem 0.4rem;
     --ui-measure-form-font-size: 0.9rem;
     --ui-measure-border-radius: 0.35rem;
     --flowchart-Assign-color1: #696a30;
@@ -205,6 +206,7 @@ div.expander {
 div.expander .icon {
     display: block;
     margin-bottom: var(--ui-measure-spacer-medium);
+    font-size: 1.1rem;
 }
 
 div.expander .text {
@@ -234,6 +236,11 @@ button {
     font-size: 1rem;
 }
 
+button,
+button * {
+    line-height: 1;
+}
+
 button:hover,
 button:focus {
     border-color: var(--ui-color-form-border-selected);
@@ -255,7 +262,9 @@ button[disabled] {
 }
 
 button .icon {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    vertical-align: bottom;
+    transform: scale(1.2);
 }
 
 input[type="text"] {
@@ -300,7 +309,7 @@ select {
     border: none;
     font-size: var(--ui-mesaure-form-font-size);
     border-radius: var(--ui-measure-border-radius);
-    padding: var(--ui-measure-form-padding-base);
+    padding: var(--ui-measure-form-padding-small);
 }
 
 input:focus,
@@ -334,6 +343,13 @@ select:focus,
 
 div.sideHeader button {
     border: none;
+    padding: 0;
+    margin-left: 0.5rem;
+    vertical-align: bottom;
+}
+
+div.sideHeader .icon {
+    font-size: 1.25rem;
 }
 
 /* FLOWCHART AREA */
@@ -742,6 +758,10 @@ div.variable:not(.editing) .edit {
     opacity: 0.7;
 }
 
+#input_send .icon {
+    font-size: 1.5rem;
+}
+
 #logWrapper {
     position: absolute;
     top: 0;
@@ -835,6 +855,11 @@ div.variable:not(.editing) .edit {
 
 #bar .group {
     display: inline-block;
+}
+
+#bar .group>.icon {
+    vertical-align: baseline;
+    font-size: 1rem;
 }
 
 #bar .separator {
