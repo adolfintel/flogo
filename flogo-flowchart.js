@@ -441,9 +441,8 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
         mainGroup.add(endBlock)
         mainGroup.add(group)
         if (group.flogo_width <= startBlock.flogo_width) {
-            const xOff = (startBlock.flogo_width - group.flogo_width) / 2
-            group.x(xOff)
-            mainGroup.flogo_width = startBlock.flogo_width
+            group.x(startBlock.flogo_width / 2 - group.flogo_connX)
+            mainGroup.flogo_width = Math.max(startBlock.flogo_width, group.x() + group.flogo_width)
         } else {
             startBlock.x(group.flogo_connX - startBlock.flogo_width / 2)
             endBlock.x(group.flogo_connX - startBlock.flogo_width / 2)
