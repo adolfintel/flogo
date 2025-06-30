@@ -858,15 +858,19 @@ While.prototype.createDrawable = function() {
     condition.on("dblclick", (e) => _dispatchEdit(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.add(b)
-    const bPad = b.flogo_width < LINE_FONT_SIZE * 5 ? LINE_FONT_SIZE * 3 : PADDING_BASE
-    b.x(condition.flogo_width + bPad)
+    const minBPad = LINE_FONT_SIZE * 3
+    if (condition.flogo_width / 2 + PADDING_BASE * 2 + b.flogo_connX >= condition.flogo_width + minBPad) {
+        b.x(condition.flogo_width / 2 + PADDING_BASE * 2)
+    } else {
+        b.x(condition.flogo_width + (minBPad - b.flogo_connX))
+    }
     b.y(condition.flogo_height + PADDING_BASE)
     const endY = b.y() + b.flogo_height + SPACE_BETWEEN_INSTRUCTIONS + PADDING_BASE
     if (this.body.body.length > 0) {
         const arrowIn = new Konva.Arrow({
             x: condition.flogo_width,
             y: condition.flogo_height / 2,
-            points: [0, 0, b.flogo_connX + bPad, 0, b.flogo_connX + bPad, condition.flogo_height / 2 + PADDING_BASE],
+            points: [0, 0, b.x() - condition.flogo_width + b.flogo_connX, 0, b.x() - condition.flogo_width + b.flogo_connX, condition.flogo_height / 2 + PADDING_BASE],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -878,16 +882,16 @@ While.prototype.createDrawable = function() {
         _makeArrowHighlightable(arrowIn)
         group.add(arrowIn)
         const arrowToTop = new Konva.Arrow({
-            x: condition.flogo_width + b.flogo_connX + bPad,
+            x: b.x() + b.flogo_connX,
             y: b.y() + b.flogo_height,
             points: [
                 0,
                 0,
                 0,
                 SPACE_BETWEEN_INSTRUCTIONS,
-                -(b.flogo_connX + condition.flogo_width / 2 + bPad) + PADDING_BASE,
+                -(b.x() + b.flogo_connX) + condition.flogo_width / 2 + PADDING_BASE,
                 SPACE_BETWEEN_INSTRUCTIONS,
-                -(b.flogo_connX + condition.flogo_width / 2 + bPad) + PADDING_BASE,
+                -(b.x() + b.flogo_connX) + condition.flogo_width / 2 + PADDING_BASE,
                 -(b.flogo_height + PADDING_BASE),
             ],
             pointerLength: LINE_ARROW_SIZE,
@@ -907,9 +911,9 @@ While.prototype.createDrawable = function() {
             points: [
                 0,
                 0,
-                b.flogo_connX + bPad,
+                b.flogo_connX + minBPad,
                 0,
-                b.flogo_connX + bPad,
+                b.flogo_connX + minBPad,
                 condition.flogo_height / 2 + SPACE_BETWEEN_INSTRUCTIONS,
                 -condition.flogo_width / 2 + PADDING_BASE,
                 condition.flogo_height / 2 + SPACE_BETWEEN_INSTRUCTIONS,
