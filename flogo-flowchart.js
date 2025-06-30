@@ -704,15 +704,23 @@ DoWhile.prototype.createDrawable = function() {
     condition.on("dblclick", (e) => _dispatchEdit(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.add(b)
-    b.x(condition.flogo_width + PADDING_BASE)
+    if (b.flogo_connX >= condition.flogo_width / 2) {
+        b.x(condition.flogo_width / 2 + PADDING_BASE * 2)
+    } else {
+        b.x(condition.flogo_width + PADDING_BASE * 2 - b.flogo_connX)
+    }
     b.y(SPACE_BETWEEN_INSTRUCTIONS)
     condition.x(0)
     if (this.body.body.length > 0) {
-        condition.y(b.y() + b.flogo_height + SPACE_BETWEEN_INSTRUCTIONS - condition.flogo_height / 2)
+        if (condition.flogo_height >= SPACE_BETWEEN_INSTRUCTIONS) {
+            condition.y(b.y() + b.flogo_height + PADDING_BASE * 2)
+        } else {
+            condition.y(b.y() + b.flogo_height + SPACE_BETWEEN_INSTRUCTIONS + condition.flogo_height)
+        }
         const arrowIn = new Konva.Arrow({
             x: condition.flogo_width / 2,
             y: 0,
-            points: [0, 0, condition.flogo_width / 2 + b.flogo_connX + PADDING_BASE, 0, condition.flogo_width / 2 + b.flogo_connX + PADDING_BASE, SPACE_BETWEEN_INSTRUCTIONS],
+            points: [0, 0, b.x() + b.flogo_connX - condition.flogo_width / 2, 0, b.x() + b.flogo_connX - condition.flogo_width / 2, SPACE_BETWEEN_INSTRUCTIONS],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -726,7 +734,7 @@ DoWhile.prototype.createDrawable = function() {
         const arrowToCond = new Konva.Arrow({
             x: b.x() + b.flogo_connX,
             y: b.y() + b.flogo_height,
-            points: [0, 0, 0, SPACE_BETWEEN_INSTRUCTIONS, -(b.flogo_connX + PADDING_BASE), SPACE_BETWEEN_INSTRUCTIONS],
+            points: [0, 0, 0, condition.y() + condition.flogo_height / 2 - (b.y() + b.flogo_height), -(b.x() + b.flogo_connX - (condition.x() + condition.flogo_width)), condition.y() + condition.flogo_height / 2 - (b.y() + b.flogo_height)],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -738,7 +746,7 @@ DoWhile.prototype.createDrawable = function() {
         _makeArrowHighlightable(arrowToCond)
         group.add(arrowToCond)
     } else {
-        condition.y(b.y() + b.flogo_height + SPACE_BETWEEN_INSTRUCTIONS)
+        condition.y(b.y())
         const loopArrow = new Konva.Arrow({
             x: condition.flogo_width / 2,
             y: 0,
@@ -766,7 +774,7 @@ DoWhile.prototype.createDrawable = function() {
     const arrowToTop = new Konva.Arrow({
         x: condition.flogo_width / 2,
         y: condition.y(),
-        points: [0, 0, 0, -(b.flogo_height + 2 * SPACE_BETWEEN_INSTRUCTIONS - (this.body.body.length > 0 ? condition.flogo_height / 2 : 0))],
+        points: [0, 0, 0, -condition.y()],
         pointerLength: LINE_ARROW_SIZE,
         pointerWidth: LINE_ARROW_SIZE,
         fill: LINE_COLOR,
