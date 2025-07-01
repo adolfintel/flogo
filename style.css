@@ -594,7 +594,7 @@ div.variable {
     margin: var(--ui-measure-spacer-small);
     border: var(--ui-measure-border-thin) solid var(--ui-color-border1);
     border-radius: var(--ui-measure-border-radius);
-    overflow: hidden;
+    position: relative;
 }
 
 div.variable>div.nameType {

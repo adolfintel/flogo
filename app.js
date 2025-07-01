@@ -626,7 +626,7 @@ function ui_onProgramCrash(e) {
     d.className = "notice"
     d.innerText = "Program crashed"
     document.getElementById("log").prepend(d)
-    document.getElementById("variablesArea").classList.remove("noedit")
+    variablesEditor_enable()
 }
 
 //-------- CONSOLE PANEL --------
@@ -706,7 +706,7 @@ function ui_onProgramEnd() {
     d.className = "notice"
     d.innerText = "Program finished"
     document.getElementById("log").prepend(d)
-    document.getElementById("variablesArea").classList.remove("noedit")
+    variablesEditor_enable()
     //resetVariables()
 }
 
@@ -753,10 +753,19 @@ function console_save() {
 
 //-------- VARIABLES EDITOR --------
 
+let dragging = null
+
 function variablesEditor_createVariable(name) {
     const v = document.createElement("div")
     v.className = "variable"
     v.flogo_variable = name
+    v.draggable = true
+    v.ondragstart = () => {
+        dragging = v
+    }
+    v.ondragend = () => {
+        dragging = null
+    }
     const nt = document.createElement("div")
     nt.className = "nameType"
     const nameVis = document.createElement("div")
@@ -814,6 +823,9 @@ function variablesEditor_createVariable(name) {
     }
     btns.appendChild(confirmEditBtn)
     nt.appendChild(btns)
+    nt.ondrop = (e) => {
+        variablesEditor_moveVariableBefore(dragging, v)
+    }
     v.appendChild(nt)
     const valVis = document.createElement("div")
     valVis.className = "value vis"
@@ -861,6 +873,9 @@ function variablesEditor_createVariable(name) {
         edit: editBtn,
         del: delBtn,
     }
+    valVis.ondrop = valEdit.ondrop = (e) => {
+        variablesEditor_moveVariableAfter(dragging, v)
+    }
     valEdit.flogo_init = init
     valEdit.flogo_initVal = initVal
     variablesEditor_updateVariableValue(v)
@@ -881,6 +896,33 @@ function variablesEditor_createVariable(name) {
         }
     }
     return v
+}
+
+function variablesEditor_moveVariableBefore(before, after) {
+    if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
+    const list = document.getElementById("variableList")
+    list.removeChild(before)
+    list.insertBefore(before, after)
+    variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList()
+    saveToHistory()
+}
+
+function variablesEditor_moveVariableAfter(after, before) {
+    if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
+    const list = document.getElementById("variableList")
+    list.removeChild(after)
+    before.after(after)
+    variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList()
+    saveToHistory()
+}
+
+function variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList() {
+    const newVariables = {}
+    const vars = document.querySelectorAll("#variableList > div.variable")
+    vars.forEach((v) => {
+        newVariables[v.flogo_variable] = variables[v.flogo_variable]
+    })
+    variables = newVariables
 }
 
 function variablesEditor_deleteVariable(v) {
@@ -1017,6 +1059,22 @@ function variablesEditor_updateVariableValue(v) {
     }
 }
 
+function variablesEditor_enable() {
+    document.getElementById("variablesArea").classList.remove("noedit")
+    const vars = document.querySelectorAll("#variableList > div.variable")
+    vars.forEach((v) => {
+        v.draggable = true
+    })
+}
+
+function variablesEditor_disable() {
+    document.getElementById("variablesArea").classList.add("noedit")
+    const vars = document.querySelectorAll("#variableList > div.variable")
+    vars.forEach((v) => {
+        v.draggable = false
+    })
+}
+
 function updateVariableValues() {
     requestAnimationFrame(updateVariableValues)
     const vars = document.querySelectorAll("#variableList > div.variable")
@@ -1074,7 +1132,7 @@ function updateBar() {
 
 function runProgram() {
     closePopup(true)
-    document.getElementById("variablesArea").classList.add("noedit")
+    variablesEditor_disable()
     const state = interpreter.getState()
     if (state === STATE_STOPPED || state === STATE_CRASHED) {
         resetConsole()
@@ -1085,9 +1143,9 @@ function runProgram() {
 
 function stopProgram() {
     closePopup(true)
+    variablesEditor_enable()
     document.getElementById("input").disabled = true
     document.getElementById("input_send").disabled = true
-    document.getElementById("variablesArea").classList.remove("noedit")
     const state = interpreter.getState()
     if (state === STATE_RUNNING || state === STATE_PAUSED) {
         interpreter.stop()
