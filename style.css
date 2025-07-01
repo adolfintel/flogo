@@ -454,13 +454,14 @@ div.sideHeader .icon {
 
 #editor2 .icon {
     font-size: 1.5rem;
-    vertical-align: middle;
     margin-right: var(--ui-measure-spacer-small);
 }
 
 #editor2>div {
     padding: var(--ui-measure-spacer-small);
     border-radius: var(--ui-measure-border-radius);
+    display: flex;
+    align-items: center;
 }
 
 #editor2>div:hover {
