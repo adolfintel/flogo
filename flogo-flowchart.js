@@ -705,9 +705,9 @@ DoWhile.prototype.createDrawable = function() {
     condition.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.add(b)
     if (b.flogo_connX >= condition.flogo_width / 2) {
-        b.x(condition.flogo_width / 2 + PADDING_BASE * 2)
+        b.x(condition.flogo_width / 2 + PADDING_BASE)
     } else {
-        b.x(condition.flogo_width + PADDING_BASE * 2 - b.flogo_connX)
+        b.x(condition.flogo_width + PADDING_BASE - b.flogo_connX)
     }
     b.y(SPACE_BETWEEN_INSTRUCTIONS)
     condition.x(0)
