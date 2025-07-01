@@ -1519,12 +1519,12 @@ function ensureInstructionVisibleInFlowchart(i) {
         let ipos = i.drawable.flogo_highlightable.absolutePosition()
         const x = ipos.x + i.drawable.flogo_highlightable.width() * stage.scaleX()
         const y = ipos.y + i.drawable.flogo_highlightable.height() * stage.scaleY()
-        if (x >= stage.width()) {
-            const diff = x - stage.width() + PADDING_BASE
+        if (x + PADDING_BASE >= stage.width()) {
+            const diff = x - stage.width() + i.drawable.flogo_highlightable.width() * stage.scaleX()
             stage.x(stage.x() - diff)
         }
-        if (y >= stage.height()) {
-            const diff = y - stage.height() + PADDING_BASE
+        if (y + PADDING_BASE >= stage.height()) {
+            const diff = y - stage.height() + i.drawable.flogo_highlightable.height() * stage.scaleY()
             stage.y(stage.y() - diff)
         }
         ipos = i.drawable.flogo_highlightable.absolutePosition()
