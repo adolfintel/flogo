@@ -105,6 +105,7 @@
 * {
     box-sizing: border-box;
     user-select: none;
+    -webkit-user-select: none;
     outline: none;
 }
 
@@ -1005,6 +1006,7 @@ div.settings_tab.selected {
 
 #man * {
     user-select: text;
+    -webkit-user-select: text;
 }
 
 #man table {
