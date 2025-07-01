@@ -933,6 +933,7 @@ function variablesEditor_deleteVariable(v) {
 
 function variablesEditor_editVariable(v) {
     v.classList.add("editing")
+    v.draggable = false
     requestAnimationFrame(() => {
         //needs to happen on the next frame because we can't focus an element that's not currently visible
         v.flogo_name.edit.focus()
@@ -941,6 +942,7 @@ function variablesEditor_editVariable(v) {
 
 function variablesEditor_cancelEditVariable(v) {
     v.classList.remove("editing")
+    v.draggable = true
     if (v.flogo_variable === null) {
         document.getElementById("variableList").removeChild(v)
         document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
@@ -1022,6 +1024,7 @@ function variablesEditor_confirmEditVariable(v) {
             variablesEditor_updateVariableValue(v)
         }
         v.classList.remove("editing")
+        v.draggable = true
         if (changed) {
             saveToHistory()
         }
