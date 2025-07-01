@@ -181,6 +181,7 @@
             <button id="pauseProgram" title="Pause" onclick="pauseProgram()"><span class="icon material-icons-sharp">pause</span></button>
             <button id="stopProgram" title="Stop" onclick="stopProgram()"><span class="icon material-icons-sharp">stop</span></button>
         </span>
+        <span class="separator"></span>
         <span class="group">
             <span class="icon material-icons-sharp">bolt</span><select id="executionMode" title="Execution mode" onchange="setProgramExecutionMode()">
                 <option value="turbo">Turbo</option>
@@ -194,7 +195,7 @@
             <button id="undo" title="Undo" onclick="undo()"><span class="icon material-icons-sharp">undo</span></button>
             <button id="redo" title="Redo" onclick="redo()"><span class="icon material-icons-sharp">redo</span></button>
         </span>
-        <span class="group floatRight">
+        <span id="bar_settings" class="group">
             <button id="openManual" title="Documentation" onclick="openManual()"><span class="icon material-icons-sharp">question_mark</span></button>
             <button id="openSettings" title="Settings" onclick="openSettings()"><span class="icon material-icons-sharp">settings</span></button>
         </span>

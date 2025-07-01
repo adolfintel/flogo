@@ -851,14 +851,17 @@ div.variable:not(.editing) .edit {
     border-bottom: var(--ui-measure-border-thin) solid var(--ui-color-border1);
     color: var(--ui-color-text-accent);
     z-index: 99;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 #bar .group {
-    display: inline-block;
+    height: 2.5rem;
+    overflow: hidden;
 }
 
 #bar .group>.icon {
-    vertical-align: baseline;
     font-size: 1rem;
 }
 
@@ -875,6 +878,7 @@ div.variable:not(.editing) .edit {
 #bar select {
     border: var(--ui-measure-border-medium) solid var(--ui-color-form-border);
     background: transparent;
+    max-height: 100%;
 }
 
 #bar select:hover,
@@ -889,6 +893,10 @@ div.variable:not(.editing) .edit {
 
 #filePicker {
     display: none;
+}
+
+#bar_settings {
+    margin-left: auto;
 }
 
 @media all and (max-width: 32rem) {
