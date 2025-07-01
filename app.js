@@ -1592,6 +1592,9 @@ function initApp() {
             }
         }
     })
+    if (enableWorkaroundsForWebKitBecauseItFuckingSucks) { //webkit-based browsers don't support file filters with multiple types
+        document.getElementById("filePicker").removeAttribute("accept")
+    }
 }
 
 function recoverProgram() {
