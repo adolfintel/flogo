@@ -42,8 +42,7 @@
     --ui-measure-spacer-small: 0.25rem;
     --ui-measure-spacer-medium: 0.5rem;
     --ui-measure-spacer-large: 0.75rem;
-    --ui-measure-form-padding-base: 0.4rem 0.55rem;
-    --ui-measure-form-padding-small: 0.3rem 0.4rem;
+    --ui-measure-form-padding-base: 0.35rem 0.5rem;
     --ui-measure-form-font-size: 0.9rem;
     --ui-measure-border-radius: 0.35rem;
     --flowchart-Assign-color1: #696a30;
@@ -234,6 +233,9 @@ button {
     border-radius: var(--ui-measure-border-radius);
     font-weight: bold;
     font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button,
@@ -262,9 +264,8 @@ button[disabled] {
 }
 
 button .icon {
-    font-size: 1rem;
+    font-size: 1.15rem;
     vertical-align: bottom;
-    transform: scale(1.2);
 }
 
 input[type="text"] {
@@ -309,7 +310,7 @@ select {
     border: none;
     font-size: var(--ui-mesaure-form-font-size);
     border-radius: var(--ui-measure-border-radius);
-    padding: var(--ui-measure-form-padding-small);
+    padding: var(--ui-measure-form-padding-base);
 }
 
 input:focus,
@@ -608,6 +609,8 @@ div.variable>div.nameType::after {
 div.variable>div.nameType>.buttonGroup {
     float: right;
     width: fit-content;
+    display: inline-flex;
+    gap: var(--ui-measure-spacer-small);
 }
 
 div.variable>.value {
@@ -859,6 +862,9 @@ div.variable:not(.editing) .edit {
 #bar .group {
     height: 2.5rem;
     overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ui-measure-spacer-small);
 }
 
 #bar .group>.icon {
