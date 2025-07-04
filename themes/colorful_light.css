@@ -39,6 +39,8 @@
     --flowchart-Block-highlight-color: #ff8020;
     --flowchart-Line-color: #000000;
     --flowchart-Line-selected-color: #ff8020;
+    --flowchart-selected-color1: #aa00ff;
+    --flowchart-selected-color2: #0020b0;
     --flowchart-scrollbar-color: #00000060;
 }
 

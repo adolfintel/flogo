@@ -34,6 +34,8 @@
     --flowchart-Block-outline-thickness: 1.25;
     --flowchart-Block-highlight-color: #4080ff;
     --flowchart-Line-color: #000000;
+    --flowchart-selected-color1: #000000;
+    --flowchart-selected-color2: #a0a0ff;
     --flowchart-Block-text-color: #000000;
     --flowchart-scrollbar-color: #00000060;
 }

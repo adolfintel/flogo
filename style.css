@@ -80,6 +80,8 @@
     --flowchart-Line-font-size: 10;
     --flowchart-Line-selected-color: #ff0000;
     --flowchart-Block-text-color: #ffffff;
+    --flowchart-selected-color1: #ffffff;
+    --flowchart-selected-color2: #1330b0;
     --flowchart-Padding-base: 10;
     --flowchart-Padding-spaceBetweenInstructions: 24;
     --flowchart-Block-text-maxWidth: 25;
@@ -449,7 +451,7 @@ div.sideHeader .icon {
 
 #editor2 {
     padding: var(--ui-measure-spacer-medium);
-    width: 7rem;
+    width: 8rem;
 }
 
 #editor2 .icon {

@@ -35,6 +35,8 @@ let ASSIGN_COLOR1,
     LINE_FONT_SIZE,
     LINE_SELECTED_COLOR,
     BLOCK_TEXT_COLOR,
+    SELECTED_COLOR1,
+    SELECTED_COLOR2,
     PADDING_BASE,
     SPACE_BETWEEN_INSTRUCTIONS,
     BLOCK_TEXT_MAX_WIDTH,
@@ -46,19 +48,18 @@ let ASSIGN_COLOR1,
     SCROLLBAR_PADDING,
     MINVIS
 
-let _selectionMode = false //TODO: implement
 let _allowZoomOnFlowchart = false
 
 function _makeArrowHighlightable(arrow) {
     arrow.on("mouseover", () => {
-        if (_selectionMode || arrow.flogo_forceHighlighted) return
+        if (arrow.flogo_forceHighlighted) return
         const intState = interpreter.getState()
         if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
         arrow.stroke(LINE_SELECTED_COLOR)
         arrow.fill(LINE_SELECTED_COLOR)
     })
     arrow.on("mouseout", () => {
-        if (_selectionMode || arrow.flogo_forceHighlighted) return
+        if (arrow.flogo_forceHighlighted) return
         const intState = interpreter.getState()
         if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
         arrow.stroke(LINE_COLOR)
@@ -103,8 +104,11 @@ Assign.prototype.createDrawable = function() {
     })
     group.add(rect)
     group.add(text)
-    group.on("dblclick", (e) => _dispatchEdit(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    group.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
     group.flogo_height = rect.height()
     group.flogo_connX = group.flogo_width / 2
@@ -149,8 +153,11 @@ Input.prototype.createDrawable = function() {
     })
     group.add(rect)
     group.add(text)
-    group.on("dblclick", (e) => _dispatchEdit(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    group.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
     group.flogo_height = rect.height()
     group.flogo_connX = group.flogo_width / 2
@@ -198,8 +205,11 @@ Output.prototype.createDrawable = function() {
     })
     group.add(rect)
     group.add(text)
-    group.on("dblclick", (e) => _dispatchEdit(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    group.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
     group.flogo_height = rect.height()
     group.flogo_connX = group.flogo_width / 2
@@ -255,8 +265,11 @@ Comment.prototype.createDrawable = function() {
     })
     group.add(rect)
     group.add(text)
-    group.on("dblclick", (e) => _dispatchEdit(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    group.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
     group.flogo_height = rect.height()
     group.flogo_connX = group.flogo_width / 2
@@ -299,8 +312,11 @@ Breakpoint.prototype.createDrawable = function() {
     group.add(rect)
     group.add(s1)
     group.add(s2)
-    group.on("dblclick", (e) => _dispatchEdit(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    group.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
     group.flogo_height = rect.height()
     group.flogo_connX = group.flogo_width / 2
@@ -512,8 +528,11 @@ If.prototype.createDrawable = function() {
         y: 0,
     })
     group.add(condition)
-    condition.on("dblclick", (e) => _dispatchEdit(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    condition.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //condition.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.add(f)
     group.add(t)
     f.x(0)
@@ -701,8 +720,11 @@ DoWhile.prototype.createDrawable = function() {
         y: 0,
     })
     group.add(condition)
-    condition.on("dblclick", (e) => _dispatchEdit(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    condition.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //condition.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.add(b)
     if (b.flogo_connX >= condition.flogo_width / 2) {
         b.x(condition.flogo_width / 2 + PADDING_BASE)
@@ -855,8 +877,11 @@ While.prototype.createDrawable = function() {
         y: 0,
     })
     group.add(condition)
-    condition.on("dblclick", (e) => _dispatchEdit(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    condition.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //condition.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.add(b)
     const minBPad = LINE_FONT_SIZE * 3
     if (condition.flogo_width / 2 + PADDING_BASE * 2 + b.flogo_connX >= condition.flogo_width + minBPad) {
@@ -1016,8 +1041,11 @@ For.prototype.createDrawable = function() {
         y: 0,
     })
     group.add(condition)
-    condition.on("dblclick", (e) => _dispatchEdit(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    condition.on("click tap", (e) => _dispatchEdit2(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //condition.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    condition.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.add(b)
     const minBPad = LINE_FONT_SIZE * 3
     if (condition.flogo_width / 2 + PADDING_BASE * 2 + b.flogo_connX >= condition.flogo_width + minBPad) {
@@ -1133,9 +1161,9 @@ For.prototype.createDrawable = function() {
 }
 
 function _dispatchEdit(instruction, evt, parent, posInParent) {
-    if (_selectionMode) return
-    const intState = interpreter.getState()
-    if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+    if (stage.isDragging()) {
+        stage.stopDrag()
+    }
     if (typeof ui_edit !== "undefined") {
         ui_edit(instruction, evt, parent, posInParent)
     } else {
@@ -1144,29 +1172,20 @@ function _dispatchEdit(instruction, evt, parent, posInParent) {
 }
 
 function _dispatchEdit2(instruction, evt, parent, posInParent) {
-    const intState = interpreter.getState()
-    if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
-    let fire = false
-    if (evt.type === "click") {
-        if (evt.evt.button === 2) {
-            fire = true
-        }
-    } else if (evt.type === "tap") {
-        fire = true
+    if (stage.isDragging()) {
+        stage.stopDrag()
     }
-    if (fire) {
-        if (typeof ui_edit2 !== "undefined") {
-            ui_edit2(instruction, evt, parent, posInParent)
-        } else {
-            console.log("Edit 2 " + instruction.constructor.name)
-        }
+    if (typeof ui_edit2 !== "undefined") {
+        ui_edit2(instruction, evt, parent, posInParent)
+    } else {
+        console.log("Edit 2 " + instruction.constructor.name)
     }
 }
 
 function _dispatchInsert(instruction, pos, evt, arrow) {
-    if (_selectionMode) return
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+    cancelSelection()
     if (typeof ui_insert !== "undefined") {
         arrow.flogo_forceHighlighted = true
         arrow.stroke(LINE_SELECTED_COLOR)
@@ -1195,6 +1214,167 @@ function _extractCoordFromEvent(evt, name, defaultVal = 0) {
         }
     }
     return defaultVal
+}
+
+let _touchMultiselectMode = false
+let selectedInstructions = []
+
+function startTouchMultiSelect() {
+    _touchMultiselectMode = true
+}
+
+function cancelSelection() {
+    selectedInstructions.forEach(i => _selectionMode_deselect_rec(i))
+    selectedInstructions = []
+    _touchMultiselectMode = false
+}
+
+function _selectionMode_sanityCheck() {
+    if (selectedInstructions.length === 0) return true
+    //a selection is valid if all the instructions have the same parent
+    const parentInstruction = selectedInstructions[0].drawable.flogo_parentInstruction
+    for (let i = 1; i < selectedInstructions.length; i++) {
+        if (selectedInstructions[i].drawable.flogo_parentInstruction !== parentInstruction) return false
+    }
+    //unless the program is malformed, the parent is guaranteed to be an InstructionSequence, so we sort the selected instructions in case the user has selected them in non-sequential order
+    for (let i = 0; i < selectedInstructions.length - 1; i++) { //TODO: rewrite this trash using sort
+        for (let j = i + 1; j < selectedInstructions.length; j++) {
+            if (selectedInstructions[i].drawable.flogo_parentPos > selectedInstructions[j].drawable.flogo_parentPos) {
+                const temp = selectedInstructions[i]
+                selectedInstructions[i] = selectedInstructions[j]
+                selectedInstructions[j] = temp
+            }
+        }
+    }
+    return true
+}
+
+function _selectionMode_select_rec(i) {
+    if (Array.isArray(i)) {
+        i.forEach(i => _selectionMode_select_rec(i))
+    } else {
+        if (i.drawable.flogo_highlightable !== null) {
+            i.drawable.flogo_highlightable.stroke(SELECTED_COLOR1)
+            i.drawable.flogo_highlightable.fill(SELECTED_COLOR2)
+        }
+        if (typeof i.trueBranch !== "undefined") _selectionMode_select_rec(i.trueBranch)
+        if (typeof i.falseBranch !== "undefined") _selectionMode_select_rec(i.falseBranch)
+        if (typeof i.body !== "undefined") _selectionMode_select_rec(i.body)
+    }
+}
+
+function _selectionMode_deselect_rec(i) {
+    if (Array.isArray(i)) {
+        i.forEach(i => _selectionMode_deselect_rec(i))
+    } else {
+        if (i.drawable.flogo_highlightable !== null) {
+            i.drawable.flogo_highlightable.stroke(i.drawable.flogo_highlightable.flogo_originalStroke)
+            i.drawable.flogo_highlightable.fill(i.drawable.flogo_highlightable.flogo_originalFill)
+        }
+        if (typeof i.trueBranch !== "undefined") _selectionMode_deselect_rec(i.trueBranch)
+        if (typeof i.falseBranch !== "undefined") _selectionMode_deselect_rec(i.falseBranch)
+        if (typeof i.body !== "undefined") _selectionMode_deselect_rec(i.body)
+    }
+}
+
+function selectInstruction(instr, single) {
+    if (single) {
+        if (selectedInstructions.length === 1 && selectedInstructions[0] === instr) return
+        selectedInstructions.forEach(i => _selectionMode_deselect_rec(i))
+        selectedInstructions = [instr]
+    } else {
+        if (selectedInstructions.includes(instr)) return
+        selectedInstructions.push(instr)
+        if (!_selectionMode_sanityCheck()) {
+            selectedInstructions.forEach(i => _selectionMode_deselect_rec(i))
+            selectedInstructions = [instr]
+        }
+    }
+    _selectionMode_select_rec(instr)
+}
+
+function deselectInstruction(instr) {
+    if (!selectedInstructions.includes(instr)) return
+    selectedInstructions.splice(selectedInstructions.indexOf(instr), 1)
+    _selectionMode_deselect_rec(instr)
+    if (selectedInstructions.length === 0) {
+        cancelSelection()
+    }
+}
+
+function _block_dblclick(instr, e, parentInstr, parentPos) {
+    const intState = interpreter.getState()
+    if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+    if (e.evt.ctrlKey) return
+    if (e.evt.button === 2) return
+    _dispatchEdit(instr, e, parentInstr, parentPos)
+}
+
+function _block_click(instr, e, parentInstr, parentPos) {
+    const intState = interpreter.getState()
+    if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+    const rightClick = e.type === "click" && e.evt.button === 2
+    if (rightClick) {
+        if (!selectedInstructions.includes(instr)) {
+            selectInstruction(instr, !e.evt.ctrlKey)
+        }
+        _dispatchEdit2(instr, e, parentInstr, parentPos)
+    } else {
+        if (_touchMultiselectMode) {
+            if (!selectedInstructions.includes(instr)) {
+                selectInstruction(instr, false)
+            } else {
+                deselectInstruction(instr)
+            }
+        } else {
+            if (!selectedInstructions.includes(instr)) {
+                selectInstruction(instr, !e.evt.ctrlKey)
+            } else {
+                if (!e.evt.ctrlKey) {
+                    selectInstruction(instr, true)
+                } else {
+                    deselectInstruction(instr)
+                }
+            }
+        }
+    }
+}
+
+function _block_tap(instr, e, parentInstr, parentPos) {
+    const intState = interpreter.getState()
+    if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+    if (_touchMultiselectMode) {
+        if (!selectedInstructions.includes(instr)) {
+            selectInstruction(instr, false)
+        } else {
+            deselectInstruction(instr)
+        }
+    } else {
+        _dispatchEdit(instr, e, parentInstr, parentPos)
+    }
+}
+
+let _longPressTimeout = null
+
+function _block_touchstart(instr, e, parentInstr, parentPos) {
+    const intState = interpreter.getState()
+    if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+    _longPressTimeout = setTimeout(() => {
+        if (!stage.isDragging()) {
+            _dispatchEdit2(instr, e, parentInstr, parentPos)
+        }
+        _longPressTimeout = null
+    }, 400)
+}
+
+function _block_touchend(instr, e, parentInstr, parentPos) {
+    const intState = interpreter.getState()
+    if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+    if (_longPressTimeout !== null) {
+        clearTimeout(_longPressTimeout)
+        _longPressTimeout = null
+        _block_tap(instr, e, parentInstr, parentPos)
+    }
 }
 
 let stage = null
@@ -1318,11 +1498,7 @@ function initFlowchart(id) {
     })
     stage.on("click", (e) => {
         if (e.target === stage) {
-            if (typeof ui_cancel !== "undefined") {
-                ui_cancel()
-            } else {
-                console.log("cancel")
-            }
+            cancelSelection()
         }
     })
     stage.on("contextmenu", (e) => {
@@ -1395,38 +1571,36 @@ function initFlowchart(id) {
     let prevHighlightInstr = null
     const highlightFun = () => {
         requestAnimationFrame(highlightFun)
-        if (!_selectionMode) {
-            const i = interpreter.currentInstruction
-            if (prevHighlightInstr !== i) {
-                if (prevHighlightInstr !== null && prevHighlightInstr.drawable.flogo_highlightable !== null) {
-                    if (prevHighlightInstr.drawable.flogo_highlightable.fill() !== prevHighlightInstr.drawable.flogo_highlightable.flogo_originalFill) {
-                        prevHighlightInstr.drawable.flogo_highlightable.fill(prevHighlightInstr.drawable.flogo_highlightable.flogo_originalFill)
-                    }
-                    if (prevHighlightInstr.drawable.flogo_highlightable.stroke() !== prevHighlightInstr.drawable.flogo_highlightable.flogo_originalStroke) {
-                        prevHighlightInstr.drawable.flogo_highlightable.stroke(prevHighlightInstr.drawable.flogo_highlightable.flogo_originalStroke)
-                    }
+        const i = interpreter.currentInstruction
+        if (prevHighlightInstr !== i) {
+            if (prevHighlightInstr !== null && prevHighlightInstr.drawable.flogo_highlightable !== null) {
+                if (prevHighlightInstr.drawable.flogo_highlightable.fill() !== prevHighlightInstr.drawable.flogo_highlightable.flogo_originalFill) {
+                    prevHighlightInstr.drawable.flogo_highlightable.fill(prevHighlightInstr.drawable.flogo_highlightable.flogo_originalFill)
                 }
-                if (i !== null && i.drawable.flogo_highlightable !== null) {
-                    if (interpreter.getState() === STATE_CRASHED) {
-                        if (i.drawable.flogo_highlightable.fill() !== ERROR_COLOR1) {
-                            i.drawable.flogo_highlightable.fill(ERROR_COLOR1)
-                        }
-                        if (i.drawable.flogo_highlightable.stroke() !== ERROR_COLOR2) {
-                            i.drawable.flogo_highlightable.stroke(ERROR_COLOR2)
-                        }
-                    } else {
-                        if (i.drawable.flogo_highlightable.fill() !== i.drawable.flogo_highlightable.flogo_originalFill) {
-                            i.drawable.flogo_highlightable.fill(i.drawable.flogo_highlightable.flogo_originalFill)
-                        }
-                        if (i.drawable.flogo_highlightable.stroke() !== HIGHLIGHT_COLOR) {
-                            i.drawable.flogo_highlightable.stroke(HIGHLIGHT_COLOR)
-                        }
-                    }
+                if (prevHighlightInstr.drawable.flogo_highlightable.stroke() !== prevHighlightInstr.drawable.flogo_highlightable.flogo_originalStroke) {
+                    prevHighlightInstr.drawable.flogo_highlightable.stroke(prevHighlightInstr.drawable.flogo_highlightable.flogo_originalStroke)
                 }
-                ensureInstructionVisibleInFlowchart(i)
             }
-            prevHighlightInstr = i
+            if (i !== null && i.drawable.flogo_highlightable !== null) {
+                if (interpreter.getState() === STATE_CRASHED) {
+                    if (i.drawable.flogo_highlightable.fill() !== ERROR_COLOR1) {
+                        i.drawable.flogo_highlightable.fill(ERROR_COLOR1)
+                    }
+                    if (i.drawable.flogo_highlightable.stroke() !== ERROR_COLOR2) {
+                        i.drawable.flogo_highlightable.stroke(ERROR_COLOR2)
+                    }
+                } else {
+                    if (i.drawable.flogo_highlightable.fill() !== i.drawable.flogo_highlightable.flogo_originalFill) {
+                        i.drawable.flogo_highlightable.fill(i.drawable.flogo_highlightable.flogo_originalFill)
+                    }
+                    if (i.drawable.flogo_highlightable.stroke() !== HIGHLIGHT_COLOR) {
+                        i.drawable.flogo_highlightable.stroke(HIGHLIGHT_COLOR)
+                    }
+                }
+            }
+            ensureInstructionVisibleInFlowchart(i)
         }
+        prevHighlightInstr = i
     }
     highlightFun()
     let oldScrollbarState = null
@@ -1614,6 +1788,8 @@ function loadFlowchartThemeFromCSS(callback) {
     LINE_FONT_SIZE = Number(_getCSSVal("--flowchart-Line-font-size", 10))
     LINE_COLOR = _getCSSVal("--flowchart-Line-color", "#ffffff")
     LINE_SELECTED_COLOR = _getCSSVal("--flowchart-Line-selected-color", "#ff0000")
+    SELECTED_COLOR1 = _getCSSVal("--flowchart-selected-color1", "#ffffff")
+    SELECTED_COLOR2 = _getCSSVal("--flowchart-selected-color2", "#1330b0")
     PADDING_BASE = Number(_getCSSVal("--flowchart-Padding-base", 10))
     MINVIS = PADDING_BASE * 2
     SPACE_BETWEEN_INSTRUCTIONS = Number(_getCSSVal("--flowchart-Padding-spaceBetweenInstructions", 24))

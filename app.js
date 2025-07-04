@@ -23,12 +23,13 @@ let insert_targetIstruction, insert_targetPos
 
 function insert_createBlockDrawable(type) {
     const b = new globalThis[type]().createDrawable().flogo_shapeOnly
-    b.removeEventListener("click dblclick tap")
+    b.removeEventListener("click dblclick tap touchstart touchend touchmove")
     b.on("click tap", () => {
         const newInstr = new globalThis[type]()
         insert_targetIstruction.body.splice(insert_targetPos, 0, newInstr)
         saveToHistory()
         closePopup()
+        cancelSelection()
         updateFlowchart()
         ensureInstructionVisibleInFlowchart(newInstr)
     })
@@ -387,6 +388,7 @@ function pasteInstructions(instruction, parent, posInParent) {
         parent.body.splice(posInParent, 0, globalThis[instruction.type].fromSimpleObject(instruction))
     }
     saveToHistory()
+    cancelSelection()
     updateFlowchart()
 }
 
@@ -429,6 +431,7 @@ function edit_confirm() {
     if (changed) {
         saveToHistory()
     }
+    cancelSelection()
     updateFlowchart()
 }
 
@@ -517,7 +520,7 @@ function edit_prepareGraphics() {
             e.flogo_stage.destroy()
         }
         const shape = new globalThis[type]().createDrawable().flogo_shapeOnly
-        shape.removeEventListener("click dblclick tap")
+        shape.removeEventListener("click dblclick tap touchstart touchend")
         const gstage = new Konva.Stage({
             container: id,
             width: shape.flogo_width + 2 * BLOCK_OUTLINE_THICKNESS,
@@ -546,26 +549,77 @@ let clipboard = null
 function ui_edit2(instruction, evt, parent, posInParent) {
     const clientX = _extractCoordFromEvent(evt.evt, "clientX")
     const clientY = _extractCoordFromEvent(evt.evt, "clientY")
-    document.getElementById("editor2_edit").onclick = () => {
-        closePopup()
-        ui_edit(instruction, evt, parent, posInParent)
+    const ed = document.getElementById("editor2_edit")
+    if (selectedInstructions.length === 0 || selectedInstructions.length === 1 && selectedInstructions[0] === instruction) {
+        ed.style.display = ""
+        ed.onclick = () => {
+            closePopup()
+            ui_edit(instruction, evt, parent, posInParent)
+        }
+    } else {
+        ed.style.display = "none"
     }
     document.getElementById("editor2_delete").onclick = () => {
         closePopup()
-        parent.body.splice(posInParent, 1)
+        if (selectedInstructions.length >= 1) {
+            selectedInstructions.forEach(i => parent.body.splice(parent.body.indexOf(i), 1))
+        } else {
+            parent.body.splice(posInParent, 1)
+        }
         saveToHistory()
+        cancelSelection()
         updateFlowchart()
     }
     document.getElementById("editor2_cut").onclick = () => {
         closePopup()
-        clipboard = [instruction.toSimpleObject()]
-        parent.body.splice(posInParent, 1)
+        if (selectedInstructions.length >= 1) {
+            clipboard = []
+            selectedInstructions.forEach(i => {
+                clipboard.push(i.toSimpleObject())
+                parent.body.splice(parent.body.indexOf(i), 1)
+            })
+        } else {
+            clipboard = [instruction.toSimpleObject()]
+            parent.body.splice(posInParent, 1)
+        }
         saveToHistory()
+        cancelSelection()
         updateFlowchart()
     }
     document.getElementById("editor2_copy").onclick = () => {
         closePopup()
-        clipboard = [instruction.toSimpleObject()]
+        if (selectedInstructions.length >= 1) {
+            clipboard = []
+            selectedInstructions.forEach(i => clipboard.push(i.toSimpleObject()))
+        } else {
+            clipboard = [instruction.toSimpleObject()]
+        }
+        cancelSelection()
+    }
+    const selAdd = document.getElementById("editor2_addToSelection"),
+        selRem = document.getElementById("editor2_removeFromSelection")
+    if (evt.type === "click") {
+        selAdd.style.display = "none"
+        selRem.style.display = "none"
+    } else {
+        if (!selectedInstructions.includes(instruction)) {
+            selAdd.style.display = ""
+            selRem.style.display = "none"
+            selAdd.onclick = () => {
+                closePopup()
+                if (!_touchMultiselectMode) {
+                    startTouchMultiSelect()
+                }
+                selectInstruction(instruction)
+            }
+        } else {
+            selAdd.style.display = "none"
+            selRem.style.display = ""
+            selRem.onclick = () => {
+                closePopup()
+                deselectInstruction(instruction)
+            }
+        }
     }
     let e = document.getElementById("editor2")
     showPopup(e)
@@ -1141,6 +1195,7 @@ function runProgram() {
         resetConsole()
     }
     variablesEditor_cancelAllEdits()
+    cancelSelection()
     interpreter.run()
 }
 
@@ -1192,6 +1247,7 @@ function newProgram() {
         if (state === STATE_RUNNING || state === STATE_PAUSED) {
             stopProgram()
         }
+        cancelSelection()
         clearVariables()
         clearProgram()
         clearMetadata()
@@ -1220,6 +1276,7 @@ function loadProgram() {
         l.onchange = () => {
             document.getElementById("loadOverlay").style.display = "block"
             loadFromFile(l.files[0], (e) => {
+                cancelSelection()
                 recreateVariableList()
                 resetConsole()
                 clearHistory()
@@ -1269,6 +1326,7 @@ function saveToHistory() {
 
 function undo() {
     closePopup(true)
+    cancelSelection()
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
     if (undoHistoryPtr <= 1) return
@@ -1280,6 +1338,7 @@ function undo() {
 
 function redo() {
     closePopup(true)
+    cancelSelection()
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
     if (undoHistoryPtr <= 0 || undoHistoryPtr >= undoHistory.length) return
@@ -1292,6 +1351,7 @@ function redo() {
 //-------- SETTINGS STUFF --------
 function openSettings() {
     closePopup()
+    cancelSelection()
     const state = interpreter.getState()
     if (state === STATE_RUNNING || state === STATE_PAUSED) {
         stopProgram()
@@ -1472,6 +1532,7 @@ function loadTheme(name, callback) {
         document.getElementById("loadOverlay").style.display = "none"
         return
     }
+    cancelSelection()
     //the link element needs to be recreated for the onload event to trigger again (chromium)
     if (t !== null) document.head.removeChild(t)
     t = document.createElement("link")
@@ -1633,6 +1694,7 @@ function initApp() {
             const loadDraggedProgram = () => {
                 document.getElementById("loadOverlay").style.display = "block"
                 loadFromFile(f, (e2) => {
+                    cancelSelection()
                     recreateVariableList()
                     resetConsole()
                     clearHistory()
