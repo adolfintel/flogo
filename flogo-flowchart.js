@@ -1360,11 +1360,14 @@ let _touchStartPos = null
 function _block_touchstart(instr, e, parentInstr, parentPos) {
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+    if (_longPressTimeout !== null) {
+        clearTimeout(_longPressTimeout)
+    }
     _longPressTimeout = setTimeout(() => {
+        _longPressTimeout = null
         if (!stage.isDragging()) {
             _dispatchEdit2(instr, e, parentInstr, parentPos)
         }
-        _longPressTimeout = null
     }, 400)
     _touchStartPos = stage.position()
 }
@@ -1524,6 +1527,10 @@ function initFlowchart(id) {
     stage.on("touchmove", (e) => {
         e.evt.preventDefault()
         if (e.evt.touches.length !== 2) return
+        if (_longPressTimeout !== null) {
+            clearTimeout(_longPressTimeout)
+            _longPressTimeout = null
+        }
         const touch1 = e.evt.touches[0]
         const touch2 = e.evt.touches[1]
         if (touch1 && !touch2 && !stage.isDragging() && dragStopped) {
