@@ -1355,6 +1355,7 @@ function _block_tap(instr, e, parentInstr, parentPos) {
 }
 
 let _longPressTimeout = null
+let _touchStartPos = null
 
 function _block_touchstart(instr, e, parentInstr, parentPos) {
     const intState = interpreter.getState()
@@ -1365,6 +1366,7 @@ function _block_touchstart(instr, e, parentInstr, parentPos) {
         }
         _longPressTimeout = null
     }, 400)
+    _touchStartPos = stage.position()
 }
 
 function _block_touchend(instr, e, parentInstr, parentPos) {
@@ -1373,7 +1375,10 @@ function _block_touchend(instr, e, parentInstr, parentPos) {
     if (_longPressTimeout !== null) {
         clearTimeout(_longPressTimeout)
         _longPressTimeout = null
-        _block_tap(instr, e, parentInstr, parentPos)
+        const touchEndPos = stage.position()
+        if (Math.sqrt((touchEndPos.x - _touchStartPos.x) ** 2 + (touchEndPos.y - _touchStartPos.y) ** 2) < 20) {
+            _block_tap(instr, e, parentInstr, parentPos)
+        }
     }
 }
 
