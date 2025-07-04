@@ -1001,7 +1001,7 @@ function variablesEditor_cancelEditVariable(v) {
         document.getElementById("variableList").removeChild(v)
         document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
     } else {
-        v.flogo_name.edit.value = v.flogo_variable
+        v.flogo_name.edit.innerText = v.flogo_variable
         v.flogo_type.edit.value = variables[v.flogo_variable].type
         if (variables[v.flogo_variable].initialValue !== null) {
             v.flogo_val.edit.flogo_init.checked = true
