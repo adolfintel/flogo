@@ -1366,6 +1366,9 @@ function _block_touchstart(instr, e, parentInstr, parentPos) {
     _longPressTimeout = setTimeout(() => {
         _longPressTimeout = null
         if (!stage.isDragging()) {
+            try {
+                navigator.vibrate(70)
+            } catch (e) {}
             _dispatchEdit2(instr, e, parentInstr, parentPos)
         }
     }, 400)
