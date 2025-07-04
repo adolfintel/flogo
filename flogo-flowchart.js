@@ -1237,15 +1237,7 @@ function _selectionMode_sanityCheck() {
         if (selectedInstructions[i].drawable.flogo_parentInstruction !== parentInstruction) return false
     }
     //unless the program is malformed, the parent is guaranteed to be an InstructionSequence, so we sort the selected instructions in case the user has selected them in non-sequential order
-    for (let i = 0; i < selectedInstructions.length - 1; i++) { //TODO: rewrite this trash using sort
-        for (let j = i + 1; j < selectedInstructions.length; j++) {
-            if (selectedInstructions[i].drawable.flogo_parentPos > selectedInstructions[j].drawable.flogo_parentPos) {
-                const temp = selectedInstructions[i]
-                selectedInstructions[i] = selectedInstructions[j]
-                selectedInstructions[j] = temp
-            }
-        }
-    }
+    selectedInstructions.sort((a, b) => a.drawable.flogo_parentPos - b.drawable.flogo_parentPos)
     return true
 }
 
