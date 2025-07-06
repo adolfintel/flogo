@@ -544,6 +544,32 @@ function edit_prepareGraphics() {
 
 let clipboard = null
 
+function copySelectedInstructions() {
+    clipboard = []
+    selectedInstructions.forEach(i => clipboard.push(i.toSimpleObject()))
+    cancelSelection()
+}
+
+function deleteSelectedInstructions() {
+    if (selectedInstructions.length === 0) return
+    selectedInstructions.forEach(i => i.drawable.flogo_parentInstruction.body.splice(i.drawable.flogo_parentInstruction.body.indexOf(i), 1))
+    saveToHistory()
+    cancelSelection()
+    updateFlowchart()
+}
+
+function cutSelectedInstructions() {
+    if (selectedInstructions.length === 0) return
+    clipboard = []
+    selectedInstructions.forEach(i => {
+        clipboard.push(i.toSimpleObject())
+        i.drawable.flogo_parentInstruction.body.splice(i.drawable.flogo_parentInstruction.body.indexOf(i), 1)
+    })
+    saveToHistory()
+    cancelSelection()
+    updateFlowchart()
+}
+
 function ui_edit2(instruction, evt, parent, posInParent) {
     const clientX = _extractCoordFromEvent(evt.evt, "clientX")
     const clientY = _extractCoordFromEvent(evt.evt, "clientY")
@@ -559,40 +585,24 @@ function ui_edit2(instruction, evt, parent, posInParent) {
     }
     document.getElementById("editor2_delete").onclick = () => {
         closePopup()
-        if (selectedInstructions.length >= 1) {
-            selectedInstructions.forEach(i => parent.body.splice(parent.body.indexOf(i), 1))
-        } else {
-            parent.body.splice(posInParent, 1)
+        if (selectedInstructions.length === 0) {
+            selectedInstructions.push(instruction)
         }
-        saveToHistory()
-        cancelSelection()
-        updateFlowchart()
+        deleteSelectedInstructions()
     }
     document.getElementById("editor2_cut").onclick = () => {
         closePopup()
-        if (selectedInstructions.length >= 1) {
-            clipboard = []
-            selectedInstructions.forEach(i => {
-                clipboard.push(i.toSimpleObject())
-                parent.body.splice(parent.body.indexOf(i), 1)
-            })
-        } else {
-            clipboard = [instruction.toSimpleObject()]
-            parent.body.splice(posInParent, 1)
+        if (selectedInstructions.length === 0) {
+            selectedInstructions.push(instruction)
         }
-        saveToHistory()
-        cancelSelection()
-        updateFlowchart()
+        cutSelectedInstructions()
     }
     document.getElementById("editor2_copy").onclick = () => {
         closePopup()
-        if (selectedInstructions.length >= 1) {
-            clipboard = []
-            selectedInstructions.forEach(i => clipboard.push(i.toSimpleObject()))
-        } else {
-            clipboard = [instruction.toSimpleObject()]
+        if (selectedInstructions.length === 0) {
+            selectedInstructions.push(instruction)
         }
-        cancelSelection()
+        copySelectedInstructions()
     }
     const selAdd = document.getElementById("editor2_addToSelection"),
         selRem = document.getElementById("editor2_removeFromSelection")
@@ -1488,6 +1498,55 @@ function showPopup(d) {
     document.getElementById("popupBackdrop").classList.add("active")
 }
 
+//-------- KEYBOARD SHORTCUTS --------
+function initKeyboardShortcuts() {
+    document.body.addEventListener('keydown', e => {
+        if (e.target === document.body) {
+            if (document.querySelectorAll("div.popup.visible").length !== 0) return
+            switch (e.key.toLowerCase()) {
+                case 'z': {
+                    if (e.ctrlKey) {
+                        if (e.shiftKey) {
+                            redo()
+                        } else {
+                            undo()
+                        }
+                        e.preventDefault()
+                    }
+                };
+                break
+                case 'y': {
+                    if (e.ctrlKey && !e.shiftKey) {
+                        redo()
+                        e.preventDefault()
+                    }
+                };
+                break
+                case 'x': {
+                    if (e.ctrlKey && !e.shiftKey) {
+                        cutSelectedInstructions()
+                        e.preventDefault()
+                    }
+                };
+                break
+                case 'c': {
+                    if (e.ctrlKey && !e.shiftKey) {
+                        copySelectedInstructions()
+                        e.preventDefault()
+                    }
+                };
+                break
+                case 'delete': {
+                    if (!e.ctrlKey && !e.shiftKey) {
+                        deleteSelectedInstructions()
+                        e.preventDefault()
+                    }
+                }
+            }
+        }
+    })
+}
+
 //-------- MISC UTILITIES -------
 
 function disableSpellcheck(element) {
@@ -1668,6 +1727,7 @@ function initApp() {
             saveToHistory()
             updateBar()
             autoLayout(true)
+            initKeyboardShortcuts()
         })
     })
     window.addEventListener("resize", closePopup)
