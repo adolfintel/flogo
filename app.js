@@ -1503,6 +1503,7 @@ function showPopup(d) {
 //-------- KEYBOARD SHORTCUTS --------
 function initKeyboardShortcuts() {
     document.body.addEventListener('keydown', e => {
+        if (document.getElementById("errorScreen").style.display === "block") return
         if (e.target === document.body) {
             switch (e.key.toLowerCase()) {
                 case 'z': {
