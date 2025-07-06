@@ -166,6 +166,7 @@ function prepare_insertWide() {
     blockSelector.add(bpBlock)
     s.flogo_width = INSERT_WIDE_COLUMN_WIDTH * 6
     s.flogo_height = forBlock.y() + forBlock.flogo_height
+    s.flogo_pasteBtn = paste
     insertWide_stage = s
 }
 
@@ -286,6 +287,7 @@ function prepare_insertTall() {
     blockSelector.add(bpBlock)
     s.flogo_width = forBlock.x() + forBlock.flogo_width
     s.flogo_height = bpBlock.y() + bpBlock.flogo_height
+    s.flogo_pasteBtn = paste
     insertTall_stage = s
 }
 
@@ -1501,9 +1503,9 @@ function showPopup(d) {
 function initKeyboardShortcuts() {
     document.body.addEventListener('keydown', e => {
         if (e.target === document.body) {
-            if (document.querySelectorAll("div.popup.visible").length !== 0) return
             switch (e.key.toLowerCase()) {
                 case 'z': {
+                    if (document.querySelectorAll("div.popup.visible").length !== 0) return
                     if (e.ctrlKey) {
                         if (e.shiftKey) {
                             redo()
@@ -1515,6 +1517,7 @@ function initKeyboardShortcuts() {
                 };
                 break
                 case 'y': {
+                    if (document.querySelectorAll("div.popup.visible").length !== 0) return
                     if (e.ctrlKey && !e.shiftKey) {
                         redo()
                         e.preventDefault()
@@ -1522,6 +1525,7 @@ function initKeyboardShortcuts() {
                 };
                 break
                 case 'x': {
+                    if (document.querySelectorAll("div.popup.visible").length !== 0) return
                     if (e.ctrlKey && !e.shiftKey) {
                         cutSelectedInstructions()
                         e.preventDefault()
@@ -1529,13 +1533,26 @@ function initKeyboardShortcuts() {
                 };
                 break
                 case 'c': {
+                    if (document.querySelectorAll("div.popup.visible").length !== 0) return
                     if (e.ctrlKey && !e.shiftKey) {
                         copySelectedInstructions()
                         e.preventDefault()
                     }
                 };
                 break
+                case 'v': {
+                    if (e.ctrlKey && !e.shiftKey) {
+                        if (clipboard === null) return
+                        if (insertTall_stage.container().classList.contains("visible")) {
+                            insertTall_stage.flogo_pasteBtn.eventListeners["click"][0].handler()
+                        } else if (insertWide_stage.container().classList.contains("visible")) {
+                            insertWide_stage.flogo_pasteBtn.eventListeners["click"][0].handler()
+                        }
+                    }
+                };
+                break
                 case 'delete': {
+                    if (document.querySelectorAll("div.popup.visible").length !== 0) return
                     if (!e.ctrlKey && !e.shiftKey) {
                         deleteSelectedInstructions()
                         e.preventDefault()
