@@ -69,7 +69,7 @@ function prepare_insertWide() {
     paste.on("click tap", () => {
         if (clipboard === null) return
         closePopup()
-        pasteInstructions(clipboard, insert_targetIstruction, insert_targetPos)
+        pasteClipboard(insert_targetIstruction, insert_targetPos)
     })
     blockSelector.add(paste)
     s.flogo_xAfterClipboard = INSERT_WIDE_COLUMN_WIDTH
@@ -199,7 +199,7 @@ function prepare_insertTall() {
     paste.on("click tap", () => {
         if (clipboard === null) return
         closePopup()
-        pasteInstructions(clipboard, insert_targetIstruction, insert_targetPos)
+        pasteClipboard(insert_targetIstruction, insert_targetPos)
     })
     blockSelector.add(paste)
     s.flogo_yAfterClipboard = paste.y() + paste.height() + TALL_INSERT_SPACE_BELOW_ROW
@@ -379,19 +379,6 @@ function ui_insert(instruction, pos, evt, callback) {
     }
 }
 
-function pasteInstructions(instruction, parent, posInParent) {
-    if (Array.isArray(instruction)) {
-        for (let i = 0; i < instruction.length; i++) {
-            parent.body.splice(posInParent + i, 0, globalThis[instruction[i].type].fromSimpleObject(instruction[i]))
-        }
-    } else {
-        parent.body.splice(posInParent, 0, globalThis[instruction.type].fromSimpleObject(instruction))
-    }
-    saveToHistory()
-    cancelSelection()
-    updateFlowchart()
-}
-
 function insert_pixelRatioChangeHandler() {
     requestAnimationFrame(insert_pixelRatioChangeHandler)
     if (window.devicePixelRatio !== insertWide_stage.getLayers()[0].getCanvas().getPixelRatio()) {
@@ -542,34 +529,6 @@ function edit_prepareGraphics() {
     })
 }
 
-let clipboard = null
-
-function copySelectedInstructions() {
-    clipboard = []
-    selectedInstructions.forEach(i => clipboard.push(i.toSimpleObject()))
-    cancelSelection()
-}
-
-function deleteSelectedInstructions() {
-    if (selectedInstructions.length === 0) return
-    selectedInstructions.forEach(i => i.drawable.flogo_parentInstruction.body.splice(i.drawable.flogo_parentInstruction.body.indexOf(i), 1))
-    saveToHistory()
-    cancelSelection()
-    updateFlowchart()
-}
-
-function cutSelectedInstructions() {
-    if (selectedInstructions.length === 0) return
-    clipboard = []
-    selectedInstructions.forEach(i => {
-        clipboard.push(i.toSimpleObject())
-        i.drawable.flogo_parentInstruction.body.splice(i.drawable.flogo_parentInstruction.body.indexOf(i), 1)
-    })
-    saveToHistory()
-    cancelSelection()
-    updateFlowchart()
-}
-
 function ui_edit2(instruction, evt, parent, posInParent) {
     const clientX = _extractCoordFromEvent(evt.evt, "clientX")
     const clientY = _extractCoordFromEvent(evt.evt, "clientY")
@@ -651,6 +610,46 @@ function ui_edit2(instruction, evt, parent, posInParent) {
     if (eBounds.y < 0) {
         e.style.top = 0
     }
+}
+
+//-------- CLIPBOARD SYSTEM --------
+
+let clipboard = null
+
+function copySelectedInstructions() {
+    clipboard = []
+    selectedInstructions.forEach(i => clipboard.push(i.toSimpleObject()))
+    cancelSelection()
+}
+
+function deleteSelectedInstructions() {
+    if (selectedInstructions.length === 0) return
+    selectedInstructions.forEach(i => i.drawable.flogo_parentInstruction.body.splice(i.drawable.flogo_parentInstruction.body.indexOf(i), 1))
+    saveToHistory()
+    cancelSelection()
+    updateFlowchart()
+}
+
+function cutSelectedInstructions() {
+    if (selectedInstructions.length === 0) return
+    clipboard = []
+    selectedInstructions.forEach(i => {
+        clipboard.push(i.toSimpleObject())
+        i.drawable.flogo_parentInstruction.body.splice(i.drawable.flogo_parentInstruction.body.indexOf(i), 1)
+    })
+    saveToHistory()
+    cancelSelection()
+    updateFlowchart()
+}
+
+function pasteClipboard(parent, posInParent) {
+    if (clipboard === null || clipboard.length === 0) return
+    for (let i = 0; i < clipboard.length; i++) {
+        parent.body.splice(posInParent + i, 0, globalThis[clipboard[i].type].fromSimpleObject(clipboard[i]))
+    }
+    saveToHistory()
+    cancelSelection()
+    updateFlowchart()
 }
 
 //-------- CRASH HANDLER (for user program, not flogo) --------
