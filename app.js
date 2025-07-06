@@ -513,16 +513,14 @@ function ui_edit(instruction, evt, parent, posInParent) {
 }
 
 function edit_prepareGraphics() {
-    ["Input", "Output", "Assign", "If", "DoWhile", "While", "For", "Breakpoint", "Comment"].forEach(type => {
-        const id = "editor_" + type + "_graphics"
-        const e = document.getElementById(id)
+    document.querySelectorAll(".editor_graphics").forEach(e => {
         if (typeof e.flogo_stage !== "undefined") {
             e.flogo_stage.destroy()
         }
-        const shape = new globalThis[type]().createDrawable().flogo_shapeOnly
+        const shape = new globalThis[e.getAttribute("flogo_instruction")]().createDrawable().flogo_shapeOnly
         shape.removeEventListener("click dblclick tap touchstart touchend")
         const gstage = new Konva.Stage({
-            container: id,
+            container: e,
             width: shape.flogo_width + 2 * BLOCK_OUTLINE_THICKNESS,
             height: shape.flogo_height + 2 * BLOCK_OUTLINE_THICKNESS
         })
@@ -1653,8 +1651,11 @@ function initApp() {
                     //these 2 lines shouldn't be necessary, but konva doesn't redraw it automatically after changing pixel ratio
                     insertWide_stage.draw()
                     insertTall_stage.draw()
-                    //the graphics in the block editor can just be recreated since they're simple and small
-                    edit_prepareGraphics()
+                    //update graphics in the editor
+                    document.querySelectorAll(".editor_graphics").forEach(e => {
+                        e.flogo_stage.getLayers()[0].getCanvas().setPixelRatio(window.devicePixelRatio)
+                        e.flogo_stage.draw()
+                    })
                 }
             }
             pixelRatioChangeHandler()
