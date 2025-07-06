@@ -1631,17 +1631,6 @@ function initApp() {
     initFlowchart("flowchartArea")
     window.addEventListener("load", () => {
         document.fonts.ready.then(() => {
-            insert_preparePopups()
-            edit_prepareGraphics()
-            edit_shapeFollower()
-            updateFlowchart(true)
-            recreateVariableList()
-            updateVariableValues()
-            setProgramExecutionMode()
-            resetConsole()
-            saveToHistory()
-            updateBar()
-            autoLayout(true)
             const pixelRatioChangeHandler = () => {
                 requestAnimationFrame(pixelRatioChangeHandler)
                 //flowchart handles this itself, no need to update it
@@ -1658,9 +1647,11 @@ function initApp() {
                     })
                 }
             }
-            pixelRatioChangeHandler()
             const endOfLoad = () => {
                 applyBrowserThemeColorFromCSS()
+                edit_shapeFollower()
+                updateFlowchart(true)
+                pixelRatioChangeHandler()
                 if (typeof localStorage.recovery !== "undefined") {
                     showPopup("errorRec")
                 }
@@ -1668,9 +1659,15 @@ function initApp() {
             if (typeof localStorage.theme !== "undefined") {
                 loadTheme(localStorage.theme, endOfLoad)
             } else {
-                document.getElementById("loadOverlay").style.display = "none"
-                endOfLoad()
+                loadTheme("default_dark", endOfLoad)
             }
+            recreateVariableList()
+            updateVariableValues()
+            setProgramExecutionMode()
+            resetConsole()
+            saveToHistory()
+            updateBar()
+            autoLayout(true)
         })
     })
     window.addEventListener("resize", closePopup)
