@@ -619,6 +619,7 @@ function ui_edit2(instruction, evt, parent, posInParent) {
 let clipboard = null
 
 function copySelectedInstructions() {
+    if (selectedInstructions.length === 0) return
     clipboard = []
     selectedInstructions.forEach(i => clipboard.push(i.toSimpleObject()))
     cancelSelection()
@@ -645,7 +646,7 @@ function cutSelectedInstructions() {
 }
 
 function pasteClipboard(parent, posInParent) {
-    if (clipboard === null || clipboard.length === 0) return
+    if (clipboard === null) return
     for (let i = 0; i < clipboard.length; i++) {
         parent.body.splice(posInParent + i, 0, globalThis[clipboard[i].type].fromSimpleObject(clipboard[i]))
     }
