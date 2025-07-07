@@ -341,7 +341,7 @@ function ui_insert(instruction, pos, evt, callback) {
         x: zoomW,
         y: zoomW,
     })
-    insertWide_stage.x(PADDING_BASE * zoomW - (clipboard === null ? insertWide_stage.flogo_xAfterClipboard : 0))
+    insertWide_stage.x((PADDING_BASE - (clipboard === null ? insertWide_stage.flogo_xAfterClipboard : 0)) * zoomW)
     insertWide_stage.y(PADDING_BASE * zoomW)
     insertWide_stage.width((realWideStageWidth + PADDING_BASE * 2) * zoomW)
     insertWide_stage.height((insertWide_stage.flogo_height + PADDING_BASE * 2) * zoomW)
@@ -350,7 +350,7 @@ function ui_insert(instruction, pos, evt, callback) {
         y: zoomT,
     })
     insertTall_stage.x(PADDING_BASE * zoomT)
-    insertTall_stage.y(PADDING_BASE * zoomT - (clipboard === null ? insertTall_stage.flogo_yAfterClipboard : 0))
+    insertTall_stage.y((PADDING_BASE - (clipboard === null ? insertTall_stage.flogo_yAfterClipboard : 0)) * zoomT)
     insertTall_stage.width((insertTall_stage.flogo_width + PADDING_BASE * 2) * zoomT)
     insertTall_stage.height((realTallStageHeight + PADDING_BASE * 2) * zoomT)
     pw.style.top = clientY + "px"
