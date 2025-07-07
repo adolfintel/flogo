@@ -1698,6 +1698,32 @@ function applyBrowserThemeColorFromCSS() {
     document.querySelector('meta[name="theme-color"]').setAttribute("content", _getCSSVal("--browser-theme-color", "#000000", document.body))
 }
 
+//-------- TOAST NOTIFICATIONS --------
+function toast(text, duration = 2000) {
+    document.querySelectorAll("#toasts>div.toast").forEach(t => {
+        if (typeof t.flogo_autoOutTimer !== "undefined") {
+            clearTimeout(t.flogo_autoOutTimer)
+            t.flogo_leave()
+        }
+    })
+    const t = document.createElement("div")
+    t.className = "toast"
+    t.innerText = text
+    t.onanimationend = () => {
+        t.flogo_leave = () => {
+            t.style.animation = "toast-out var(--toast-animation-duration)"
+            delete(t.flogo_autoOutTimer)
+            delete(t.flogo_leave)
+            t.onanimationend = () => {
+                document.getElementById("toasts").removeChild(t)
+            }
+        }
+        t.flogo_autoOutTimer = setTimeout(t.flogo_leave, duration)
+    }
+    t.style.animation = "toast-in var(--toast-animation-duration)"
+    document.getElementById("toasts").appendChild(t)
+}
+
 //-------- FPS COUNTER --------
 
 let oldTimestamp = 0

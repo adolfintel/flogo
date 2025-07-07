@@ -101,6 +101,9 @@
     --layout-small-threshold: 45;
     --layout-consoleArea-width: 25rem;
     --layout-variablesArea-width: 20rem;
+    --toast-background: #ffffffd0;
+    --toast-color: #000000;
+    --toast-animation-duration: 0.4s;
 }
 
 /* BASIC RULES */
@@ -1077,6 +1080,49 @@ div.settings_tab.selected {
 
 #man h3 {
     text-align: center;
+}
+
+/* TOAST NOTIFICATIONS */
+div.toast {
+    z-index: 9999;
+    position: fixed;
+    bottom: 2rem;
+    width: fit-content;
+    max-width: 40rem;
+    padding: 0 1rem;
+    padding: var(--ui-measure-spacer-large);
+    background: var(--toast-background);
+    color: var(--toast-color);
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-radius: 9999rem;
+    text-align: center;
+    pointer-events: none;
+}
+
+@keyframes toast-in {
+    0% {
+        opacity: 0;
+        transform: translate(0, 0.35rem);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes toast-out {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(0, -0.35rem);
+    }
 }
 
 /* MISC */

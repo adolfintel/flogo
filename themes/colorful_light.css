@@ -42,6 +42,8 @@
     --flowchart-selected-color1: #aa00ff;
     --flowchart-selected-color2: #0020b0;
     --flowchart-scrollbar-color: #00000060;
+    --toast-background: #000000c0;
+    --toast-color: #ffffff;
 }
 
 #bar,

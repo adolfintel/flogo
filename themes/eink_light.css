@@ -43,6 +43,8 @@
     --flowchart-selected-color2: #c0c0c0;
     --insert-Wide-columnWidth: 7;
     --flowchart-scrollbar-color: #00000060;
+    --toast-background: #000000;
+    --toast-color: #ffffff;
 }
 
 #bar {
