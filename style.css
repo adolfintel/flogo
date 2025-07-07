@@ -1089,7 +1089,6 @@ div.toast {
     bottom: 2rem;
     width: fit-content;
     max-width: 40rem;
-    padding: 0 1rem;
     padding: var(--ui-measure-spacer-large);
     background: var(--toast-background);
     color: var(--toast-color);
