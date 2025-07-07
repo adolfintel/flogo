@@ -1361,6 +1361,11 @@ function _block_touchstart(instr, e, parentInstr, parentPos) {
             try {
                 navigator.vibrate(70)
             } catch (e) {}
+            if (_touchMultiselectMode) {
+                if (!selectedInstructions.includes(instr)) {
+                    selectInstruction(instr)
+                }
+            }
             _dispatchEdit2(instr, e, parentInstr, parentPos)
         }
     }, 400)
