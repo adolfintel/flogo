@@ -415,7 +415,7 @@ function evaluateExpression(text) {
                         if (n.arguments.length !== 1) throw "charToCode requires 1 argument"
                         const val = expr_rec(n.arguments[0])
                         if (typeof val !== "string") throw "charToCode requires a string"
-                        if (val.length !== 0) throw "charToCode requires a single character"
+                        if (val.length !== 1) throw "charToCode requires a single character"
                         return val.charCodeAt(0)
                     }
                     break
