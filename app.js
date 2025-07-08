@@ -1192,9 +1192,12 @@ function updateBar() {
         document.getElementById("saveProgram").disabled = false
         document.getElementById("openSettings").disabled = false
         document.getElementById("openManual").disabled = false
+        document.getElementById("undo").disabled = undoHistoryPtr <= 1
+        document.getElementById("redo").disabled = undoHistoryPtr <= 0 || undoHistoryPtr >= undoHistory.length
+    }else{
+        document.getElementById("undo").disabled = true
+        document.getElementById("redo").disabled = true
     }
-    document.getElementById("undo").disabled = undoHistoryPtr <= 1
-    document.getElementById("redo").disabled = undoHistoryPtr <= 0 || undoHistoryPtr >= undoHistory.length
 }
 
 function runProgram() {
