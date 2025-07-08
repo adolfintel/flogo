@@ -4,29 +4,42 @@
 
 let ASSIGN_COLOR1,
     ASSIGN_COLOR2,
+    ASSIGN_COLOR3,
     OUTPUT_COLOR1,
     OUTPUT_COLOR2,
+    OUTPUT_COLOR3,
     INPUT_COLOR1,
     INPUT_COLOR2,
+    INPUT_COLOR3,
     IF_COLOR1,
     IF_COLOR2,
+    IF_COLOR3,
     DOWHILE_COLOR1,
     DOWHILE_COLOR2,
+    DOWHILE_COLOR3,
     WHILE_COLOR1,
     WHILE_COLOR2,
+    WHILE_COLOR3,
     FOR_COLOR1,
     FOR_COLOR2,
+    FOR_COLOR3,
     BREAKPOINT_COLOR1,
     BREAKPOINT_COLOR2,
+    BREAKPOINT_COLOR3,
     COMMENT_COLOR1,
     COMMENT_COLOR2,
+    COMMENT_COLOR3,
     COMMENT_DASH_LENGTH,
     ERROR_COLOR1,
     ERROR_COLOR2,
+    ERROR_COLOR3,
     ROUND_COLOR1,
     ROUND_COLOR2,
+    ROUND_COLOR3,
     BLOCK_OUTLINE_THICKNESS,
-    HIGHLIGHT_COLOR,
+    HIGHLIGHT_COLOR1,
+    HIGHLIGHT_COLOR2,
+    HIGHLIGHT_COLOR3,
     FLOWCHART_FONT,
     BLOCK_FONT_SIZE,
     LINE_THICKNESS,
@@ -34,9 +47,9 @@ let ASSIGN_COLOR1,
     LINE_COLOR,
     LINE_FONT_SIZE,
     LINE_SELECTED_COLOR,
-    BLOCK_TEXT_COLOR,
     SELECTED_COLOR1,
     SELECTED_COLOR2,
+    SELECTED_COLOR3,
     PADDING_BASE,
     SPACE_BETWEEN_INSTRUCTIONS,
     BLOCK_TEXT_MAX_WIDTH,
@@ -81,7 +94,7 @@ Assign.prototype.createDrawable = function() {
         padding: PADDING_BASE,
         fontSize: BLOCK_FONT_SIZE,
         fontFamily: FLOWCHART_FONT,
-        fill: BLOCK_TEXT_COLOR,
+        fill: ASSIGN_COLOR3,
         align: "center",
     })
     if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
@@ -98,6 +111,8 @@ Assign.prototype.createDrawable = function() {
     })
     rect.flogo_originalFill = rect.fill()
     rect.flogo_originalStroke = rect.stroke()
+    rect.flogo_text = [text]
+    rect.flogo_originalTextColor = text.fill()
     const group = new Konva.Group({
         x: 0,
         y: 0,
@@ -130,7 +145,7 @@ Input.prototype.createDrawable = function() {
         padding: PADDING_BASE,
         fontSize: BLOCK_FONT_SIZE,
         fontFamily: FLOWCHART_FONT,
-        fill: BLOCK_TEXT_COLOR,
+        fill: INPUT_COLOR3,
         align: "center",
     })
     if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
@@ -147,6 +162,8 @@ Input.prototype.createDrawable = function() {
     })
     rect.flogo_originalFill = rect.fill()
     rect.flogo_originalStroke = rect.stroke()
+    rect.flogo_text = [text]
+    rect.flogo_originalTextColor = text.fill()
     const group = new Konva.Group({
         x: 0,
         y: 0,
@@ -182,7 +199,7 @@ Output.prototype.createDrawable = function() {
         padding: PADDING_BASE,
         fontSize: BLOCK_FONT_SIZE,
         fontFamily: FLOWCHART_FONT,
-        fill: BLOCK_TEXT_COLOR,
+        fill: OUTPUT_COLOR3,
         align: "center",
     })
     if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
@@ -199,6 +216,8 @@ Output.prototype.createDrawable = function() {
     })
     rect.flogo_originalFill = rect.fill()
     rect.flogo_originalStroke = rect.stroke()
+    rect.flogo_text = [text]
+    rect.flogo_originalTextColor = text.fill()
     const group = new Konva.Group({
         x: 0,
         y: 0,
@@ -242,7 +261,7 @@ Comment.prototype.createDrawable = function() {
         padding: PADDING_BASE,
         fontSize: BLOCK_FONT_SIZE,
         fontFamily: FLOWCHART_FONT,
-        fill: BLOCK_TEXT_COLOR,
+        fill: COMMENT_COLOR3,
     })
     if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
         text.width(BLOCK_TEXT_MAX_WIDTH)
@@ -259,6 +278,8 @@ Comment.prototype.createDrawable = function() {
     })
     rect.flogo_originalFill = rect.fill()
     rect.flogo_originalStroke = rect.stroke()
+    rect.flogo_text = [text]
+    rect.flogo_originalTextColor = text.fill()
     const group = new Konva.Group({
         x: 0,
         y: 0,
@@ -296,15 +317,17 @@ Breakpoint.prototype.createDrawable = function() {
         y: PADDING_BASE,
         width: BLOCK_FONT_SIZE / 4,
         height: BLOCK_FONT_SIZE,
-        fill: BLOCK_TEXT_COLOR,
+        fill: BREAKPOINT_COLOR3,
     })
     const s2 = new Konva.Rect({
         x: rect.width() / 2 + BLOCK_FONT_SIZE / 4,
         y: PADDING_BASE,
         width: BLOCK_FONT_SIZE / 4,
         height: BLOCK_FONT_SIZE,
-        fill: BLOCK_TEXT_COLOR,
+        fill: BREAKPOINT_COLOR3,
     })
+    rect.flogo_text = [s1, s2]
+    rect.flogo_originalTextColor = s1.fill()
     const group = new Konva.Group({
         x: 0,
         y: 0,
@@ -416,7 +439,7 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
                 padding: PADDING_BASE,
                 fontSize: BLOCK_FONT_SIZE,
                 fontFamily: FLOWCHART_FONT,
-                fill: BLOCK_TEXT_COLOR,
+                fill: ROUND_COLOR3,
                 align: "center",
             })
             if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
@@ -435,8 +458,6 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
                 strokeWidth: BLOCK_OUTLINE_THICKNESS,
                 cornerRadius: Infinity,
             })
-            rect.flogo_originalFill = rect.fill()
-            rect.flogo_originalStroke = rect.stroke()
             const group = new Konva.Group({
                 x: 0,
                 y: 0,
@@ -488,7 +509,7 @@ If.prototype.createDrawable = function() {
         padding: PADDING_BASE * 1.25,
         fontSize: BLOCK_FONT_SIZE,
         fontFamily: FLOWCHART_FONT,
-        fill: BLOCK_TEXT_COLOR,
+        fill: IF_COLOR3,
         align: "center",
     })
     if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
@@ -508,6 +529,8 @@ If.prototype.createDrawable = function() {
     })
     rect.flogo_originalFill = rect.fill()
     rect.flogo_originalStroke = rect.stroke()
+    rect.flogo_text = [text]
+    rect.flogo_originalTextColor = text.fill()
     text.x(rw / 2 - tw / 2)
     text.y(rh / 2 - th / 2)
     const condition = new Konva.Group({
@@ -689,7 +712,7 @@ DoWhile.prototype.createDrawable = function() {
         padding: PADDING_BASE,
         fontSize: BLOCK_FONT_SIZE,
         fontFamily: FLOWCHART_FONT,
-        fill: BLOCK_TEXT_COLOR,
+        fill: DOWHILE_COLOR3,
         align: "center",
     })
     if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
@@ -706,6 +729,8 @@ DoWhile.prototype.createDrawable = function() {
     })
     rect.flogo_originalFill = rect.fill()
     rect.flogo_originalStroke = rect.stroke()
+    rect.flogo_text = [text]
+    rect.flogo_originalTextColor = text.fill()
     const condition = new Konva.Group({
         x: 0,
         y: 0,
@@ -846,7 +871,7 @@ While.prototype.createDrawable = function() {
         padding: PADDING_BASE,
         fontSize: BLOCK_FONT_SIZE,
         fontFamily: FLOWCHART_FONT,
-        fill: BLOCK_TEXT_COLOR,
+        fill: WHILE_COLOR3,
         align: "center",
     })
     if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
@@ -863,6 +888,8 @@ While.prototype.createDrawable = function() {
     })
     rect.flogo_originalFill = rect.fill()
     rect.flogo_originalStroke = rect.stroke()
+    rect.flogo_text = [text]
+    rect.flogo_originalTextColor = text.fill()
     const condition = new Konva.Group({
         x: 0,
         y: 0,
@@ -1010,7 +1037,7 @@ For.prototype.createDrawable = function() {
         padding: PADDING_BASE,
         fontSize: BLOCK_FONT_SIZE,
         fontFamily: FLOWCHART_FONT,
-        fill: BLOCK_TEXT_COLOR,
+        fill: FOR_COLOR3,
         align: "center",
     })
     if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
@@ -1027,6 +1054,8 @@ For.prototype.createDrawable = function() {
     })
     rect.flogo_originalFill = rect.fill()
     rect.flogo_originalStroke = rect.stroke()
+    rect.flogo_text = [text]
+    rect.flogo_originalTextColor = text.fill()
     const condition = new Konva.Group({
         x: 0,
         y: 0,
@@ -1246,8 +1275,11 @@ function _selectionMode_select_rec(i) {
         i.forEach(i => _selectionMode_select_rec(i))
     } else {
         if (i.drawable.flogo_highlightable !== null) {
-            i.drawable.flogo_highlightable.stroke(SELECTED_COLOR1)
-            i.drawable.flogo_highlightable.fill(SELECTED_COLOR2)
+            if (SELECTED_COLOR1 !== "keep") i.drawable.flogo_highlightable.stroke(SELECTED_COLOR1)
+            if (SELECTED_COLOR2 !== "keep") i.drawable.flogo_highlightable.fill(SELECTED_COLOR2)
+            if (SELECTED_COLOR3 !== "keep") i.drawable.flogo_highlightable.flogo_text.forEach(e => {
+                e.fill(SELECTED_COLOR3)
+            })
         }
         if (typeof i.trueBranch !== "undefined") _selectionMode_select_rec(i.trueBranch)
         if (typeof i.falseBranch !== "undefined") _selectionMode_select_rec(i.falseBranch)
@@ -1262,6 +1294,9 @@ function _selectionMode_deselect_rec(i) {
         if (i.drawable.flogo_highlightable !== null) {
             i.drawable.flogo_highlightable.stroke(i.drawable.flogo_highlightable.flogo_originalStroke)
             i.drawable.flogo_highlightable.fill(i.drawable.flogo_highlightable.flogo_originalFill)
+            i.drawable.flogo_highlightable.flogo_text.forEach(e => {
+                e.fill(i.drawable.flogo_highlightable.flogo_originalTextColor)
+            })
         }
         if (typeof i.trueBranch !== "undefined") _selectionMode_deselect_rec(i.trueBranch)
         if (typeof i.falseBranch !== "undefined") _selectionMode_deselect_rec(i.falseBranch)
@@ -1586,28 +1621,25 @@ function initFlowchart(id) {
         const i = interpreter.currentInstruction
         if (prevHighlightInstr !== i) {
             if (prevHighlightInstr !== null && prevHighlightInstr.drawable.flogo_highlightable !== null) {
-                if (prevHighlightInstr.drawable.flogo_highlightable.fill() !== prevHighlightInstr.drawable.flogo_highlightable.flogo_originalFill) {
-                    prevHighlightInstr.drawable.flogo_highlightable.fill(prevHighlightInstr.drawable.flogo_highlightable.flogo_originalFill)
-                }
-                if (prevHighlightInstr.drawable.flogo_highlightable.stroke() !== prevHighlightInstr.drawable.flogo_highlightable.flogo_originalStroke) {
-                    prevHighlightInstr.drawable.flogo_highlightable.stroke(prevHighlightInstr.drawable.flogo_highlightable.flogo_originalStroke)
-                }
+                prevHighlightInstr.drawable.flogo_highlightable.fill(prevHighlightInstr.drawable.flogo_highlightable.flogo_originalFill)
+                prevHighlightInstr.drawable.flogo_highlightable.stroke(prevHighlightInstr.drawable.flogo_highlightable.flogo_originalStroke)
+                prevHighlightInstr.drawable.flogo_highlightable.flogo_text.forEach(e => {
+                    e.fill(prevHighlightInstr.drawable.flogo_highlightable.flogo_originalTextColor)
+                })
             }
             if (i !== null && i.drawable.flogo_highlightable !== null) {
                 if (interpreter.getState() === STATE_CRASHED) {
-                    if (i.drawable.flogo_highlightable.fill() !== ERROR_COLOR1) {
-                        i.drawable.flogo_highlightable.fill(ERROR_COLOR1)
-                    }
-                    if (i.drawable.flogo_highlightable.stroke() !== ERROR_COLOR2) {
-                        i.drawable.flogo_highlightable.stroke(ERROR_COLOR2)
-                    }
+                    if (ERROR_COLOR1 !== "keep") i.drawable.flogo_highlightable.fill(ERROR_COLOR1)
+                    if (ERROR_COLOR2 !== "keep") i.drawable.flogo_highlightable.stroke(ERROR_COLOR2)
+                    if (ERROR_COLOR3 !== "keep") i.drawable.flogo_highlightable.flogo_text.forEach(e => {
+                        e.fill(ERROR_COLOR3)
+                    })
                 } else {
-                    if (i.drawable.flogo_highlightable.fill() !== i.drawable.flogo_highlightable.flogo_originalFill) {
-                        i.drawable.flogo_highlightable.fill(i.drawable.flogo_highlightable.flogo_originalFill)
-                    }
-                    if (i.drawable.flogo_highlightable.stroke() !== HIGHLIGHT_COLOR) {
-                        i.drawable.flogo_highlightable.stroke(HIGHLIGHT_COLOR)
-                    }
+                    if (HIGHLIGHT_COLOR1 !== "keep") i.drawable.flogo_highlightable.fill(HIGHLIGHT_COLOR1)
+                    if (HIGHLIGHT_COLOR2 !== "keep") i.drawable.flogo_highlightable.stroke(HIGHLIGHT_COLOR2)
+                    if (HIGHLIGHT_COLOR3 !== "keep") i.drawable.flogo_highlightable.flogo_text.forEach(e => {
+                        e.fill(HIGHLIGHT_COLOR3)
+                    })
                 }
             }
             ensureInstructionVisibleInFlowchart(i)
@@ -1768,32 +1800,44 @@ function _getCSSVal(name, defaultValue, element = blockLayer.getCanvas()._canvas
 function loadFlowchartThemeFromCSS(callback) {
     ASSIGN_COLOR1 = _getCSSVal("--flowchart-Assign-color1", "#696a30")
     ASSIGN_COLOR2 = _getCSSVal("--flowchart-Assign-color2", "#84853d")
+    ASSIGN_COLOR3 = _getCSSVal("--flowchart-Assign-color3", "#ffffff")
     OUTPUT_COLOR1 = _getCSSVal("--flowchart-Output-color1", "#3f7335")
     OUTPUT_COLOR2 = _getCSSVal("--flowchart-Output-color2", "#509243")
+    OUTPUT_COLOR3 = _getCSSVal("--flowchart-Output-color3", "#ffffff")
     INPUT_COLOR1 = _getCSSVal("--flowchart-Input-color1", "#305c6a")
     INPUT_COLOR2 = _getCSSVal("--flowchart-Input-color2", "#3d7585")
+    INPUT_COLOR3 = _getCSSVal("--flowchart-Input-color3", "#ffffff")
     IF_COLOR1 = _getCSSVal("--flowchart-If-color1", "#783753")
     IF_COLOR2 = _getCSSVal("--flowchart-If-color2", "#924365")
+    IF_COLOR3 = _getCSSVal("--flowchart-If-color3", "#ffffff")
     DOWHILE_COLOR1 = _getCSSVal("--flowchart-DoWhile-color1", "#326d4f")
     DOWHILE_COLOR2 = _getCSSVal("--flowchart-DoWhile-color2", "#3e8762")
+    DOWHILE_COLOR3 = _getCSSVal("--flowchart-DoWhile-color3", "#ffffff")
     WHILE_COLOR1 = _getCSSVal("--flowchart-While-color1", "#326d4f")
     WHILE_COLOR2 = _getCSSVal("--flowchart-While-color2", "#3e8762")
+    WHILE_COLOR3 = _getCSSVal("--flowchart-While-color3", "#ffffff")
     FOR_COLOR1 = _getCSSVal("--flowchart-For-color1", "#326d4f")
     FOR_COLOR2 = _getCSSVal("--flowchart-For-color2", "#3e8762")
+    FOR_COLOR3 = _getCSSVal("--flowchart-For-color3", "#ffffff")
     BREAKPOINT_COLOR1 = _getCSSVal("--flowchart-Breakpoint-color1", "#9a5758")
     BREAKPOINT_COLOR2 = _getCSSVal("--flowchart-Breakpoint-color2", "#bd6b6c")
+    BREAKPOINT_COLOR3 = _getCSSVal("--flowchart-Breakpoint-color3", "#ffffff")
     COMMENT_COLOR1 = _getCSSVal("--flowchart-Comment-color1", null)
     COMMENT_COLOR2 = _getCSSVal("--flowchart-Comment-color2", "#cccccc")
+    COMMENT_COLOR3 = _getCSSVal("--flowchart-Comment-color3", "#ffffff")
     COMMENT_DASH_LENGTH = Number(_getCSSVal("--flowchart-Comment-dashLength", 10))
     ERROR_COLOR1 = _getCSSVal("--flowchart-Error-color1", "#000000")
     ERROR_COLOR2 = _getCSSVal("--flowchart-Error-color2", "#c00000")
+    ERROR_COLOR3 = _getCSSVal("--flowchart-Error-color3", "#ffffff")
     ROUND_COLOR1 = _getCSSVal("--flowchart-Round-color1", "#4c45a5")
     ROUND_COLOR2 = _getCSSVal("--flowchart-Round-color2", "#3d3886")
+    ROUND_COLOR3 = _getCSSVal("--flowchart-Round-color3", "#ffffff")
     BLOCK_OUTLINE_THICKNESS = Number(_getCSSVal("--flowchart-Block-outline-thickness", 2))
-    HIGHLIGHT_COLOR = _getCSSVal("--flowchart-Block-highlight-color", "#ffffff")
+    HIGHLIGHT_COLOR1 = _getCSSVal("--flowchart-Block-highlight-color1", "keep")
+    HIGHLIGHT_COLOR2 = _getCSSVal("--flowchart-Block-highlight-color2", "#ffffff")
+    HIGHLIGHT_COLOR3 = _getCSSVal("--flowchart-Block-highlight-color3", "keep")
     FLOWCHART_FONT = _getCSSVal("--flowchart-Font-family", "monospace")
     BLOCK_FONT_SIZE = Number(_getCSSVal("--flowchart-Block-font-size", 12))
-    BLOCK_TEXT_COLOR = _getCSSVal("--flowchart-Block-text-color", "#ffffff")
     LINE_THICKNESS = Number(_getCSSVal("--flowchart-Line-thickness", 2))
     LINE_ARROW_SIZE = Number(_getCSSVal("--flowchart-Line-arrow-size", 4))
     LINE_HITBOX_EXTRA = LINE_ARROW_SIZE + 6
@@ -1802,6 +1846,7 @@ function loadFlowchartThemeFromCSS(callback) {
     LINE_SELECTED_COLOR = _getCSSVal("--flowchart-Line-selected-color", "#ff0000")
     SELECTED_COLOR1 = _getCSSVal("--flowchart-selected-color1", "#ffffff")
     SELECTED_COLOR2 = _getCSSVal("--flowchart-selected-color2", "#1330b0")
+    SELECTED_COLOR3 = _getCSSVal("--flowchart-selected-color3", "#ffffff")
     PADDING_BASE = Number(_getCSSVal("--flowchart-Padding-base", 10))
     MINVIS = PADDING_BASE * 2
     SPACE_BETWEEN_INSTRUCTIONS = Number(_getCSSVal("--flowchart-Padding-spaceBetweenInstructions", 24))
