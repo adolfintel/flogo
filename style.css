@@ -339,6 +339,10 @@ select:focus,
     box-shadow: 0 0 0 var(--ui-measure-border-thick) var(--ui-color-accent1) inset;
 }
 
+input[type="checkbox"]:focus {
+    outline: var(--ui-measure-border-thin) solid var(--ui-color-accent1);
+}
+
 @keyframes errorFlash {
     0% {
         box-shadow: 0 0 0 0rem var(--ui-color-accent2) inset;
