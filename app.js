@@ -836,7 +836,7 @@ function variablesEditor_createVariable(name) {
     const nameEdit = document.createElement("span")
     nameEdit.contentEditable = true
     nameEdit.className = "name edit"
-    nameEdit.onkeydown=e=>{
+    nameEdit.onkeydown = e => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault()
             v.flogo_buttons.confirm.click()
@@ -855,7 +855,7 @@ function variablesEditor_createVariable(name) {
         o.innerText = t.slice(0, 1).toUpperCase() + t.slice(1)
         typeEdit.appendChild(o)
     })
-    typeEdit.onkeydown=e=>{
+    typeEdit.onkeydown = e => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault()
             v.flogo_buttons.confirm.click()
@@ -1205,7 +1205,7 @@ function updateBar() {
         document.getElementById("openManual").disabled = false
         document.getElementById("undo").disabled = undoHistoryPtr <= 1
         document.getElementById("redo").disabled = undoHistoryPtr <= 0 || undoHistoryPtr >= undoHistory.length
-    }else{
+    } else {
         document.getElementById("undo").disabled = true
         document.getElementById("redo").disabled = true
     }
