@@ -836,6 +836,12 @@ function variablesEditor_createVariable(name) {
     const nameEdit = document.createElement("span")
     nameEdit.contentEditable = true
     nameEdit.className = "name edit"
+    nameEdit.onkeydown=e=>{
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault()
+            v.flogo_buttons.confirm.click()
+        }
+    }
     disableSpellcheck(nameEdit)
     nt.appendChild(nameVis)
     nt.appendChild(nameEdit)
@@ -849,6 +855,12 @@ function variablesEditor_createVariable(name) {
         o.innerText = t.slice(0, 1).toUpperCase() + t.slice(1)
         typeEdit.appendChild(o)
     })
+    typeEdit.onkeydown=e=>{
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault()
+            v.flogo_buttons.confirm.click()
+        }
+    }
     nt.appendChild(typeVis)
     nt.appendChild(typeEdit)
     const btns = document.createElement("div")
