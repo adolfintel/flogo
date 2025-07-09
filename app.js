@@ -947,6 +947,7 @@ function variablesEditor_createVariable(name) {
         cancel: cancelEditBtn,
         edit: editBtn,
         del: delBtn,
+        init: init
     }
     valVis.ondrop = valEdit.ondrop = (e) => {
         variablesEditor_moveVariableAfter(dragging, v)
@@ -1009,6 +1010,7 @@ function variablesEditor_deleteVariable(v) {
 function variablesEditor_editVariable(v) {
     v.classList.add("editing")
     v.draggable = false
+    v.flogo_buttons.init.onchange()
     requestAnimationFrame(() => {
         //needs to happen on the next frame because we can't focus an element that's not currently visible
         v.flogo_name.edit.focus()
