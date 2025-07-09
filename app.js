@@ -1526,6 +1526,7 @@ function initKeyboardShortcuts() {
                 if (e.target !== document.body) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey) {
+                    e.preventDefault()
                     if (e.shiftKey) {
                         toast("Redo")
                         redo()
@@ -1533,7 +1534,6 @@ function initKeyboardShortcuts() {
                         toast("Undo")
                         undo()
                     }
-                    e.preventDefault()
                 }
             };
             break
@@ -1541,9 +1541,9 @@ function initKeyboardShortcuts() {
                 if (e.target !== document.body) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey && !e.shiftKey) {
+                    e.preventDefault()
                     toast("Redo")
                     redo()
-                    e.preventDefault()
                 }
             };
             break
@@ -1551,6 +1551,7 @@ function initKeyboardShortcuts() {
                 if (e.target !== document.body) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey && !e.shiftKey) {
+                    e.preventDefault()
                     cutSelectedInstructions()
                     if (clipboard !== null) {
                         if (clipboard.length === 1) {
@@ -1559,7 +1560,6 @@ function initKeyboardShortcuts() {
                             toast("Cut " + clipboard.length + " instructions")
                         }
                     }
-                    e.preventDefault()
                 }
             };
             break
@@ -1567,6 +1567,7 @@ function initKeyboardShortcuts() {
                 if (e.target !== document.body) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey && !e.shiftKey) {
+                    e.preventDefault()
                     copySelectedInstructions()
                     if (clipboard !== null) {
                         if (clipboard.length === 1) {
@@ -1575,20 +1576,18 @@ function initKeyboardShortcuts() {
                             toast("Copied " + clipboard.length + " instructions")
                         }
                     }
-                    e.preventDefault()
                 }
             };
             break
             case 'v': {
                 if (e.target !== document.body) return
                 if (e.ctrlKey && !e.shiftKey) {
+                    e.preventDefault()
                     if (clipboard === null) return
-                    if (clipboard !== null) {
-                        if (clipboard.length === 1) {
-                            toast("Pasted")
-                        } else {
-                            toast("Pasted " + clipboard.length + " instructions")
-                        }
+                    if (clipboard.length === 1) {
+                        toast("Pasted")
+                    } else {
+                        toast("Pasted " + clipboard.length + " instructions")
                     }
                     if (insertTall_stage.container().classList.contains("visible")) {
                         insertTall_stage.flogo_pasteBtn.eventListeners["click"][0].handler()
@@ -1602,6 +1601,7 @@ function initKeyboardShortcuts() {
                 if (e.target !== document.body) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (!e.ctrlKey && !e.shiftKey) {
+                    e.preventDefault()
                     if (selectedInstructions.length > 0) {
                         if (selectedInstructions.length === 1) {
                             toast("Deleted")
@@ -1610,21 +1610,21 @@ function initKeyboardShortcuts() {
                         }
                     }
                     deleteSelectedInstructions()
-                    e.preventDefault()
                 }
             };
             break
             case 'escape': {
                 if (!e.ctrlKey && !e.shiftKey) {
                     if (document.querySelectorAll("div.popup.visible").length !== 0) {
+                        e.preventDefault()
                         closePopup(true)
                     } else {
+                        e.preventDefault()
                         const v = e.target.closest('.variable.editing')
                         if (v !== null) {
                             v.flogo_buttons.cancel.click()
                         }
                     }
-                    e.preventDefault()
                 }
             };
             break
