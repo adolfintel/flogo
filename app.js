@@ -737,7 +737,6 @@ function ui_input(variable, type, callback) {
 }
 
 function input_keypressed(e) {
-    const i = document.getElementById("input")
     if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault()
         document.getElementById("input_send").click()
