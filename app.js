@@ -1310,6 +1310,8 @@ function loadProgram() {
                 if (e !== null) {
                     document.getElementById("loadError_details").innerText = e
                     showPopup("loadError")
+                } else {
+                    toast("Program loaded")
                 }
                 document.getElementById("loadOverlay").style.display = "none"
             })
@@ -1330,6 +1332,7 @@ function saveProgram() {
     if (state === STATE_RUNNING || state === STATE_PAUSED) {
         stopProgram()
     }
+    toast("Starting download")
     download()
 }
 
@@ -1524,8 +1527,10 @@ function initKeyboardShortcuts() {
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey) {
                     if (e.shiftKey) {
+                        toast("Redo")
                         redo()
                     } else {
+                        toast("Undo")
                         undo()
                     }
                     e.preventDefault()
@@ -1536,6 +1541,7 @@ function initKeyboardShortcuts() {
                 if (e.target !== document.body) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey && !e.shiftKey) {
+                    toast("Redo")
                     redo()
                     e.preventDefault()
                 }
@@ -1546,6 +1552,13 @@ function initKeyboardShortcuts() {
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey && !e.shiftKey) {
                     cutSelectedInstructions()
+                    if (clipboard !== null) {
+                        if (clipboard.length === 1) {
+                            toast("Cut")
+                        } else {
+                            toast("Cut " + clipboard.length + " instructions")
+                        }
+                    }
                     e.preventDefault()
                 }
             };
@@ -1555,6 +1568,13 @@ function initKeyboardShortcuts() {
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey && !e.shiftKey) {
                     copySelectedInstructions()
+                    if (clipboard !== null) {
+                        if (clipboard.length === 1) {
+                            toast("Copied")
+                        } else {
+                            toast("Copied " + clipboard.length + " instructions")
+                        }
+                    }
                     e.preventDefault()
                 }
             };
@@ -1563,6 +1583,13 @@ function initKeyboardShortcuts() {
                 if (e.target !== document.body) return
                 if (e.ctrlKey && !e.shiftKey) {
                     if (clipboard === null) return
+                    if (clipboard !== null) {
+                        if (clipboard.length === 1) {
+                            toast("Pasted")
+                        } else {
+                            toast("Pasted " + clipboard.length + " instructions")
+                        }
+                    }
                     if (insertTall_stage.container().classList.contains("visible")) {
                         insertTall_stage.flogo_pasteBtn.eventListeners["click"][0].handler()
                     } else if (insertWide_stage.container().classList.contains("visible")) {
@@ -1575,6 +1602,13 @@ function initKeyboardShortcuts() {
                 if (e.target !== document.body) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (!e.ctrlKey && !e.shiftKey) {
+                    if (selectedInstructions.length > 0) {
+                        if (selectedInstructions.length === 1) {
+                            toast("Deleted")
+                        } else {
+                            toast("Deleted " + selectedInstructions.length + " instructions")
+                        }
+                    }
                     deleteSelectedInstructions()
                     e.preventDefault()
                 }
@@ -1839,6 +1873,8 @@ function initApp() {
                     if (e2 !== null) {
                         document.getElementById("loadError_details").innerText = e2
                         showPopup("loadError")
+                    } else {
+                        toast("Program loaded")
                     }
                     document.getElementById("loadOverlay").style.display = "none"
                 })
