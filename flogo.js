@@ -1,6 +1,6 @@
 /*
  * This file contains the interpreter for Flogo. It's a simple interpreted prorgamming language.
-*/
+ */
 
 //-------- VARIABLES AND TYPE SYSTEM --------
 /* Flogo is strongly and statically typed, but uses JS underneath so some checks are required to make sure that values are of the correct type and can't change over time, that variables aren't re-decleared, etc.
@@ -73,6 +73,7 @@ function declareVariable(name, type, value = null) {
             } else {
                 target.value = null
             }
+            target.modified = true
         },
         get(target, prop, receiver) {
             return target[prop]
@@ -81,15 +82,21 @@ function declareVariable(name, type, value = null) {
     const v = {
         type: type,
         value: null,
+        modified: false
     }
     const proxy = new Proxy(v, variableGetterAndSetter)
     proxy.value = value
     v.initialValue = v.value
+    v.modified = false
     v.toSimpleObject = () => {
         return {
             type: v.type,
-            value: v.initialValue,
+            value: v.initialValue
         }
+    }
+    v.reset = () => {
+        v.value = v.initialValue
+        v.modified = false
     }
     variables[name] = proxy
 }
@@ -100,7 +107,7 @@ function clearVariables() {
 
 function resetVariables() {
     for (const v in variables) {
-        variables[v].value = variables[v].initialValue
+        variables[v].reset()
     }
 }
 

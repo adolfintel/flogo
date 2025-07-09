@@ -1135,6 +1135,11 @@ function variablesEditor_updateVariableValue(v) {
     if (text !== v.flogo_val.vis.innerText) {
         v.flogo_val.vis.innerText = text
     }
+    if (variables[v.flogo_variable].modified) {
+        if (!v.flogo_val.vis.classList.contains("modified")) v.flogo_val.vis.classList.add("modified")
+    } else {
+        if (v.flogo_val.vis.classList.contains("modified")) v.flogo_val.vis.classList.remove("modified")
+    }
 }
 
 function variablesEditor_enable() {
