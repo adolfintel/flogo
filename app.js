@@ -801,7 +801,7 @@ function console_save() {
             out += "Input: " + m.innerText + "\n"
         }
     }
-    if (navigator.platform.indexOf("Win") !== -1) {
+    if (bowser.parse(navigator.userAgent).os.name === "Windows") {
         //yes, this is still a thing on windows... sigh
         out.replace("\n", "\r\n")
     }
