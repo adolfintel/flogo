@@ -45,4 +45,4 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>. 
 
-Uses the Noto Sans, Roboto Mono, Caveat and Monoton fonts, distributed under the [SIL Open Font License](https://openfontlicense.org/).
+Uses the Noto Sans, Roboto Mono, Caveat, Cinzel and Monoton fonts, distributed under the [SIL Open Font License](https://openfontlicense.org/).

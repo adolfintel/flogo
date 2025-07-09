@@ -1,0 +1,98 @@
+@font-face {
+    font-family: "Cinzel";
+    src: url("Cinzel-Medium.woff2");
+}
+
+:root {
+    --browser-theme-color: #a04040;
+    --ui-color-background1: #403c38;
+    --ui-color-accent1: #2060a0;
+    --ui-color-accent2: #a04040;
+    --ui-color-form-background: #404040;
+    --ui-color-form-background2: #64622f;
+    --flowchart-Assign-color1: #2060a0;
+    --flowchart-Assign-color2: #70b0f0;
+    --flowchart-Assign-color3: #ffd0a0;
+    --flowchart-Output-color1: #a04040;
+    --flowchart-Output-color2: #f09090;
+    --flowchart-Output-color3: #ffffa0;
+    --flowchart-Input-color1: #c08040;
+    --flowchart-Input-color2: #ffd090;
+    --flowchart-Input-color3: #fff0d0;
+    --flowchart-If-color1: #60a060;
+    --flowchart-If-color2: #b0f0b0;
+    --flowchart-If-color3: #f8f8f8;
+    --flowchart-DoWhile-color1: #f0e080;
+    --flowchart-DoWhile-color2: #101010;
+    --flowchart-DoWhile-color3: #101010;
+    --flowchart-While-color1: #f0e080;
+    --flowchart-While-color2: #101010;
+    --flowchart-While-color3: #101010;
+    --flowchart-For-color1: #f0e080;
+    --flowchart-For-color2: #101010;
+    --flowchart-For-color3: #101010;
+    --flowchart-Breakpoint-color1: #c02020;
+    --flowchart-Breakpoint-color2: #e0e0e0;
+    --flowchart-Breakpoint-color3: #e0e0e0;
+    --flowchart-Error-color1: #c00000;
+    --flowchart-Error-color2: #000000;
+    --flowchart-Error-color3: #ffffff;
+    --flowchart-Round-color1: #e0e0e0;
+    --flowchart-Round-color2: #101010;
+    --flowchart-Round-color3: #505050;
+    --flowchart-Block-outline-thickness: 1.5;
+    --flowchart-Block-highlight-color1: #00c060;
+    --flowchart-Block-highlight-color2: #ffffff;
+    --flowchart-Block-highlight-color3: #ffffff;
+    --flowchart-Font-family: "Cinzel";
+    --flowchart-Font-svgEmbeddableFile: "themes/Cinzel-Medium.woff2";
+    --flowchart-Block-font-size: 14;
+    --flowchart-Line-arrow-size: 6;
+    --flowchart-Line-color: #eaeef0;
+    --flowchart-Line-font-size: 11.5;
+    --flowchart-Line-selected-color: #ffc000;
+    --flowchart-selected-color1: #ffffff;
+    --flowchart-selected-color2: #4080ff;
+    --flowchart-selected-color3: #ffffff;
+    --flowchart-Padding-spaceBetweenInstructions: 22;
+    --insert-Font-size: 14;
+}
+
+#bar {
+    background: #a04040;
+}
+
+#variablesArea,
+#consoleArea {
+    border-color: var(--ui-color-border2);
+}
+
+#settings_tabSelector {
+    background: var(--ui-color-background1);
+}
+
+#settings_tabSelector>div.selected {
+    background: var(--ui-color-background2);
+}
+
+#settings div.settings_tab {
+    background: var(--ui-color-background2);
+}
+
+#man,
+#settings {
+    border-color: var(--ui-color-accent1);
+}
+
+#flowchartArea::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('alchemy.svg');
+    background-size: 10vmax;
+    background-position: 50% 50%;
+    opacity: 0.075;
+}
