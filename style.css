@@ -703,7 +703,8 @@ div.variable button {
 }
 
 #variablesArea.noedit button {
-    display: none;
+    visibility: hidden;
+    width: 0 !important;
 }
 
 div.variable.editing .vis {
