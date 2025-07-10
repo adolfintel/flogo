@@ -300,24 +300,13 @@ function insert_preparePopups() {
     TALL_INSERT_SPACE_BELOW_LABEL = Number(_getCSSVal("--insert-Tall-Padding-belowLabel", 10, document.body))
     TALL_INSERT_SPACE_BELOW_ROW = Number(_getCSSVal("--insert-Tall-Padding-belowRow", 20, document.body))
     TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS = Number(_getCSSVal("--insert-Tall-Padding-spaceBetweenInstructions", 20, document.body))
-    const realPreparePopups = () => {
-        closePopup()
-        prepare_insertWide()
-        prepare_insertTall()
-    }
-    const fontChecker = () => {
-        if (!document.fonts.check("1em " + FLOWCHART_FONT) || (INSERT_FONT !== "" && !document.fonts.check("1em " + INSERT_FONT))) {
-            requestAnimationFrame(fontChecker)
-        } else {
-            realPreparePopups()
-        }
-    }
-    realPreparePopups()
-    if (!document.fonts.check("1em " + FLOWCHART_FONT) || (INSERT_FONT !== "" && !document.fonts.check("1em " + INSERT_FONT))) {
-        forceLoadFont(INSERT_FONT)
-        forceLoadFont(FLOWCHART_FONT)
-        fontChecker()
-    }
+    document.fonts.load("1em " + FLOWCHART_FONT, "a").then(() => {
+        document.fonts.load("1em " + INSERT_FONT, "a").then(() => {
+            closePopup()
+            prepare_insertWide()
+            prepare_insertTall()
+        })
+    })
 }
 
 function ui_insert(instruction, pos, evt, callback) {
@@ -1662,17 +1651,6 @@ function errorFlash(element) {
         element.style.animation = ""
         element.focus()
     }
-}
-
-function forceLoadFont(name) {
-    const f = document.getElementById("fontLoadForcer")
-    if (typeof f.alreadyLoaded === "undefined") f.alreadyLoaded = []
-    if (f.alreadyLoaded.includes(name)) return
-    f.alreadyLoaded.push(name)
-    const s = document.createElement("span")
-    s.style.fontFamily = name
-    s.innerText = "A"
-    f.appendChild(s)
 }
 
 function loadTheme(name, callback) {

@@ -1859,24 +1859,12 @@ function loadFlowchartThemeFromCSS(callback) {
     SCROLLBAR_THICKNESS = Number(_getCSSVal("--flowchart-scrollbar-thickness", 6))
     SCROLLBAR_PADDING = Number(_getCSSVal("--flowchart-scrollbar-padding", 4))
     SCROLLBAR_COLOR = _getCSSVal("--flowchart-scrollbar-color", "#ffffff60")
-    const fontChecker = () => {
-        if (FLOWCHART_FONT !== "" && !document.fonts.check("1em " + FLOWCHART_FONT)) {
-            requestAnimationFrame(fontChecker)
-        } else {
-            updateFlowchart()
-            if (typeof callback !== "undefined") {
-                callback()
-            }
-        }
-    }
-    updateFlowchart(true)
-    if (FLOWCHART_FONT !== "" && !document.fonts.check("1em " + FLOWCHART_FONT)) {
-        fontChecker()
-    } else {
+    document.fonts.load("1em " + FLOWCHART_FONT, "a").then(() => {
+        updateFlowchart(true)
         if (typeof callback !== "undefined") {
             callback()
         }
-    }
+    })
 }
 
 async function _fontToBase64(url) {
