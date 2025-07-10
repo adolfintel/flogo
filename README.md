@@ -5,17 +5,17 @@ __Flogo__ is a free and open source programming language for beginners, designed
 [Try Flogo](https://flogo.fdossena.com)
 
 ## Features
-* Strong, static typing
 * Several types of variables: Integer, Real, String, Boolean; variables can also be declared with an initial value
+* Strong, statically typed
 * Standard C-like syntax for expressions to make it easier to switch to a "real" prorgamming language
 * Detection of errors such as overflows, uninitialized variables, etc.
 * All standard loop types: Do-While, While and For (basic-style)
 * Lots of built-in functions (see documentation for a complete list)
-* Chat-like interface to interact with the program
-* Undo/Redo, Cut/Copy/Paste
-* Execution speed control and step-by-step mode to better follow the flow of the program
+* Execution speed control and step-by-step mode to better follow the flow of the program; a turbo mode is also available to run larger programs at maximum speed
+* Easy to use UI with Undo/Redo, Cut/Copy/Paste and keyboard shortcuts
+* Chat-like Input/Output UI, similar to Flowgorithm
 * Several built-in themes
-* Very small and optimized, can easily run on a low-end laptop
+* Very small and optimized, can easily run on an old low-end laptop
 * Touchscreen and mobile support
 * Export to SVG and PNG
 * Built-in documentation
@@ -34,7 +34,6 @@ __Flogo__ is a free and open source programming language for beginners, designed
 * Electron version
 * Arrays
 * Turtle graphics
-* Multilingual support
 
 ## License
 Copyright (C) 2025 Federico Dossena
@@ -45,4 +44,11 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>. 
 
-Uses the Noto Sans, Roboto Mono, Caveat, Cinzel and Monoton fonts, distributed under the [SIL Open Font License](https://openfontlicense.org/).
+__Credits:__
+* [Konva](https://konvajs.org/): Object-oriented JS canvas library (MIT License)
+* [jsep](https://ericsmekens.github.io/jsep/): JS expression parser (MIT License)
+* [SVGCanvas](https://zenozeng.github.io/svgcanvas/): SVG export library for JS canvas (MIT License)
+* [Bowser](https://github.com/bowser-js/bowser): Browser detector (MIT License)
+* [Material Design Icons](https://marella.github.io/material-design-icons): Icons used throughout the application (Apache-2.0 License)
+* Fonts distributed under the [SIL Open Font License](https://openfontlicense.org/): Noto Sans, Roboto Mono, Monoton, Caveat, Cinzel
+* Some CC0 graphics from [SVG Repo](https://www.svgrepo.com/)
