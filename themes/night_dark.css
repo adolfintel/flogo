@@ -1,6 +1,6 @@
 :root {
     --browser-theme-color: #3c83f6;
-    --ui-color-background1: #1a1a25;
+    --ui-color-background1: #000000;
     --ui-color-background2: #2f2f50;
     --ui-color-accent1: #3c83f6;
     --ui-color-accent2: #f64f3c;
@@ -8,35 +8,44 @@
     --ui-color-form-background2: #4d4d1b;
     --flowchart-Assign-color1: #808020;
     --flowchart-Assign-color2: #ffff40;
-    --flowchart-Assign-color3: #ffff80;
+    --flowchart-Assign-color3: #ffffa0;
     --flowchart-Output-color1: #208020;
     --flowchart-Output-color2: #40ff40;
-    --flowchart-Output-color3: #80ff80;
+    --flowchart-Output-color3: #a0ffa0;
     --flowchart-Input-color1: #204080;
     --flowchart-Input-color2: #40a0ff;
-    --flowchart-Input-color3: #60c0ff;
+    --flowchart-Input-color3: #90c0ff;
     --flowchart-If-color1: #804040;
     --flowchart-If-color2: #ffc0c0;
     --flowchart-If-color3: #ffe0e0;
     --flowchart-DoWhile-color1: #804020;
     --flowchart-DoWhile-color2: #ff8000;
-    --flowchart-DoWhile-color3: #ffc080;
+    --flowchart-DoWhile-color3: #ffc040;
     --flowchart-While-color1: #804020;
     --flowchart-While-color2: #ff8000;
-    --flowchart-While-color3: #ffc080;
+    --flowchart-While-color3: #ffc040;
     --flowchart-For-color1: #804020;
     --flowchart-For-color2: #ff8000;
-    --flowchart-For-color3: #ffc080;
+    --flowchart-For-color3: #ffc040;
     --flowchart-Breakpoint-color1: #801010;
     --flowchart-Breakpoint-color2: #ff2020;
-    --flowchart-Comment-dashLength: 15;
-    --flowchart-Error-color2: #f6923c;
+    --flowchart-Comment-dashLength: 12;
+    --flowchart-Error-color2: #be4a24;
+    --flowchart-Round-color1: #804080;
+    --flowchart-Round-color2: #e0a0e0;
+    --flowchart-Round-color3: #ffb0f0;
+    --flowchart-Font-family: "Noto Sans";
+    --flowchart-Font-svgEmbeddableFile: "fonts/NotoSans-Regular.woff2";
+    --flowchart-Block-font-size: 13.25;
+    --flowchart-Block-outline-thickness: 1.5;
+    --flowchart-Block-highlight-color1: #3c83f6;
+    --flowchart-Block-highlight-color2: #ffffff;
     --flowchart-Block-highlight-color3: #ffffff;
-    --flowchart-Block-outline-thickness: 1.25;
-    --flowchart-Line-thickness: 1.75;
+    --flowchart-Line-thickness: 2;
+    --flowchart-Line-color: #c0c0c0;
     --flowchart-Line-arrow-size: 5;
     --flowchart-Line-font-size: 11;
-    --flowchart-Line-selected-color: #ffff40;
+    --flowchart-Line-selected-color: #ffc040;
     --flowchart-Padding-base: 8;
     --flowchart-Padding-spaceBetweenInstructions: 22;
 }
@@ -45,6 +54,11 @@
     background: #393840;
 }
 
-#man {
+div.popup {
+    background: #202020;
+}
+
+#variablesArea,
+#consoleArea {
     background: #000000;
 }
