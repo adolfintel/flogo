@@ -506,20 +506,23 @@ If.prototype.createDrawable = function() {
         x: 0,
         y: 0,
         text: string,
-        padding: PADDING_BASE * 1.25,
         fontSize: BLOCK_FONT_SIZE,
         fontFamily: FLOWCHART_FONT,
         fill: IF_COLOR3,
         align: "center",
     })
+    let rw, rh
     if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
         text.width(BLOCK_TEXT_MAX_WIDTH)
+        rw = text.width() * 2
+        rh = text.height() * 2
+    } else {
+        text.padding(PADDING_BASE)
+        rw = text.width() * 1.5
+        rh = text.height() * 1.5
     }
     const tw = text.width(),
         th = text.height()
-    const sqrt2 = Math.sqrt(2)
-    const rw = tw * sqrt2,
-        rh = th * sqrt2
     const rect = new Konva.Line({
         points: [rw / 2, 0, rw, rh / 2, rw / 2, rh, 0, rh / 2],
         fill: IF_COLOR1,
