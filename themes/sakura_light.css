@@ -125,3 +125,7 @@
 #man a {
     color: var(--ui-color-accent2);
 }
+
+#editor2>div:hover {
+    color: var(--ui-color-text);
+}

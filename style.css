@@ -489,6 +489,7 @@ div.sideHeader .icon {
 
 #editor2>div:hover {
     background: var(--ui-color-accent1);
+    color: var(--ui-color-text-accent);
 }
 
 /* INSERT POPUP */
