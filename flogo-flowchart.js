@@ -566,7 +566,7 @@ If.prototype.createDrawable = function() {
     if (f.flogo_width - f.flogo_connX + PADDING_BASE - condition.flogo_width / 2 >= minFPad) {
         condition.x(f.flogo_width - condition.flogo_width / 2 + PADDING_BASE)
     } else {
-        condition.x(f.flogo_width + minFPad - f.flogo_connX)
+        condition.x(f.flogo_connX + minFPad)
     }
     condition.y(0)
     if (t.flogo_connX + PADDING_BASE - condition.flogo_width / 2 >= minTPad) {
