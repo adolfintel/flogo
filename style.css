@@ -830,6 +830,7 @@ div.variable:not(.editing) .edit {
     align-self: flex-start;
     background: var(--flowchart-Output-color1);
     border-color: var(--flowchart-Output-color2);
+    color: var(--flowchart-Output-color3);
     margin-left: var(--ui-measure-spacer-small);
     border-radius: 1rem 1rem 1rem 0;
 }
@@ -838,6 +839,7 @@ div.variable:not(.editing) .edit {
     align-self: flex-end;
     background: var(--flowchart-Input-color1);
     border-color: var(--flowchart-Input-color2);
+    color: var(--flowchart-Input-color3);
     margin-right: var(--ui-measure-spacer-small);
     border-radius: 1rem 1rem 0 1rem;
 }
