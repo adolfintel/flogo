@@ -578,6 +578,7 @@ function ui_edit2(instruction, evt, parent, posInParent) {
                 closePopup()
                 if (!_touchMultiselectMode) {
                     startTouchMultiSelect()
+                    toast("Tap instructions to select them, long press an instruction when done", 3000)
                 }
                 selectInstruction(instruction)
             }
