@@ -391,11 +391,11 @@ div.sideHeader .icon {
 }
 
 #flowchartArea.variablesExpanded {
-    left: 20rem;
+    left: var(--layout-variablesArea-width);
 }
 
 #flowchartArea.consoleExpanded {
-    right: 25rem;
+    right: var(--layout-consoleArea-width);
 }
 
 /* BLOCK EDITOR POPUP */
@@ -737,7 +737,7 @@ div.variable:not(.editing) .edit {
 }
 
 #variablesArea.expanded+#variablesExpander {
-    left: 20rem;
+    left: var(--layout-variablesArea-width);
 }
 
 /* CONSOLE */
@@ -866,7 +866,7 @@ div.variable:not(.editing) .edit {
 }
 
 #consoleArea.expanded+#consoleExpander {
-    right: 25rem;
+    right: var(--layout-consoleArea-width);
 }
 
 @media all and (max-width: 30rem) {
