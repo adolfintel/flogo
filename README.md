@@ -1,4 +1,4 @@
-![Flogo logo](images/logo_large.webp)
+[![Flogo logo](images/logo_large.webp)](https://flogo.fdossena.com)
 
 __Flogo__ is a free and open source programming language for beginners, designed to learn programming basics within a friendly environment using flow charts.
 
@@ -29,6 +29,30 @@ __Flogo__ is a free and open source programming language for beginners, designed
 ![Mobile screenshot](.github/screenshot5.png)
 ![Mobile screenshot](.github/screenshot6.png)
 ![Mobile screenshot](.github/screenshot7.png)
+
+## Example programs
+__Basics__
+* [Sum of 2 integers](https://downloads.fdossena.com/geth.php?r=flogo-demo-01)
+* [Seconds to minutes and seconds](https://downloads.fdossena.com/geth.php?r=flogo-demo-02)
+* [Dice rolls](https://downloads.fdossena.com/geth.php?r=flogo-demo-03)
+
+__Loops__
+* [Average](https://downloads.fdossena.com/geth.php?r=flogo-demo-04)
+* [Factorial](https://downloads.fdossena.com/geth.php?r=flogo-demo-05)
+* [Speed camera](https://downloads.fdossena.com/geth.php?r=flogo-demo-06)
+* [Street light](https://downloads.fdossena.com/geth.php?r=flogo-demo-07)
+* [Temperatures (min-max)](https://downloads.fdossena.com/geth.php?r=flogo-demo-08)
+
+__Strings__
+* [Palindrome](https://downloads.fdossena.com/geth.php?r=flogo-demo-09)
+* [Decimal to binary](https://downloads.fdossena.com/geth.php?r=flogo-demo-10)
+* [String trimming](https://downloads.fdossena.com/geth.php?r=flogo-demo-11)
+* [Tip calculator](https://downloads.fdossena.com/geth.php?r=flogo-demo-12)
+* [Anagram](https://downloads.fdossena.com/geth.php?r=flogo-demo-13)
+
+__Mini games__
+* [Rock, paper, scissors](https://downloads.fdossena.com/geth.php?r=flogo-demo-14)
+* [Quasar (similar to blackjack)](https://downloads.fdossena.com/geth.php?r=flogo-demo-15)
 
 ## Future features
 * Electron version
