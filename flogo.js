@@ -1172,8 +1172,8 @@ clearMetadata()
  * The load function deletes the current program and variables and loads the new program stored in a JSON string. If an error occurs during parsing, an exception is thrown and an empty program is loaded instead
  *
  * For convenience, two additional functions are provided:
- * - download(name): same as save() but you can pass it a filename and it will start a download
- * - loadFromFile(f,callback): same as load() but you can pass it a file that the user has selected in a form
+ * - download(name): same as save() but you can pass it a filename and it will start a compressed file download
+ * - loadFromFile(f,callback): same as load() but you can pass it a compressed file that the user has selected in a form
  *   example: loadFromFile(formInput.files[0],function(e){...})
  *   The callback will be called when the file is loaded; if loading failed, the exception will the passed to the callback as an argument; otherwise the program will simply be loaded and the callback will receive null
  */
@@ -1234,6 +1234,18 @@ function load(json) {
     }
 }
 
+async function _compress(json) {
+    const stream = new Blob([json], {
+        type: 'application/json'
+    }).stream()
+    const compStream = stream.pipeThrough(new CompressionStream("gzip"))
+    const compResp = await new Response(compStream)
+    const blob = await compResp.blob()
+    return new Blob(["flogo1", blob], {
+        type: "application/octet-stream"
+    })
+}
+
 function download(name) {
     if (typeof name === "undefined") {
         if (metadata.title.trim() !== "") {
@@ -1243,28 +1255,34 @@ function download(name) {
         }
     }
     if (!name.endsWith(".flogo")) name += ".flogo"
-    const blob = new Blob([save()], {
-        type: "application/json",
+    _compress(save()).then(blob => {
+        const a = document.createElement("a")
+        a.href = URL.createObjectURL(blob)
+        a.download = name
+        a.click()
     })
-    const a = document.createElement("a")
-    a.href = URL.createObjectURL(blob)
-    a.download = name
-    a.click()
+}
+
+async function _decompress(blob) {
+    if (blob.size < 6) throw ""
+    const head = await blob.slice(0, 6).text()
+    if (head !== "flogo1") throw ""
+    const decStream = blob.slice(6).stream().pipeThrough(new DecompressionStream("gzip"))
+    const decResp = await new Response(decStream)
+    const decBlob = await decResp.blob()
+    const json = await decBlob.text()
+    return json
 }
 
 function loadFromFile(f, callback) {
-    const r = new FileReader()
-    r.readAsText(f, "UTF-8")
-    r.onload = (e) => {
+    _decompress(f).then(json => {
         try {
-            load(e.target.result)
+            load(json)
+            callback(null)
         } catch (e) {
             callback(e)
-            return
         }
-        callback(null)
-    }
-    r.onerror = (e) => {
-        callback("I/O error")
-    }
+    }).catch(() => {
+        callback("Not a Flogo program")
+    })
 }
