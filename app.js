@@ -695,10 +695,11 @@ function ui_input(variable, type, callback) {
     input.focus()
     btn.disabled = false
     btn.onclick = () => {
-        const val = input.value.trim()
+        let val = input.value
         switch (type) {
             case "integer":
             case "real": {
+                val = val.trim()
                 if (val === "" || isNaN(val)) {
                     errorFlash(input)
                     return
@@ -706,6 +707,7 @@ function ui_input(variable, type, callback) {
             }
             break
             case "boolean": {
+                val = val.trim()
                 if (val !== "true" && val !== "false") {
                     errorFlash(input)
                     return
