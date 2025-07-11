@@ -57,6 +57,10 @@
     border-bottom: var(--ui-measure-border-thick) solid #00000040;
 }
 
+#bar select>option {
+    color: black !important;
+}
+
 div.expander {
     color: #ffffff;
     border-width: var(--ui-measure-border-thick);
