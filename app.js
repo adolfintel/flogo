@@ -1791,6 +1791,7 @@ function initApp() {
         document.fonts.ready.then(() => {
             const pixelRatioChangeHandler = () => {
                 requestAnimationFrame(pixelRatioChangeHandler)
+                if (insertWide_stage === null) return //can happen during loading
                 //flowchart handles this itself, no need to update it
                 if (window.devicePixelRatio !== insertWide_stage.getLayers()[0].getCanvas().getPixelRatio()) {
                     insertWide_stage.getLayers()[0].getCanvas().setPixelRatio(window.devicePixelRatio)
