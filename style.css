@@ -32,7 +32,7 @@
     --ui-color-border2: #ffffff60;
     --ui-color-disabled: #c0c0c0;
     --ui-color-form-background: #404040;
-    --ui-color-form-background2: #2d4b79;
+    --ui-color-form-highlighted: #2d4b79;
     --ui-color-form-text: #ffffff;
     --ui-color-form-border: #ffffff60;
     --ui-color-form-border-selected: #ffffffa0;
@@ -649,7 +649,7 @@ div.variable>.value {
 }
 
 div.variable>.value.modified {
-    background: var(--ui-color-form-background2);
+    background: var(--ui-color-form-highlighted);
     font-weight: bold;
 }
 
