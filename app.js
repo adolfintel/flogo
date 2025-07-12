@@ -490,6 +490,14 @@ function ui_edit(instruction, evt, parent, posInParent) {
     showPopup(e)
 }
 
+function edit_addFocusEvents() {
+    document.querySelectorAll("#editor input[type='text'], #editor textarea").forEach(e => {
+        e.onfocus = () => {
+            selectContents(e)
+        }
+    })
+}
+
 function edit_prepareGraphics() {
     document.querySelectorAll(".editor_graphics").forEach(e => {
         if (typeof e.flogo_stage !== "undefined") {
@@ -834,6 +842,9 @@ function variablesEditor_createVariable(name) {
             v.flogo_buttons.confirm.click()
         }
     }
+    nameEdit.onfocus = () => {
+        selectContents(nameEdit)
+    }
     disableSpellcheck(nameEdit)
     nt.appendChild(nameVis)
     nt.appendChild(nameEdit)
@@ -916,6 +927,9 @@ function variablesEditor_createVariable(name) {
     const initVal = document.createElement("div")
     initVal.contentEditable = true
     initVal.style.display = "none"
+    initVal.onfocus = () => {
+        selectContents(initVal)
+    }
     disableSpellcheck(initVal)
     valEdit.appendChild(init)
     valEdit.appendChild(initLabel)
@@ -1699,6 +1713,18 @@ function applyBrowserThemeColorFromCSS() {
     document.querySelector('meta[name="theme-color"]').setAttribute("content", _getCSSVal("--browser-theme-color", "#000000", document.body))
 }
 
+function selectContents(element) {
+    if (element.nodeName === "INPUT" || element.nodeName === "TEXTAREA") {
+        element.select()
+    } else {
+        const range = document.createRange()
+        range.selectNodeContents(element)
+        const sel = window.getSelection()
+        sel.removeAllRanges()
+        sel.addRange(range)
+    }
+}
+
 //-------- TOAST NOTIFICATIONS --------
 function toast(text, duration = 2000) {
     document.querySelectorAll("#toasts>div.toast").forEach(t => {
@@ -1751,6 +1777,7 @@ function initApp() {
     if (typeof localStorage.altTurboTSlice) {
         _altTurboTSlice = localStorage.altTurboTSlice === "true"
     }
+    edit_addFocusEvents()
     initFlowchart("flowchartArea")
     window.addEventListener("load", () => {
         document.fonts.ready.then(() => {
