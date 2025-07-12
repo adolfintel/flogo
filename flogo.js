@@ -693,7 +693,7 @@ While.fromSimpleObject = function(o) {
     return r
 }
 
-function For(variable = null, from = null, to = null, step = null, direction = null, body = new InstructionSequence()) {
+function For(variable = null, from = null, to = null, step = "1", direction = "up", body = new InstructionSequence()) {
     this.variable = variable
     this.from = from
     this.to = to
