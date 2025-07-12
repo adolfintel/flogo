@@ -930,6 +930,12 @@ function variablesEditor_createVariable(name) {
     initVal.onfocus = () => {
         selectContents(initVal)
     }
+    initVal.onkeydown = e => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault()
+            v.flogo_buttons.confirm.click()
+        }
+    }
     disableSpellcheck(initVal)
     valEdit.appendChild(init)
     valEdit.appendChild(initLabel)
