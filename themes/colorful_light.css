@@ -37,7 +37,8 @@
     --flowchart-Round-color1: #d82888;
     --flowchart-Round-color2: #000000;
     --flowchart-Block-outline-thickness: 1.25;
-    --flowchart-Block-highlight-color: #ff8020;
+    --flowchart-Block-highlight-color1: #00a080;
+    --flowchart-Block-highlight-color2: #005040;
     --flowchart-Line-color: #000000;
     --flowchart-Line-selected-color: #ff8020;
     --flowchart-selected-color1: #aa00ff;

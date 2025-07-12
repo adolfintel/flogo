@@ -45,8 +45,11 @@
     --flowchart-Round-color2: #7088a0;
     --flowchart-Round-color3: #000000;
     --flowchart-Block-outline-thickness: 1.25;
-    --flowchart-Block-highlight-color2: #4080ff;
+    --flowchart-Block-highlight-color1: #00a080;
+    --flowchart-Block-highlight-color2: #005040;
+    --flowchart-Block-highlight-color3: #ffffff;
     --flowchart-Line-color: #000000;
+    --flowchart-Line-selected-color: #ff8040;
     --flowchart-selected-color1: #4080ff;
     --flowchart-scrollbar-color: #00000060;
     --toast-background: #000000c0;
