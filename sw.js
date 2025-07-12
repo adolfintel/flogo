@@ -30,7 +30,7 @@ const appFiles = [
     "themes/blossoms.svg",
     "themes/alchemy.svg",
     "themes/Caveat-Regular.woff2",
-    "themes/Alchemy-Medium.woff2",
+    "themes/Cinzel-Medium.woff2",
     "LICENSE.txt",
     "manifest.json",
 ]
