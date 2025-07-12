@@ -1655,41 +1655,6 @@ function errorFlash(element) {
     }
 }
 
-function loadTheme(name, callback) {
-    let t = document.getElementById("theme")
-    const newTheme = "themes/" + name + ".css"
-    if (t !== null && t.href.endsWith(newTheme)) {
-        document.getElementById("loadOverlay").style.display = "none"
-        return
-    }
-    cancelSelection()
-    //the link element needs to be recreated for the onload event to trigger again (chromium)
-    if (t !== null) document.head.removeChild(t)
-    t = document.createElement("link")
-    t.id = "theme"
-    t.rel = "stylesheet"
-    t.type = "text/css"
-    closePopup()
-    document.getElementById("loadOverlay").style.display = "block"
-    t.onload = () => {
-        LARGE_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-large-threshold", 75, document.body))
-        SMALL_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-small-threshold", 45, document.body))
-        applyBrowserThemeColorFromCSS()
-        localStorage.theme = name
-        loadFlowchartThemeFromCSS(() => {
-            insert_preparePopups()
-            edit_prepareGraphics()
-            document.getElementById("loadOverlay").style.display = "none"
-            if (typeof callback !== "undefined") callback()
-        })
-    }
-    t.href = newTheme
-    t.onerror = () => {
-        loadTheme("default_dark")
-    }
-    document.head.appendChild(t)
-}
-
 function yesnoPrompt(title, details, e, callback_yes, callback_no) {
     const yesno = document.getElementById("yesno")
     document.getElementById("yesno_title_text").innerText = title
@@ -1892,4 +1857,39 @@ function recoverProgram() {
 function deleteRecovery() {
     delete localStorage.recovery
     closePopup(true)
+}
+
+function loadTheme(name, callback) {
+    let t = document.getElementById("theme")
+    const newTheme = "themes/" + name + ".css"
+    if (t !== null && t.href.endsWith(newTheme)) {
+        document.getElementById("loadOverlay").style.display = "none"
+        return
+    }
+    cancelSelection()
+    //the link element needs to be recreated for the onload event to trigger again (chromium)
+    if (t !== null) document.head.removeChild(t)
+    t = document.createElement("link")
+    t.id = "theme"
+    t.rel = "stylesheet"
+    t.type = "text/css"
+    closePopup()
+    document.getElementById("loadOverlay").style.display = "block"
+    t.onload = () => {
+        LARGE_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-large-threshold", 75, document.body))
+        SMALL_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-small-threshold", 45, document.body))
+        applyBrowserThemeColorFromCSS()
+        localStorage.theme = name
+        loadFlowchartThemeFromCSS(() => {
+            insert_preparePopups()
+            edit_prepareGraphics()
+            document.getElementById("loadOverlay").style.display = "none"
+            if (typeof callback !== "undefined") callback()
+        })
+    }
+    t.href = newTheme
+    t.onerror = () => {
+        loadTheme("default_dark")
+    }
+    document.head.appendChild(t)
 }
