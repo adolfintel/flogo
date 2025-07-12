@@ -3,7 +3,7 @@
  * Other important files are flogo.js (the main interpreter for programs), flogo-flowchart.js (flowchart drawing)
  */
 
-const enableWorkaroundsForWebKitBecauseItFuckingSucks = bowser.parse(navigator.userAgent).engine.name === "WebKit"
+const enableWorkaroundsForWebKitBecauseItFuckingSucks = /(apple)?webkit/i.test(navigator.userAgent) && !/(apple)?webkit\/537\.36/i.test(navigator.userAgent)
 
 //-------- INSERT POPUP --------
 
@@ -793,7 +793,7 @@ function console_save() {
             out += "Input: " + m.innerText + "\n"
         }
     }
-    if (bowser.parse(navigator.userAgent).os.name === "Windows") {
+    if (navigator.platform.indexOf("Win") !== -1) {
         //yes, this is still a thing on windows... sigh
         out = out.replace("\n", "\r\n")
     }

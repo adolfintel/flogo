@@ -72,7 +72,6 @@ __Credits:__
 * [Konva](https://konvajs.org/): Object-oriented JS canvas library (MIT License)
 * [jsep](https://ericsmekens.github.io/jsep/): JS expression parser (MIT License)
 * [SVGCanvas](https://zenozeng.github.io/svgcanvas/): SVG export library for JS canvas (MIT License)
-* [Bowser](https://github.com/bowser-js/bowser): Browser detector (MIT License)
 * [Material Design Icons](https://marella.github.io/material-design-icons): Icons used throughout the application (Apache-2.0 License)
 * Fonts distributed under the [SIL Open Font License](https://openfontlicense.org/): Noto Sans, Roboto Mono, Monoton, Caveat, Cinzel
 * Some CC0 graphics from [SVG Repo](https://www.svgrepo.com/)
