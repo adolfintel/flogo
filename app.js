@@ -1793,10 +1793,10 @@ function initApp() {
     if (typeof localStorage.bkColor !== "undefined") {
         document.getElementById("settings_bkColor").checked = localStorage.bkColor === "true"
     }
-    if (typeof localStorage.allowZoomOnFlowchart) {
+    if (typeof localStorage.allowZoomOnFlowchart !== "undefined") {
         _allowZoomOnFlowchart = localStorage.allowZoomOnFlowchart === "true"
     }
-    if (typeof localStorage.altTurboTSlice) {
+    if (typeof localStorage.altTurboTSlice !== "undefined") {
         _altTurboTSlice = localStorage.altTurboTSlice === "true"
     }
     edit_addFocusEvents()
