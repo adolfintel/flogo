@@ -1874,7 +1874,7 @@ async function _fontToBase64(url) {
     return `data:font/woff2;base64,${base64}`
 }
 
-function downloadSVG(name) {
+function downloadSVG(name, background = true) {
     const oldX = stage.x(),
         oldY = stage.y(),
         oldZ = stage.scale()
@@ -1892,7 +1892,12 @@ function downloadSVG(name) {
     })
     stage.draw()
     let out = tempCtx.getSerializedSvg()
-    out = out.replace(/<rect[a-zA-Z0-9\s="#.()]*\/>/, "") //gets rid of the background rect
+    const bkColor = _getCSSVal("--ui-color-background1", null, document.body)
+    if (background && bkColor !== null) {
+        out = out.replace(/<rect[a-zA-Z0-9\s="#.()]*\/>/, `<rect x="0" y="0" width="${tempCtx.width}" height="${tempCtx.height}" fill="${bkColor}"/>`)
+    } else {
+        out = out.replace(/<rect[a-zA-Z0-9\s="#.()]*\/>/, "")
+    }
     blockLayer.canvas.context._context = oldContext
     stage.x(oldX)
     stage.y(oldY)
@@ -1937,7 +1942,7 @@ function downloadSVG(name) {
     }
 }
 
-function downloadPNG(name, superSampling = 2) {
+function downloadPNG(name, background = true, superSampling = 2) {
     const oldX = stage.x(),
         oldY = stage.y(),
         oldZ = stage.scale()
@@ -1958,8 +1963,28 @@ function downloadPNG(name, superSampling = 2) {
         x: superSampling,
         y: superSampling,
     })
+    let rect = null
+    if (background) {
+        const bkColor = _getCSSVal("--ui-color-background1", null, document.body)
+        if (bkColor !== null) {
+            rect = new Konva.Rect({
+                fill: bkColor
+            })
+            rect.position({
+                x: stage.x() - cw / 2,
+                y: stage.y() - ch / 2
+            })
+            rect.width(cw)
+            rect.height(ch)
+            blockLayer.add(rect)
+            rect.moveToBottom()
+        }
+    }
     stage.draw()
     const out = tempCanvas.toDataURL("image/png")
+    if (rect !== null) {
+        rect.destroy()
+    }
     blockLayer.canvas.context._context = oldContext
     stage.x(oldX)
     stage.y(oldY)

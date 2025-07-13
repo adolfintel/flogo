@@ -1433,6 +1433,11 @@ function settings_setTheme() {
     loadTheme(document.getElementById("style_theme").value)
 }
 
+function settings_bkColor_changed() {
+    const val = document.getElementById("settings_bkColor").checked
+    localStorage.bkColor = val
+}
+
 function settings_fps_changed() {
     const val = document.getElementById("settings_fps").checked
     localStorage.showFps = val
@@ -1449,6 +1454,14 @@ function settings_altTurboTSlice_changed() {
     const val = document.getElementById("settings_altTurboTSlice").checked
     localStorage.altTurboTSlice = val
     _altTurboTSlice = val
+}
+
+function settings_downloadSVG() {
+    downloadSVG(undefined, document.getElementById("settings_bkColor").checked)
+}
+
+function settings_downloadPNG() {
+    downloadPNG(undefined, document.getElementById("settings_bkColor").checked)
 }
 
 //-------- MANUAL STUFF --------
@@ -1777,6 +1790,9 @@ function initApp() {
     document.getElementById("editor2").addEventListener("contextmenu", (e) => e.preventDefault()) //workaround: on some chromium-based browsers, this context menu gets accidentally triggered when right-clicking a block, despite it having display:none when the event is triggered
     document.getElementById("fps").style.display = localStorage.showFps === "true" ? "block" : "none"
     updateFps()
+    if (typeof localStorage.bkColor !== "undefined") {
+        document.getElementById("settings_bkColor").checked = localStorage.bkColor === "true"
+    }
     if (typeof localStorage.allowZoomOnFlowchart) {
         _allowZoomOnFlowchart = localStorage.allowZoomOnFlowchart === "true"
     }
