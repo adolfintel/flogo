@@ -1780,10 +1780,10 @@ function initApp() {
     document.getElementById("editor2").addEventListener("contextmenu", (e) => e.preventDefault()) //workaround: on some chromium-based browsers, this context menu gets accidentally triggered when right-clicking a block, despite it having display:none when the event is triggered
     document.getElementById("fps").style.display = localStorage.showFps === "true" ? "block" : "none"
     updateFps()
-    if (typeof localStorage.allowZoomOnFlowchart) {
+    if (typeof localStorage.allowZoomOnFlowchart !== "undefined") {
         _allowZoomOnFlowchart = localStorage.allowZoomOnFlowchart === "true"
     }
-    if (typeof localStorage.altTurboTSlice) {
+    if (typeof localStorage.altTurboTSlice !== "undefined") {
         _altTurboTSlice = localStorage.altTurboTSlice === "true"
     }
     edit_addFocusEvents()
