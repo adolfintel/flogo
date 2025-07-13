@@ -10,6 +10,7 @@ __Flogo__ is a free and open source programming language for beginners, designed
 * Standard C-like syntax for expressions to make it easier to switch to a "real" prorgamming language
 * Detection of errors such as overflows, uninitialized variables, etc.
 * All standard loop types: Do-While, While and For (basic-style)
+* Lazy evaluation of boolean expressions
 * Lots of built-in functions (see documentation for a complete list)
 * Execution speed control and step-by-step mode to better follow the flow of the program; a turbo mode is also available to run larger programs at maximum speed
 * Easy to use UI with Undo/Redo, Cut/Copy/Paste and keyboard shortcuts

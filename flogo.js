@@ -128,7 +128,7 @@ function removeVariable(name) {
  * Strings are delimited by single or double quotes
  * Trigonometric functions work with rads
  * + does both sum and string concatenation
- * Expressions are always evaluated fully (no lazy evaluation)
+ * Expressions are evaluated using lazy evaluation
  *
  * The evaluateExpression function takes an expression in the form of text, parses and executes it; it returns the computed result of the expression or throws an exception in case of errors such as unclosed brackets, uninitialized variables, etc.
  */
@@ -199,88 +199,101 @@ function evaluateExpression(text) {
             }
             break
             case jsep.BINARY_EXP: {
-                const left = expr_rec(n.left)
-                const right = expr_rec(n.right)
-                switch (n.operator) {
-                    case "^": {
-                        if (typeof left !== "number" || typeof right !== "number") throw "Power requires 2 numbers"
-                        return Math.pow(left, right)
+                if (n.operator === "&&" || n.operator === "||") { // && and || need to be treated differently for lazy evaluation
+                    switch (n.operator) {
+                        case "&&": {
+                            const left = expr_rec(n.left)
+                            if (typeof left !== "boolean") throw "Not a valid condition"
+                            if (!left) return false
+                            const right = expr_rec(n.right)
+                            if (typeof right !== "boolean") throw "Not a valid condition"
+                            return left && right
+                        }
+                        break
+                        case "||": {
+                            const left = expr_rec(n.left)
+                            if (typeof left !== "boolean") throw "Not a valid condition"
+                            if (left) return true
+                            const right = expr_rec(n.right)
+                            if (typeof right !== "boolean") throw "Not a valid condition"
+                            return left || right
+                        }
+                        break
                     }
-                    break
-                    case "*": {
-                        if (typeof left !== "number" || typeof right !== "number") throw "Multiplication requires 2 numbers"
-                        return left * right
-                    }
-                    break
-                    case "/": {
-                        if (typeof left !== "number" || typeof right !== "number") throw "Division requires 2 numbers"
-                        if (right === 0) throw "Division by 0"
-                        return left / right
-                    }
-                    break
-                    case "%": {
-                        if (typeof left !== "number" || typeof right !== "number") throw "Modulus requires 2 numbers"
-                        if (right === 0) throw "Modulus by 0"
-                        return left % right
-                    }
-                    break
-                    case "+": {
-                        if ((typeof left !== "number" || typeof right !== "number") && !(typeof left === "string" || typeof right === "string"))
-                            throw "Addition can only add numbers or concatenate strings"
-                        return left + right
-                    }
-                    break
-                    case "-": {
-                        if (typeof left !== "number" || typeof right !== "number") throw "Subtraction requires 2 numbers"
-                        return left - right
-                    }
-                    break
-                    case "<": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        if (typeof left === "boolean" || typeof right === "boolean") throw "< can't compare booleans"
-                        return left < right
-                    }
-                    break
-                    case ">": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        if (typeof left === "boolean" || typeof right === "boolean") throw "> can't compare booleans"
-                        return left > right
-                    }
-                    break
-                    case "<=": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        if (typeof left === "boolean" || typeof right === "boolean") throw "<= can't compare booleans"
-                        return left <= right
-                    }
-                    break
-                    case ">=": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        if (typeof left === "boolean" || typeof right === "boolean") throw ">= can't compare booleans"
-                        return left >= right
-                    }
-                    break
-                    case "==": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        return left == right
-                    }
-                    break
-                    case "!=": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        return left != right
-                    }
-                    break
-                    case "&&": {
-                        if (typeof left !== "boolean" || typeof right !== "boolean") throw "Not a valid condition"
-                        return left && right
-                    }
-                    break
-                    case "||": {
-                        if (typeof left !== "boolean" || typeof right !== "boolean") throw "Not a valid condition"
-                        return left || right
-                    }
-                    break
-                    default: {
-                        throw "Invalid operator: " + n.operator
+                } else {
+                    const left = expr_rec(n.left)
+                    const right = expr_rec(n.right)
+                    switch (n.operator) {
+                        case "^": {
+                            if (typeof left !== "number" || typeof right !== "number") throw "Power requires 2 numbers"
+                            return Math.pow(left, right)
+                        }
+                        break
+                        case "*": {
+                            if (typeof left !== "number" || typeof right !== "number") throw "Multiplication requires 2 numbers"
+                            return left * right
+                        }
+                        break
+                        case "/": {
+                            if (typeof left !== "number" || typeof right !== "number") throw "Division requires 2 numbers"
+                            if (right === 0) throw "Division by 0"
+                            return left / right
+                        }
+                        break
+                        case "%": {
+                            if (typeof left !== "number" || typeof right !== "number") throw "Modulus requires 2 numbers"
+                            if (right === 0) throw "Modulus by 0"
+                            return left % right
+                        }
+                        break
+                        case "+": {
+                            if ((typeof left !== "number" || typeof right !== "number") && !(typeof left === "string" || typeof right === "string"))
+                                throw "Addition can only add numbers or concatenate strings"
+                            return left + right
+                        }
+                        break
+                        case "-": {
+                            if (typeof left !== "number" || typeof right !== "number") throw "Subtraction requires 2 numbers"
+                            return left - right
+                        }
+                        break
+                        case "<": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            if (typeof left === "boolean" || typeof right === "boolean") throw "< can't compare booleans"
+                            return left < right
+                        }
+                        break
+                        case ">": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            if (typeof left === "boolean" || typeof right === "boolean") throw "> can't compare booleans"
+                            return left > right
+                        }
+                        break
+                        case "<=": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            if (typeof left === "boolean" || typeof right === "boolean") throw "<= can't compare booleans"
+                            return left <= right
+                        }
+                        break
+                        case ">=": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            if (typeof left === "boolean" || typeof right === "boolean") throw ">= can't compare booleans"
+                            return left >= right
+                        }
+                        break
+                        case "==": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            return left == right
+                        }
+                        break
+                        case "!=": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            return left != right
+                        }
+                        break
+                        default: {
+                            throw "Invalid operator: " + n.operator
+                        }
                     }
                 }
             }
