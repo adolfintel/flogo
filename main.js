@@ -8,8 +8,10 @@ const {
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 1280,
-        height: 720
+        height: 720,
+        icon: 'images/favicon.png'
     })
+
     win.on('close', async (e) => {
         e.preventDefault()
         const undoHistoryPtr = await win.webContents.executeJavaScript("undoHistoryPtr")
