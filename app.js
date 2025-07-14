@@ -1869,6 +1869,32 @@ function initApp() {
             }
         }
     })
+    const {
+        ipcRenderer
+    } = require('electron')
+    const fs = require('fs')
+    ipcRenderer.on('open-file', (e, path) => {
+        fs.readFile(path, (err, data) => {
+            loadFromFile(new Blob([data], {
+                type: "application/octet-stream"
+            }), (e2) => {
+                cancelSelection()
+                recreateVariableList()
+                resetConsole()
+                clearHistory()
+                saveToHistory()
+                updateFlowchart(true)
+                clipboard = null
+                if (e2 !== null) {
+                    document.getElementById("loadError_details").innerText = e2
+                    showPopup("loadError")
+                } else {
+                    toast("Program loaded")
+                }
+                document.getElementById("loadOverlay").style.display = "none"
+            })
+        })
+    })
     if (enableWorkaroundsForWebKitBecauseItFuckingSucks) { //webkit-based browsers don't support file filters with multiple types
         document.getElementById("filePicker").removeAttribute("accept")
     }

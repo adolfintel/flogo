@@ -5,6 +5,8 @@ const {
     webContents
 } = require('electron')
 
+let openThis = null
+
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 1280,
@@ -12,10 +14,18 @@ const createWindow = () => {
         minWidth: 640,
         minHeight: 400,
         icon: 'images/favicon.png',
-        show: false
+        show: false,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
+        }
     })
-    win.on('ready-to-show',()=>{
+    win.on('ready-to-show', () => {
         win.show()
+        if (openThis !== null) {
+            win.webContents.send('open-file', openThis)
+            openThis = null
+        }
     })
     win.on('close', async (e) => {
         e.preventDefault()
@@ -39,6 +49,7 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
+    openThis = process.argv.find(arg => arg.toLowerCase().endsWith('.flogo')) ?? null
     createWindow()
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
@@ -51,4 +62,9 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit()
     }
+})
+
+app.on('second-instance', (e, args) => {
+    openThis = argv.find(arg => arg.toLowerCase().endsWith('.flogo')) ?? null
+    createWindow()
 })
