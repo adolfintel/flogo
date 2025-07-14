@@ -1,26 +1,49 @@
-const { app, BrowserWindow } = require('electron')
+const {
+    app,
+    BrowserWindow,
+    dialog,
+    webContents
+} = require('electron')
 
 const createWindow = () => {
-  const win = new BrowserWindow({
-    width: 1280,
-    height: 720
-  })
+    const win = new BrowserWindow({
+        width: 1280,
+        height: 720
+    })
+    win.on('close', async (e) => {
+        e.preventDefault()
+        const undoHistoryPtr = await win.webContents.executeJavaScript("undoHistoryPtr")
+        if (Number(undoHistoryPtr) <= 1) {
+            win.destroy()
+        } else {
+            const response = await dialog.showMessageBox({
+                type: 'question',
+                title: 'Quit',
+                message: 'Are you sure you want to quit?\nUnsaved changes will be lost',
+                buttons: ['No', 'Yes']
+            })
+            if (response.response === 1) {
+                win.destroy()
+            }
+        }
 
-  win.loadFile('index.html')
+    })
+
+    win.loadFile('index.html')
 }
 
 app.whenReady().then(() => {
-  createWindow()
+    createWindow()
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
-    }
-  })
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow()
+        }
+    })
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
 })

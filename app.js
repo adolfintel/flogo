@@ -1829,12 +1829,6 @@ function initApp() {
         })
     })
     window.addEventListener("resize", closePopup)
-    window.onbeforeunload = (e) => {
-        if (document.getElementById("errorScreen").style.display === "block") return
-        if (undoHistoryPtr <= 1) return
-        e.preventDefault()
-        e.returnValue = ""
-    }
     document.body.addEventListener("dragover", (e) => e.preventDefault())
     document.body.addEventListener("drop", (e) => {
         e.preventDefault()
