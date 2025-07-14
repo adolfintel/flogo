@@ -1560,9 +1560,11 @@ function initKeyboardShortcuts() {
                 if (e.ctrlKey) {
                     e.preventDefault()
                     if (e.shiftKey) {
+                        if (undoHistoryPtr >= undoHistory.length) return
                         toast("Redo")
                         redo()
                     } else {
+                        if (undoHistoryPtr <= 1) return
                         toast("Undo")
                         undo()
                     }
@@ -1574,6 +1576,7 @@ function initKeyboardShortcuts() {
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey && !e.shiftKey) {
                     e.preventDefault()
+                    if (undoHistoryPtr >= undoHistory.length) return
                     toast("Redo")
                     redo()
                 }
