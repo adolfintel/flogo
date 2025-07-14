@@ -11,9 +11,12 @@ const createWindow = () => {
         height: 720,
         minWidth: 640,
         minHeight: 400,
-        icon: 'images/favicon.png'
+        icon: 'images/favicon.png',
+        show: false
     })
-
+    win.on('ready-to-show',()=>{
+        win.show()
+    })
     win.on('close', async (e) => {
         e.preventDefault()
         const undoHistoryPtr = await win.webContents.executeJavaScript("undoHistoryPtr")
@@ -30,17 +33,13 @@ const createWindow = () => {
                 win.destroy()
             }
         }
-
     })
-
     win.setMenu(null)
-
     win.loadFile('index.html')
 }
 
 app.whenReady().then(() => {
     createWindow()
-
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow()
