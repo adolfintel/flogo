@@ -9,6 +9,8 @@ const createWindow = () => {
     const win = new BrowserWindow({
         width: 1280,
         height: 720,
+        minWidth: 640,
+        minHeight: 400,
         icon: 'images/favicon.png'
     })
 
