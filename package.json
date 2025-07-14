@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "buildwin": "electron-packager . --platform win32 --arch x64 --out out/ --icon images/winicon.ico",
+    "buildwin": "electron-packager . --platform win32 --arch x64 --out out/ --icon images/winicon.ico --ignore .git --ignore .github --ignore .gitignore --ignore _SETUP --ignore node_modules --asar",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Federico Dossena",
@@ -13,6 +13,6 @@
   "private": false,
   "devDependencies": {
     "@electron/packager": "^18.3.6",
-    "electron": "37.2.1"
+    "electron": "^37.2.1"
   }
 }
