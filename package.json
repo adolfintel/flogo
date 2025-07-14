@@ -5,12 +5,14 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "buildwin": "electron-packager . --platform win32 --arch x64 --out out/ --icon icons/winicon.ico",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Federico Dossena",
   "license": "AGPL-3.0-or-later",
   "private": false,
   "devDependencies": {
+    "@electron/packager": "^18.3.6",
     "electron": "37.2.1"
   }
 }
