@@ -1351,7 +1351,6 @@ function saveProgram() {
     if (state === STATE_RUNNING || state === STATE_PAUSED) {
         stopProgram()
     }
-    toast("Starting download")
     download()
 }
 
