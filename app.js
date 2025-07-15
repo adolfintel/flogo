@@ -1451,6 +1451,11 @@ function settings_altTurboTSlice_changed() {
     _altTurboTSlice = val
 }
 
+function showLicense() {
+    closePopup(true)
+    showPopup("licenseViewer")
+}
+
 //-------- MANUAL STUFF --------
 function openManual() {
     showPopup("man")
