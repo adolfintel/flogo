@@ -53,6 +53,7 @@ let ASSIGN_COLOR1,
     PADDING_BASE,
     SPACE_BETWEEN_INSTRUCTIONS,
     BLOCK_TEXT_MAX_WIDTH,
+    COMMENT_TEXT_MAX_WIDTH,
     ROUND_MIN_WIDTH,
     LINE_HITBOX_EXTRA,
     COMMENT_TEXT_MAX_LENGTH,
@@ -80,6 +81,40 @@ function _makeArrowHighlightable(arrow) {
     })
 }
 
+function _fitText(string, maxWidth) {
+    const breakCandidates = [' ', '\n', '+', '-', '*', '/', '%', '^', '&', '|', '!', '<', '>', '=']
+    let ret = ""
+    let w = 0
+    for (let i = 0; i < string.length; i++) {
+        if (w >= maxWidth && !breakCandidates.includes(string[i])) {
+            let lastWrapSpot = ret.length - 1
+            while (lastWrapSpot >= 0 && !breakCandidates.includes(ret[lastWrapSpot])) {
+                lastWrapSpot--
+            }
+            if (lastWrapSpot !== -1 && ret[lastWrapSpot] != '\n') {
+                if (ret[lastWrapSpot] === ' ') {
+                    ret = ret.slice(0, lastWrapSpot) + '\n' + ret.slice(lastWrapSpot + 1) + string[i]
+                    w = ret.length - lastWrapSpot - 1
+                } else {
+                    ret = ret.slice(0, lastWrapSpot + 1) + '\n' + ret.slice(lastWrapSpot + 1) + string[i]
+                    w = ret.length - lastWrapSpot - 2
+                }
+            } else {
+                ret += '\n' + string[i]
+                w = 0
+            }
+        } else {
+            ret += string[i]
+            if (string[i] === '\n') {
+                w = 0
+            } else {
+                w++
+            }
+        }
+    }
+    return ret
+}
+
 Assign.prototype.createDrawable = function() {
     let string
     if (this.variable !== null && this.expression !== null) {
@@ -87,6 +122,7 @@ Assign.prototype.createDrawable = function() {
     } else {
         string = "Assign"
     }
+    string = _fitText(string, BLOCK_TEXT_MAX_WIDTH)
     const text = new Konva.Text({
         x: 0,
         y: 0,
@@ -96,10 +132,8 @@ Assign.prototype.createDrawable = function() {
         fontFamily: FLOWCHART_FONT,
         fill: ASSIGN_COLOR3,
         align: "center",
+        wrap: "none",
     })
-    if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
-        text.width(BLOCK_TEXT_MAX_WIDTH)
-    }
     const rect = new Konva.Rect({
         x: 0,
         y: 0,
@@ -138,6 +172,7 @@ Input.prototype.createDrawable = function() {
     if (this.variable !== null) {
         string += " " + this.variable
     }
+    string = _fitText(string, BLOCK_TEXT_MAX_WIDTH)
     const text = new Konva.Text({
         x: PADDING_BASE / 2,
         y: 0,
@@ -147,10 +182,8 @@ Input.prototype.createDrawable = function() {
         fontFamily: FLOWCHART_FONT,
         fill: INPUT_COLOR3,
         align: "center",
+        wrap: "none",
     })
-    if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
-        text.width(BLOCK_TEXT_MAX_WIDTH)
-    }
     const tw = text.width() + PADDING_BASE,
         th = text.height()
     const rect = new Konva.Line({
@@ -192,6 +225,7 @@ Output.prototype.createDrawable = function() {
     if (this.expression !== null) {
         string += " " + this.expression
     }
+    string = _fitText(string, BLOCK_TEXT_MAX_WIDTH)
     const text = new Konva.Text({
         x: PADDING_BASE / 2,
         y: 0,
@@ -201,10 +235,8 @@ Output.prototype.createDrawable = function() {
         fontFamily: FLOWCHART_FONT,
         fill: OUTPUT_COLOR3,
         align: "center",
+        wrap: "none",
     })
-    if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
-        text.width(BLOCK_TEXT_MAX_WIDTH)
-    }
     const tw = text.width() + PADDING_BASE,
         th = text.height()
     const rect = new Konva.Line({
@@ -254,6 +286,7 @@ Comment.prototype.createDrawable = function() {
             string = string.slice(0, COMMENT_TEXT_MAX_LENGTH) + "..."
         }
     }
+    string = _fitText(string, COMMENT_TEXT_MAX_WIDTH)
     const text = new Konva.Text({
         x: 0,
         y: 0,
@@ -262,10 +295,8 @@ Comment.prototype.createDrawable = function() {
         fontSize: BLOCK_FONT_SIZE,
         fontFamily: FLOWCHART_FONT,
         fill: COMMENT_COLOR3,
+        wrap: "none",
     })
-    if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
-        text.width(BLOCK_TEXT_MAX_WIDTH)
-    }
     const rect = new Konva.Rect({
         x: 0,
         y: 0,
@@ -502,6 +533,7 @@ If.prototype.createDrawable = function() {
     if (this.condition !== null) {
         string = this.condition
     }
+    string = _fitText(string, BLOCK_TEXT_MAX_WIDTH)
     const text = new Konva.Text({
         x: 0,
         y: 0,
@@ -510,10 +542,10 @@ If.prototype.createDrawable = function() {
         fontFamily: FLOWCHART_FONT,
         fill: IF_COLOR3,
         align: "center",
+        wrap: "none",
     })
     let rw, rh
-    if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
-        text.width(BLOCK_TEXT_MAX_WIDTH)
+    if (string.indexOf("\n") !== -1) {
         rw = text.width() * 2
         rh = text.height() * 2
     } else {
@@ -708,6 +740,7 @@ DoWhile.prototype.createDrawable = function() {
     if (this.condition !== null) {
         string = this.condition
     }
+    string = _fitText(string, BLOCK_TEXT_MAX_WIDTH)
     const text = new Konva.Text({
         x: PADDING_BASE / 2,
         y: 0,
@@ -717,10 +750,8 @@ DoWhile.prototype.createDrawable = function() {
         fontFamily: FLOWCHART_FONT,
         fill: DOWHILE_COLOR3,
         align: "center",
+        wrap: "none",
     })
-    if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
-        text.width(BLOCK_TEXT_MAX_WIDTH)
-    }
     const tw = text.width(),
         th = text.height()
     const rect = new Konva.Line({
@@ -867,6 +898,7 @@ While.prototype.createDrawable = function() {
     if (this.condition !== null) {
         string = this.condition
     }
+    string = _fitText(string, BLOCK_TEXT_MAX_WIDTH)
     const text = new Konva.Text({
         x: PADDING_BASE / 2,
         y: 0,
@@ -876,10 +908,8 @@ While.prototype.createDrawable = function() {
         fontFamily: FLOWCHART_FONT,
         fill: WHILE_COLOR3,
         align: "center",
+        wrap: "none",
     })
-    if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
-        text.width(BLOCK_TEXT_MAX_WIDTH)
-    }
     const tw = text.width(),
         th = text.height()
     const rect = new Konva.Line({
@@ -1033,6 +1063,7 @@ For.prototype.createDrawable = function() {
         if (this.step !== "1") string += " step " + this.step
         if (this.direction !== "up") string += " " + this.direction
     }
+    string = _fitText(string, BLOCK_TEXT_MAX_WIDTH)
     const text = new Konva.Text({
         x: PADDING_BASE / 2,
         y: 0,
@@ -1042,10 +1073,8 @@ For.prototype.createDrawable = function() {
         fontFamily: FLOWCHART_FONT,
         fill: FOR_COLOR3,
         align: "center",
+        wrap: "none",
     })
-    if (text.width() > BLOCK_TEXT_MAX_WIDTH) {
-        text.width(BLOCK_TEXT_MAX_WIDTH)
-    }
     const tw = text.width(),
         th = text.height()
     const rect = new Konva.Line({
@@ -1853,7 +1882,8 @@ function loadFlowchartThemeFromCSS(callback) {
     PADDING_BASE = Number(_getCSSVal("--flowchart-Padding-base", 10))
     MINVIS = PADDING_BASE * 2
     SPACE_BETWEEN_INSTRUCTIONS = Number(_getCSSVal("--flowchart-Padding-spaceBetweenInstructions", 24))
-    BLOCK_TEXT_MAX_WIDTH = Number(_getCSSVal("--flowchart-Block-text-maxWidth", 25)) * BLOCK_FONT_SIZE
+    BLOCK_TEXT_MAX_WIDTH = Number(_getCSSVal("--flowchart-Block-text-maxWidth", 40))
+    COMMENT_TEXT_MAX_WIDTH = Number(_getCSSVal("--flowchart-Comment-text-maxWidth", 60))
     ROUND_MIN_WIDTH = Number(_getCSSVal("--flowchart-Round-text-minWidth", 7)) * BLOCK_FONT_SIZE
     COMMENT_TEXT_MAX_LENGTH = Number(_getCSSVal("--flowchart-Comment-text-maxLength", 250))
     SCROLLBAR_THICKNESS = Number(_getCSSVal("--flowchart-scrollbar-thickness", 6))
