@@ -149,6 +149,17 @@ body {
     color: var(--ui-color-text-accent);
 }
 
+::-webkit-scrollbar {
+    width: calc(var(--flowchart-scrollbar-thickness) * 1px + var(--flowchart-scrollbar-padding) * 2px);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--flowchart-scrollbar-color);
+    border: calc(var(--flowchart-scrollbar-padding) * 1px) solid transparent;
+    border-radius: 999rem;
+    background-clip: content-box;
+}
+
 @media print {
     body {
         display: none;
