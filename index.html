@@ -8,6 +8,7 @@
     <title>Flogo</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="manifest" href="manifest.json">
+    <script type="text/javascript" src="settingsStorage.js"></script>
     <script type="text/javascript">
         window.onerror = function(e, url, line) {
             console.log("Unhandled exception caught: " + e + " in " + url + "@" + line + ", showing error screen")
@@ -22,17 +23,17 @@
                 try {
                     document.getElementById("errorScreen").style.display = "block"
                     try {
-                        localStorage.recovery = save(false)
+                        storage.recovery = save(false)
                         document.getElementById("error_recovery").style.display = "block"
                         document.getElementById("error_restart").style.display = "none"
                     } catch (ex) {
                         document.getElementById("error_recovery").style.display = "none"
                         document.getElementById("error_restart").style.display = "block"
-                        delete(localStorage.recovery)
+                        delete storage.recovery
                     }
                 } catch (ex) {
                     try {
-                        delete(localStorage.recovery)
+                        delete storage.recovery
                     } catch (ex) {}
                     window.location.reload()
                 }

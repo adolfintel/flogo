@@ -2,8 +2,24 @@ const {
     app,
     BrowserWindow,
     dialog,
-    webContents
+    webContents,
+    ipcMain
 } = require('electron')
+
+const Store = require('electron-store').default
+const store = new Store()
+ipcMain.on('electron-store-get', (event, key) => {
+    const value = store.get(key)
+    event.returnValue = value
+})
+ipcMain.on('electron-store-set', (event, key, value) => {
+    store.set(key, value)
+    event.returnValue = 'success'
+})
+ipcMain.on('electron-store-delete', (event, key) => {
+    const value = store.delete(key)
+    event.returnValue = 'success'
+})
 
 let openThis = null
 
