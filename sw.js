@@ -6,6 +6,7 @@ const appFiles = [
     "flogo.js",
     "flogo-flowchart.js",
     "sw.js",
+    "settingsStorage.js",
     "lib/jsep.iife.min.js",
     "lib/konva.min.js",
     "lib/svgcanvas.min.js",

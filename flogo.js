@@ -1129,13 +1129,13 @@ let metadata
 
 function _getAuthorUUID() {
     if (navigator.doNotTrack != 1) {
-        if (typeof localStorage.authorId === "undefined") {
-            localStorage.authorId = crypto.randomUUID()
+        if (typeof storage.authorId === "undefined") {
+            storage.authorId = crypto.randomUUID()
         }
-        return localStorage.authorId
+        return storage.authorId
     } else {
-        if (typeof localStorage.authorId !== "undefined") {
-            delete localStorage.authorId
+        if (typeof storage.authorId !== "undefined") {
+            delete storage.authorId
         }
         return ""
     }
