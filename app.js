@@ -1464,6 +1464,11 @@ function settings_downloadPNG() {
     downloadPNG(undefined, document.getElementById("settings_bkColor").checked)
 }
 
+function showLicense() {
+    closePopup(true)
+    showPopup("licenseViewer")
+}
+
 //-------- MANUAL STUFF --------
 function openManual() {
     showPopup("man")

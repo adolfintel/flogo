@@ -1026,6 +1026,37 @@ div.settings_tab.selected {
     display: block;
 }
 
+#licenseViewer {
+    top: 50vh;
+    left: 50vw;
+    width: 90%;
+    max-width: 50rem;
+    height: 90%;
+    max-height: 70rem;
+    transform: translate(-50%, -50%);
+    border: var(--ui-measure-border-thick) solid var(--ui-color-border1);
+}
+
+#license {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: white;
+    color: black;
+}
+
+#license_close {
+    background: var(--ui-color-accent2);
+    position: absolute;
+    top: calc(var(--ui-measure-spacer-large)*2);
+    right: calc(var(--ui-measure-spacer-large)*2);
+}
+
 /* HELP THING */
 #man {
     top: 50vh;
