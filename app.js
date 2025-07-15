@@ -1405,12 +1405,12 @@ function openSettings() {
     settings_selectTab("program_metadata")
     document.getElementById("metadata_title").value = metadata.title
     document.getElementById("metadata_author").value = metadata.author
-    if (typeof localStorage.theme !== "undefined") {
-        document.getElementById("style_theme").value = localStorage.theme
+    if (typeof storage.theme !== "undefined") {
+        document.getElementById("style_theme").value = storage.theme
     } else {
         document.getElementById("style_theme").value = "default_dark"
     }
-    document.getElementById("settings_fps").checked = localStorage.showFps === "true"
+    document.getElementById("settings_fps").checked = storage.showFps === "true"
     document.getElementById("settings_allowZoomOnFlowchart").checked = _allowZoomOnFlowchart
     document.getElementById("settings_altTurboTSlice").checked = _altTurboTSlice
     showPopup("settings")
@@ -1435,24 +1435,24 @@ function settings_setTheme() {
 
 function settings_bkColor_changed() {
     const val = document.getElementById("settings_bkColor").checked
-    localStorage.bkColor = val
+    storage.bkColor = val
 }
 
 function settings_fps_changed() {
     const val = document.getElementById("settings_fps").checked
-    localStorage.showFps = val
+    storage.showFps = val
     document.getElementById("fps").style.display = val ? "block" : "none"
 }
 
 function settings_allowZoomOnFlowchart_changed() {
     const val = document.getElementById("settings_allowZoomOnFlowchart").checked
-    localStorage.allowZoomOnFlowchart = val
+    storage.allowZoomOnFlowchart = val
     _allowZoomOnFlowchart = val
 }
 
 function settings_altTurboTSlice_changed() {
     const val = document.getElementById("settings_altTurboTSlice").checked
-    localStorage.altTurboTSlice = val
+    storage.altTurboTSlice = val
     _altTurboTSlice = val
 }
 
@@ -1805,16 +1805,16 @@ function updateFps(t) {
 
 function initApp() {
     document.getElementById("editor2").addEventListener("contextmenu", (e) => e.preventDefault()) //workaround: on some chromium-based browsers, this context menu gets accidentally triggered when right-clicking a block, despite it having display:none when the event is triggered
-    document.getElementById("fps").style.display = localStorage.showFps === "true" ? "block" : "none"
+    document.getElementById("fps").style.display = storage.showFps === "true" ? "block" : "none"
     updateFps()
-    if (typeof localStorage.bkColor !== "undefined") {
-        document.getElementById("settings_bkColor").checked = localStorage.bkColor === "true"
+    if (typeof storage.bkColor !== "undefined") {
+        document.getElementById("settings_bkColor").checked = storage.bkColor === "true"
     }
-    if (typeof localStorage.allowZoomOnFlowchart !== "undefined") {
-        _allowZoomOnFlowchart = localStorage.allowZoomOnFlowchart === "true"
+    if (typeof storage.allowZoomOnFlowchart !== "undefined") {
+        _allowZoomOnFlowchart = storage.allowZoomOnFlowchart === "true"
     }
-    if (typeof localStorage.altTurboTSlice !== "undefined") {
-        _altTurboTSlice = localStorage.altTurboTSlice === "true"
+    if (typeof storage.altTurboTSlice !== "undefined") {
+        _altTurboTSlice = storage.altTurboTSlice === "true"
     }
     edit_addFocusEvents()
     initFlowchart("flowchartArea")
@@ -1842,12 +1842,12 @@ function initApp() {
                 edit_shapeFollower()
                 updateFlowchart(true)
                 pixelRatioChangeHandler()
-                if (typeof localStorage.recovery !== "undefined") {
+                if (typeof storage.recovery !== "undefined") {
                     showPopup("errorRec")
                 }
             }
-            if (typeof localStorage.theme !== "undefined") {
-                loadTheme(localStorage.theme, endOfLoad)
+            if (typeof storage.theme !== "undefined") {
+                loadTheme(storage.theme, endOfLoad)
             } else {
                 loadTheme("default_dark", endOfLoad)
             }
@@ -1912,16 +1912,16 @@ function initApp() {
 }
 
 function recoverProgram() {
-    load(localStorage.recovery)
+    load(storage.recovery)
     recreateVariableList()
     updateFlowchart(true)
     saveToHistory()
-    delete localStorage.recovery
+    delete storage.recovery
     closePopup(true)
 }
 
 function deleteRecovery() {
-    delete localStorage.recovery
+    delete storage.recovery
     closePopup(true)
 }
 
@@ -1945,7 +1945,7 @@ function loadTheme(name, callback) {
         LARGE_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-large-threshold", 75, document.body))
         SMALL_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-small-threshold", 45, document.body))
         applyBrowserThemeColorFromCSS()
-        localStorage.theme = name
+        storage.theme = name
         loadFlowchartThemeFromCSS(() => {
             insert_preparePopups()
             edit_prepareGraphics()
