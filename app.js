@@ -1546,6 +1546,8 @@ function initKeyboardShortcuts() {
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey) {
                     e.preventDefault()
+                    const intState = interpreter.getState()
+                    if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                     if (e.shiftKey) {
                         if (undoHistoryPtr >= undoHistory.length) return
                         toast("Redo")
@@ -1563,6 +1565,8 @@ function initKeyboardShortcuts() {
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey && !e.shiftKey) {
                     e.preventDefault()
+                    const intState = interpreter.getState()
+                    if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                     if (undoHistoryPtr >= undoHistory.length) return
                     toast("Redo")
                     redo()
@@ -1571,6 +1575,8 @@ function initKeyboardShortcuts() {
             break
             case 'x': {
                 if (e.target !== document.body) return
+                const intState = interpreter.getState()
+                if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey && !e.shiftKey) {
                     e.preventDefault()
@@ -1587,6 +1593,8 @@ function initKeyboardShortcuts() {
             break
             case 'c': {
                 if (e.target !== document.body) return
+                const intState = interpreter.getState()
+                if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (e.ctrlKey && !e.shiftKey) {
                     e.preventDefault()
@@ -1603,6 +1611,8 @@ function initKeyboardShortcuts() {
             break
             case 'v': {
                 if (e.target !== document.body) return
+                const intState = interpreter.getState()
+                if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                 if (e.ctrlKey && !e.shiftKey) {
                     e.preventDefault()
                     if (clipboard === null) return
@@ -1621,6 +1631,8 @@ function initKeyboardShortcuts() {
             break
             case 'delete': {
                 if (e.target !== document.body) return
+                const intState = interpreter.getState()
+                if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (!e.ctrlKey && !e.shiftKey) {
                     e.preventDefault()
@@ -1637,6 +1649,8 @@ function initKeyboardShortcuts() {
             break
             case 'escape': {
                 if (!e.ctrlKey && !e.shiftKey) {
+                    const intState = interpreter.getState()
+                    if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                     if (document.querySelectorAll("div.popup.visible").length !== 0) {
                         e.preventDefault()
                         closePopup(true)
