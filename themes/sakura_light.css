@@ -67,6 +67,8 @@
     --flowchart-selected-color1: #be6d75;
     --flowchart-selected-color2: #b02020;
     --flowchart-selected-color3: #ffffff;
+    --flowchart-Block-text-maxWidth: 55;
+    --flowchart-Comment-text-maxWidth: 70;
     --flowchart-Padding-base: 7;
     --insert-Wide-columnWidth: 7;
     --flowchart-scrollbar-color: #00000060;
