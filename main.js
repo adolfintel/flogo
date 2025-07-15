@@ -68,3 +68,8 @@ app.on('second-instance', (e, args) => {
     openThis = argv.find(arg => arg.toLowerCase().endsWith('.flogo')) ?? null
     createWindow()
 })
+
+app.on('open-file', (e, path) => { //for mac, currently untested
+    openThis = path ?? null
+    createWindow()
+})
