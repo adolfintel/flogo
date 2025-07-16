@@ -21,11 +21,7 @@ ipcMain.on('electron-store-delete', (event, key) => {
     event.returnValue = 'success'
 })
 
-let openThis = null
-
-const createWindow = () => {
-    const fileToOpen = openThis
-    openThis = null
+const createWindow = (openThis) => {
     const win = new BrowserWindow({
         width: 1280,
         height: 720,
@@ -40,8 +36,8 @@ const createWindow = () => {
     })
     win.on('ready-to-show', () => {
         win.show()
-        if (fileToOpen !== null) {
-            win.webContents.send('open-file', fileToOpen)
+        if (typeof openThis !== "undefined") {
+            win.webContents.send('open-file', openThis)
         }
     })
     win.on('close', async (e) => {
@@ -66,8 +62,16 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
-    openThis = process.argv.find(arg => arg.toLowerCase().endsWith('.flogo')) ?? null
-    createWindow()
+    let gotFile = false
+    process.argv.forEach(arg => {
+        if (arg.toLowerCase().endsWith('.flogo')) {
+            gotFile = true
+            createWindow(arg)
+        }
+    })
+    if (!gotFile) {
+        createWindow()
+    }
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow()
@@ -82,11 +86,18 @@ app.on('window-all-closed', () => {
 })
 
 app.on('second-instance', (e, args) => {
-    openThis = argv.find(arg => arg.toLowerCase().endsWith('.flogo')) ?? null
-    createWindow()
+    let gotFile = false
+    args.forEach(arg => {
+        if (arg.toLowerCase().endsWith('.flogo')) {
+            gotFile = true
+            createWindow(arg)
+        }
+    })
+    if (!gotFile) {
+        createWindow()
+    }
 })
 
 app.on('open-file', (e, path) => { //for mac, currently untested
-    openThis = path ?? null
-    createWindow()
+    createWindow(path)
 })
