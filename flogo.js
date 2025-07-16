@@ -889,6 +889,7 @@ const interpreter = {
             reset_rec(program)
         }
         interpreter._state = STATE_RUNNING
+        interpreter.preventTurbo = false
     },
     stop() {
         if (interpreter._state === STATE_CRASHED || interpreter._state === STATE_STOPPED) throw "Cannot stop a stopped/crashed program"
