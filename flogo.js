@@ -1158,14 +1158,7 @@ function clearMetadata() {
     metadata = {
         id: navigator.doNotTrack != 1 ? crypto.randomUUID() : "",
         authorId: _getAuthorUUID(),
-        title: "Program " +
-            new Date().toLocaleString("en-GB", {
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-            }),
+        title: "Untitled",
         author: "",
         created: Date.now(),
         modified: [],
