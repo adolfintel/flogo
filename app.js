@@ -1300,6 +1300,7 @@ function newProgram() {
         saveToHistory()
         updateFlowchart(true)
         clipboard = null
+        updateWindowTitle()
     }
     if (undoHistoryPtr <= 1) {
         realNewProgram()
@@ -1318,6 +1319,7 @@ function loadProgram() {
         const l = document.getElementById("filePicker")
         l.onchange = () => {
             document.getElementById("loadOverlay").style.display = "block"
+            updateWindowTitle()
             loadFromFile(l.files[0], (e) => {
                 cancelSelection()
                 recreateVariableList()
@@ -1333,6 +1335,7 @@ function loadProgram() {
                     toast("Program loaded")
                 }
                 document.getElementById("loadOverlay").style.display = "none"
+                updateWindowTitle()
             })
             l.value = "" //workaround: some chromium-based browsers don't trigger the onchange event on the input if selecting the same file
         }
@@ -1379,6 +1382,7 @@ function undo() {
     undoHistoryPtr--
     updateFlowchart()
     recreateVariableList()
+    updateWindowTitle()
 }
 
 function redo() {
@@ -1391,6 +1395,7 @@ function redo() {
     undoHistoryPtr++
     updateFlowchart()
     recreateVariableList()
+    updateWindowTitle()
 }
 
 //-------- SETTINGS STUFF --------
@@ -1423,8 +1428,14 @@ function settings_selectTab(id) {
 }
 
 function settings_updateMetadata() {
-    metadata.title = document.getElementById("metadata_title").value.trim()
-    metadata.author = document.getElementById("metadata_author").value.trim()
+    const title = document.getElementById("metadata_title").value.trim(),
+        author = document.getElementById("metadata_author").value.trim()
+    if (title !== metadata.title || author !== metadata.author) {
+        metadata.title = document.getElementById("metadata_title").value.trim()
+        metadata.author = document.getElementById("metadata_author").value.trim()
+        saveToHistory()
+        updateWindowTitle()
+    }
     closePopup(true)
 }
 
@@ -1752,6 +1763,18 @@ function selectContents(element) {
     }
 }
 
+function updateWindowTitle() {
+    if (document.getElementById("loadOverlay").style.visible === "block") {
+        document.title = "Flogo"
+    } else {
+        if (metadata.title.trim() !== "") {
+            document.title = metadata.title + " – Flogo"
+        } else {
+            document.title = "Flogo"
+        }
+    }
+}
+
 //-------- TOAST NOTIFICATIONS --------
 function toast(text, duration = 2000) {
     document.querySelectorAll("#toasts>div.toast").forEach(t => {
@@ -1830,6 +1853,7 @@ function initApp() {
                 edit_shapeFollower()
                 updateFlowchart(true)
                 pixelRatioChangeHandler()
+                updateWindowTitle()
                 if (typeof storage.recovery !== "undefined") {
                     showPopup("errorRec")
                 }
@@ -1853,6 +1877,7 @@ function initApp() {
     document.body.addEventListener("dragover", (e) => e.preventDefault())
     document.body.addEventListener("drop", (e) => {
         e.preventDefault()
+        closePopup(true)
         if (e.dataTransfer.items) {
             if (document.getElementById("errorScreen").style.display === "block") return
             if (e.dataTransfer.items.length !== 1) return
@@ -1864,6 +1889,7 @@ function initApp() {
             const f = e.dataTransfer.items[0].getAsFile() //workaround: for some reason this becomes undefined in chromium inside loadDraggedProgram, so I save it to this variable
             const loadDraggedProgram = () => {
                 document.getElementById("loadOverlay").style.display = "block"
+                updateWindowTitle()
                 loadFromFile(f, (e2) => {
                     cancelSelection()
                     recreateVariableList()
@@ -1879,6 +1905,7 @@ function initApp() {
                         toast("Program loaded")
                     }
                     document.getElementById("loadOverlay").style.display = "none"
+                    updateWindowTitle()
                 })
             }
             if (undoHistoryPtr <= 1) {
@@ -1925,6 +1952,7 @@ function recoverProgram() {
     updateFlowchart(true)
     saveToHistory()
     delete storage.recovery
+    updateWindowTitle()
     closePopup(true)
 }
 
