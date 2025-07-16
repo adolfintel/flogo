@@ -24,6 +24,8 @@ ipcMain.on('electron-store-delete', (event, key) => {
 let openThis = null
 
 const createWindow = () => {
+    const fileToOpen = openThis
+    openThis = null
     const win = new BrowserWindow({
         width: 1280,
         height: 720,
@@ -38,9 +40,8 @@ const createWindow = () => {
     })
     win.on('ready-to-show', () => {
         win.show()
-        if (openThis !== null) {
-            win.webContents.send('open-file', openThis)
-            openThis = null
+        if (fileToOpen !== null) {
+            win.webContents.send('open-file', fileToOpen)
         }
     })
     win.on('close', async (e) => {
