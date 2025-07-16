@@ -47,6 +47,8 @@
     --flowchart-Font-family: "Cinzel";
     --flowchart-Font-svgEmbeddableFile: "themes/Cinzel-Medium.woff2";
     --flowchart-Block-font-size: 14;
+    --flowchart-Block-text-maxWidth: 25;
+    --flowchart-Block-wrapMode: old;
     --flowchart-Line-arrow-size: 6;
     --flowchart-Line-color: #eaeef0;
     --flowchart-Line-font-size: 11.5;
