@@ -55,7 +55,6 @@ __Mini games__
 * [Quasar (similar to blackjack)](https://downloads.fdossena.com/geth.php?r=flogo-demo-15)
 
 ## Future features
-* Electron version
 * Arrays
 * Turtle graphics
 
