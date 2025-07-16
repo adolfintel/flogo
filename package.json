@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "buildwin": "electron-packager . --platform win32 --arch x64 --out out/ --icon images/winicon.ico --ignore .git --ignore .github --ignore .gitignore --ignore _SETUP --asar",
+    "buildlinux": "electron-packager . --platform linux --arch x64 --out out/ --icon images/icon.png --ignore .git --ignore .github --ignore .gitignore --ignore _SETUP --asar",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Federico Dossena",
