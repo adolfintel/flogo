@@ -23,7 +23,7 @@ function _isValidVariableName(name) {
     if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name)) {
         return false
     }
-    if (["true", "false", "PI", "E"].includes(name)) {
+    if (["true", "false", "PI", "E", "CURRENT_DAY", "CURRENT_MONTH", "CURRENT_YEAR", "CURRENT_HOURS", "CURRENT_MINUTES", "CURRENT_SECONDS"].includes(name)) {
         return false
     }
     return true
@@ -141,6 +141,12 @@ jsep.addLiteral("true", true)
 jsep.addLiteral("false", false)
 jsep.addLiteral("PI", Math.PI)
 jsep.addLiteral("E", Math.E)
+jsep.addLiteral("CURRENT_DAY", null)
+jsep.addLiteral("CURRENT_MONTH", null)
+jsep.addLiteral("CURRENT_YEAR", null)
+jsep.addLiteral("CURRENT_HOURS", null)
+jsep.addLiteral("CURRENT_MINUTES", null)
+jsep.addLiteral("CURRENT_SECONDS", null)
 jsep.addUnaryOp("-", 1)
 jsep.addUnaryOp("!", 1)
 jsep.addUnaryOp("+", 1)
@@ -165,7 +171,39 @@ function evaluateExpression(text) {
     const expr_rec = (n) => {
         switch (n.type) {
             case jsep.LITERAL: {
-                return n.value
+                if (n.value !== null) {
+                    return n.value
+                } else {
+                    switch (n.raw) {
+                        case "CURRENT_DAY": {
+                            return new Date().getDate()
+                        }
+                        break
+                        case "CURRENT_MONTH": {
+                            return new Date().getMonth() + 1
+                        }
+                        break
+                        case "CURRENT_YEAR": {
+                            return new Date().getFullYear()
+                        }
+                        break
+                        case "CURRENT_HOURS": {
+                            return new Date().getHours()
+                        }
+                        break
+                        case "CURRENT_MINUTES": {
+                            return new Date().getMinutes()
+                        }
+                        break
+                        case "CURRENT_SECONDS": {
+                            return new Date().getSeconds()
+                        }
+                        break
+                        default: {
+                            throw "Syntax error"
+                        }
+                    }
+                }
             }
             break
             case jsep.IDENTIFIER: {
@@ -466,7 +504,6 @@ function evaluateExpression(text) {
                     }
                     break
                     case "currentTime": {
-                        //TODO: maybe add functions for current date, month, year?
                         if (n.arguments.length !== 0) throw "currentTime takes no arguments"
                         return performance.now()
                     }
