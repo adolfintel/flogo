@@ -99,7 +99,8 @@
     --flowchart-Padding-base: 10;
     --flowchart-Padding-spaceBetweenInstructions: 24;
     --flowchart-Block-text-maxWidth: 40;
-    --flowchart-Comment-text-maxWidth: 50;
+    --flowchart-Comment-text-maxWidth: 30;
+    --flowchart-Block-wrapMode: new;
     --flowchart-Round-text-minWidth: 7;
     --flowchart-scrollbar-thickness: 6;
     --flowchart-scrollbar-padding: 4;

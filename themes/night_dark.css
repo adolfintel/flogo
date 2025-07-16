@@ -37,6 +37,8 @@
     --flowchart-Font-family: "Noto Sans";
     --flowchart-Font-svgEmbeddableFile: "fonts/NotoSans-Regular.woff2";
     --flowchart-Block-font-size: 13.25;
+    --flowchart-Block-text-maxWidth: 25;
+    --flowchart-Block-wrapMode: old;
     --flowchart-Block-outline-thickness: 1.5;
     --flowchart-Block-highlight-color1: #3c83f6;
     --flowchart-Block-highlight-color2: #ffffff;
