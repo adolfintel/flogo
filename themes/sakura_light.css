@@ -59,6 +59,8 @@
     --flowchart-Font-family: 'Caveat';
     --flowchart-Font-svgEmbeddableFile: 'themes/Caveat-Regular.woff2';
     --flowchart-Block-font-size: 15;
+    --flowchart-Block-text-maxWidth: 30;
+    --flowchart-Block-wrapMode: old;
     --flowchart-Line-thickness: 1.75;
     --flowchart-Line-arrow-size: 5;
     --flowchart-Line-color: #000000;
