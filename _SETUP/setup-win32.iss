@@ -1,5 +1,5 @@
 #define MyAppName "Flogo"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "Federico Dossena"
 #define MyAppURL "https://fdossena.com/?p=flogo/index.frag"
 #define MyAppExeName "flogo.exe"
