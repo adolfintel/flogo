@@ -1938,6 +1938,7 @@ function initApp() {
                     toast("Program loaded")
                 }
                 document.getElementById("loadOverlay").style.display = "none"
+                updateWindowTitle()
             })
         })
     })
