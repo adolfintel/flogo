@@ -7,6 +7,7 @@
     "start": "electron .",
     "buildwin": "electron-packager . --platform win32 --arch x64 --out out/ --icon images/winicon.ico --ignore .git --ignore .github --ignore .gitignore --ignore _SETUP --asar",
     "buildlinux": "electron-packager . --platform linux --arch x64 --out out/ --icon images/icon.png --ignore .git --ignore .github --ignore .gitignore --ignore _SETUP --asar",
+    "buildlinuxappimage": "electron-builder --linux AppImage --x64",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Federico Dossena",
@@ -14,9 +15,34 @@
   "private": false,
   "devDependencies": {
     "@electron/packager": "^18.3.6",
+    "electron-builder": "^26.0.12",
     "electron": "^37.2.1"
   },
   "dependencies": {
     "electron-store": "^10.1.0"
+  },
+  "build": {
+    "appId": "com.dosse.flogo",
+    "productName": "Flogo",
+    "files":[
+      "!_SETUP/",
+      "!out/"
+    ],
+    "directories": {
+      "output": "out"
+    },
+    "linux": {
+      "category": "Education",
+      "icon": "images/icon.png",
+      "mimeTypes": ["application/x-flogo"]
+    },
+    "fileAssociations": [
+      {
+        "ext": "flogo",
+        "name": "Flogo Program",
+        "icon": "images/icon_file.png",
+        "mimeType": "application/x-flogo"
+      }
+    ]
   }
 }
