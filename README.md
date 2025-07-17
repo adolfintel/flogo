@@ -59,6 +59,15 @@ __Mini games__
 * Arrays
 * Turtle graphics
 
+## Downloads
+[Try Flogo](https://flogo.fdossena.com), it can run directly in your browser and be installed as a PWA.
+
+[Windows (x64)](https://downloads.fdossena.com/geth.php?r=flogo-win)  
+[Linux (AUR package)](https://aur.archlinux.org/packages/flogo)  
+[Linux (AppImage for all distros)](https://downloads.fdossena.com/geth.php?r=flogo-linux-appimage)  
+
+More versions will be added in future releases.
+
 ## License
 Copyright (C) 2025 Federico Dossena
 
@@ -75,3 +84,4 @@ __Credits:__
 * [Material Design Icons](https://marella.github.io/material-design-icons): Icons used throughout the application (Apache-2.0 License)
 * Fonts distributed under the [SIL Open Font License](https://openfontlicense.org/): Noto Sans, Roboto Mono, Monoton, Caveat, Cinzel
 * Some CC0 graphics from [SVG Repo](https://www.svgrepo.com/)
+* The electron-based versions of the app contain a modified icon from [KDE Breeze Icons](https://github.com/KDE/breeze-icons) (LGPL 2.1)
