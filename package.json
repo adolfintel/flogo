@@ -1,6 +1,6 @@
 {
   "name": "flogo",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Create and run flow charts",
   "main": "main.js",
   "scripts": {
