@@ -39,11 +39,11 @@ div.popup.visible {
     transition: left 0.3s, display 0.3s allow-discrete;
 }
 
-body.small #variablesArea {
+#variablesArea {
     left: -20rem;
 }
 
-body.small #variablesArea.expanded {
+#variablesArea.expanded {
     left: 0;
 
     @starting-style {
@@ -60,11 +60,11 @@ body.small #variablesArea.expanded {
     transition: right 0.3s, display 0.3s allow-discrete;
 }
 
-body.small #consoleArea {
+#consoleArea {
     right: -25rem;
 }
 
-body.small #consoleArea.expanded {
+#consoleArea.expanded {
     right: 0;
 
     @starting-style {
