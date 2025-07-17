@@ -2,7 +2,7 @@
 #define MyAppVersion "1.0.1"
 #define MyAppPublisher "Federico Dossena"
 #define MyAppURL "https://fdossena.com/?p=flogo/index.frag"
-#define MyAppExeName "flogo.exe"
+#define MyAppExeName "Flogo.exe"
 
 [Setup]
 AppId={{E669A14D-0BA6-4705-B4A8-E80F7DC4235A}}
@@ -34,7 +34,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
 
 [Files]
-Source: "..\out\flogo-win32-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\out\win-unpacked\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\images\winicon_file.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Registry]

@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "buildwin": "electron-packager . --platform win32 --arch x64 --out out/ --icon images/winicon.ico --ignore .git --ignore .github --ignore .gitignore --ignore _SETUP --asar",
-    "buildlinux": "electron-packager . --platform linux --arch x64 --out out/ --icon images/icon.png --ignore .git --ignore .github --ignore .gitignore --ignore _SETUP --asar",
+    "buildwin": "electron-builder --win --x64 --dir",
+    "buildlinux": "electron-builder --linux --x64 --dir",
     "buildlinuxappimage": "electron-builder --linux AppImage --x64",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,7 +14,6 @@
   "license": "AGPL-3.0-or-later",
   "private": false,
   "devDependencies": {
-    "@electron/packager": "^18.3.6",
     "electron-builder": "^26.0.12",
     "electron": "^37.2.1"
   },
@@ -35,6 +34,9 @@
       "category": "Education",
       "icon": "images/icon.png",
       "mimeTypes": ["application/x-flogo"]
+    },
+    "win": {
+      "icon": "images/winicon.ico"
     },
     "fileAssociations": [
       {
