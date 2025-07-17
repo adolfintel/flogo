@@ -1,4 +1,4 @@
-const cacheName = "flogo-v1_0_1"
+const cacheName = "flogo-v1_0_2_release"
 const appFiles = [
     "index.html",
     "pwa.js",
