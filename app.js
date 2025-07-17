@@ -1765,15 +1765,28 @@ function selectContents(element) {
 }
 
 function updateWindowTitle() {
-    if (document.getElementById("loadOverlay").style.visible === "block") {
-        document.title = "Flogo"
-    } else {
-        if (metadata.title.trim() !== "") {
-            document.title = metadata.title + " – Flogo"
+    if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+        if (document.getElementById("loadOverlay").style.visible === "block") {
+            document.title = "Loading"
         } else {
+            if (metadata.title.trim() !== "") {
+                document.title = metadata.title
+            } else {
+                document.title = "Untitled"
+            }
+        }
+    } else {
+        if (document.getElementById("loadOverlay").style.visible === "block") {
             document.title = "Flogo"
+        } else {
+            if (metadata.title.trim() !== "") {
+                document.title = metadata.title + " – Flogo"
+            } else {
+                document.title = "Untitled – Flogo"
+            }
         }
     }
+
 }
 
 //-------- TOAST NOTIFICATIONS --------
