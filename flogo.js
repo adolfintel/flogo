@@ -123,7 +123,7 @@ function removeVariable(name) {
  * Comparison operators: < > <= >= == !=
  * Logical operators: ! && ||
  * Literals and constants: true, false, PI, E
- * Built-in functions: abs, sqrt, sin, cos, tan, asin, acos, atan, ln, log(base,val) ceil, floor, round, toFixed(val,digits), random (real between 0 and 1), len, charAt(string,index), codeToChar, charToCode, strToReal, strToInt, currentTime
+ * Built-in functions: abs, sqrt, sin, cos, tan, asin, acos, atan, ln, log(base,val) ceil, floor, round, toFixed(val,digits), random (real between 0 and 1), len, charAt(string,index), codeToChar, charToCode, strToReal, strToInt
  * Round brackets are allowed in expressions
  * Strings are delimited by single or double quotes
  * Trigonometric functions work with rads
@@ -147,6 +147,7 @@ jsep.addLiteral("CURRENT_YEAR", null)
 jsep.addLiteral("CURRENT_HOURS", null)
 jsep.addLiteral("CURRENT_MINUTES", null)
 jsep.addLiteral("CURRENT_SECONDS", null)
+jsep.addLiteral("CURRENT_TS", null)
 jsep.addUnaryOp("-", 1)
 jsep.addUnaryOp("!", 1)
 jsep.addUnaryOp("+", 1)
@@ -197,6 +198,10 @@ function evaluateExpression(text) {
                         break
                         case "CURRENT_SECONDS": {
                             return new Date().getSeconds()
+                        }
+                        break
+                        case "CURRENT_TS": {
+                            return performance.now()
                         }
                         break
                         default: {
@@ -501,11 +506,6 @@ function evaluateExpression(text) {
                         if (isNaN(val)) throw "String does not contain a valid number"
                         if (!Number.isInteger(val) || val < Number.MIN_SAFE_INTEGER || val > Number.MAX_SAFE_INTEGER) throw "String does not contain a valid integer"
                         return Math.trunc(val)
-                    }
-                    break
-                    case "currentTime": {
-                        if (n.arguments.length !== 0) throw "currentTime takes no arguments"
-                        return performance.now()
                     }
                     break
                     default: {
