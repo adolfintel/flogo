@@ -1861,6 +1861,13 @@ function setFlowchartCamera(x, y) {
     })
 }
 
+function centerFlowchartOnProgramEnd() {
+    const p = blockLayer.children[0]
+    const x = stage.width() / 2 - p.flogo_connX * stage.scaleX()
+    const y = -p.flogo_height * stage.scaleY()
+    setFlowchartCamera(x, y)
+}
+
 function _getCSSVal(name, defaultValue, element = blockLayer.getCanvas()._canvas) {
     const v = getComputedStyle(element).getPropertyValue(name)
     if (v !== "") {

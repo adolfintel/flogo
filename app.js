@@ -770,6 +770,7 @@ function ui_onProgramEnd() {
     d.innerText = "Program finished"
     document.getElementById("log").prepend(d)
     variablesEditor_enable()
+    centerFlowchartOnProgramEnd()
     //resetVariables()
 }
 
