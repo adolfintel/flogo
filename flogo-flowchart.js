@@ -1806,7 +1806,7 @@ function initFlowchart(id) {
 }
 
 function ensureInstructionVisibleInFlowchart(i) {
-    if (i !== null && i.drawable.flogo_highlightable !== null) {
+    if (i !== null && i.drawable.flogo_highlightable !== null && !stage.isDragging()) {
         let ipos = i.drawable.flogo_highlightable.absolutePosition()
         const x = ipos.x + i.drawable.flogo_highlightable.width() * stage.scaleX()
         const y = ipos.y + i.drawable.flogo_highlightable.height() * stage.scaleY()
@@ -1862,6 +1862,7 @@ function setFlowchartCamera(x, y) {
 }
 
 function centerFlowchartOnProgramEnd() {
+    if (stage.isDragging()) return
     const p = blockLayer.children[0]
     const x = stage.width() / 2 - p.flogo_connX * stage.scaleX()
     const y = -p.flogo_height * stage.scaleY()
