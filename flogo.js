@@ -122,7 +122,7 @@ function removeVariable(name) {
  * Math operators: ^ * / % + -
  * Comparison operators: < > <= >= == !=
  * Logical operators: ! && ||
- * Literals and constants: true, false, PI, E
+ * Literals and constants: true, false, PI, E, CURRENT_DAY, CURRENT_MONTH, CURRENT_YEAR, CURRENT_HOURS, CURRENT_MINUTES, CURRENT_SECONDS
  * Built-in functions: abs, sqrt, sin, cos, tan, asin, acos, atan, ln, log(base,val) ceil, floor, round, toFixed(val,digits), random (real between 0 and 1), len, charAt(string,index), codeToChar, charToCode, strToReal, strToInt
  * Round brackets are allowed in expressions
  * Strings are delimited by single or double quotes
