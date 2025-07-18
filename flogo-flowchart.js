@@ -1054,8 +1054,8 @@ While.prototype.createDrawable = function() {
     }
     const arrowOut = new Konva.Arrow({
         x: condition.flogo_width / 2,
-        y: condition.flogo_height,
-        points: [0, 0, 0, b.flogo_height + SPACE_BETWEEN_INSTRUCTIONS * 2],
+        y: 0,
+        points: [0, condition.flogo_height, 0, endY],
         pointerLength: 0,
         pointerWidth: 0,
         fill: LINE_COLOR,
@@ -1224,8 +1224,8 @@ For.prototype.createDrawable = function() {
     }
     const arrowOut = new Konva.Arrow({
         x: condition.flogo_width / 2,
-        y: condition.flogo_height,
-        points: [0, 0, 0, b.flogo_height + SPACE_BETWEEN_INSTRUCTIONS * 2],
+        y: 0,
+        points: [0, condition.flogo_height, 0, endY],
         pointerLength: 0,
         pointerWidth: 0,
         fill: LINE_COLOR,
