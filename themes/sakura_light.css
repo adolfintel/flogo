@@ -133,3 +133,11 @@
 #editor2>div:hover {
     color: var(--ui-color-text);
 }
+
+#input_send {
+    background: var(--ui-color-accent2);
+}
+
+#input:focus {
+    box-shadow: 0 0 0 var(--ui-measure-border-thick) var(--ui-color-accent2) inset;
+}
