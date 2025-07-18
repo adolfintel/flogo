@@ -839,7 +839,7 @@ div.variable:not(.editing) .edit {
 #log div.message {
     max-width: 85%;
     min-width: 3rem;
-    border-width: var(--ui-measure-border-medium);
+    border-width: calc(var(--flowchart-Block-outline-thickness) * 1px);
     border-style: solid;
     padding: 0.35rem 0.6rem;
     margin-top: var(--ui-measure-spacer-small);
