@@ -212,7 +212,7 @@ function evaluateExpression(text) {
             }
             break
             case jsep.IDENTIFIER: {
-                if (typeof variables[n.name] === "undefined") throw "Variable does not exist " + n.name
+                if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
                 if (variables[n.name].value === null) throw "Variable not initialized: " + n.name
                 return variables[n.name].value
             }
