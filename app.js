@@ -1477,8 +1477,11 @@ function settings_downloadPNG() {
 }
 
 function showLicense() {
-    closePopup(true)
-    showPopup("licenseViewer")
+    document.getElementById("licenseViewer").classList.add("visible")
+}
+
+function hideLicense() {
+    document.getElementById("licenseViewer").classList.remove("visible")
 }
 
 //-------- MANUAL STUFF --------
