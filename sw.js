@@ -27,7 +27,6 @@ const appFiles = [
     "themes/glass_dark.css",
     "themes/eink_light.css",
     "themes/night_dark.css",
-    "themes/colors.webp",
     "themes/blossoms.svg",
     "themes/alchemy.svg",
     "themes/Caveat-Regular.woff2",

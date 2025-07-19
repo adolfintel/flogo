@@ -61,7 +61,8 @@ let ASSIGN_COLOR1,
     SCROLLBAR_THICKNESS,
     SCROLLBAR_COLOR,
     SCROLLBAR_PADDING,
-    MINVIS
+    MINVIS,
+    FLOWCHART_OCCLUDED_ON_TOP = 0
 
 let _allowZoomOnFlowchart = false
 
@@ -1511,7 +1512,7 @@ function initFlowchart(id) {
         cornerRadius: Infinity,
         dragBoundFunc: function(pos) {
             pos.x = stage.width() - SCROLLBAR_PADDING - SCROLLBAR_THICKNESS
-            if (pos.y < SCROLLBAR_PADDING + SCROLLBAR_THICKNESS) pos.y = SCROLLBAR_PADDING + SCROLLBAR_THICKNESS
+            if (pos.y < SCROLLBAR_PADDING + SCROLLBAR_THICKNESS + FLOWCHART_OCCLUDED_ON_TOP) pos.y = SCROLLBAR_PADDING + SCROLLBAR_THICKNESS + FLOWCHART_OCCLUDED_ON_TOP
             if (pos.y + vbar.height() * stage.scaleY() > stage.height() - SCROLLBAR_PADDING - SCROLLBAR_THICKNESS)
                 pos.y = stage.height() - SCROLLBAR_PADDING - SCROLLBAR_THICKNESS - vbar.height() * stage.scaleY()
             return pos
@@ -1557,18 +1558,18 @@ function initFlowchart(id) {
             stageLeft = stage.x(),
             stageBottom = stage.y() + stage.flogo_realHeight * stage.scaleY(),
             stageRight = stage.x() + stage.flogo_realWidth * stage.scaleX()
-        const playY = stageBottom - stageTop + MINVIS - stage.height()
+        const playY = stageBottom - stageTop + MINVIS - stage.height() + FLOWCHART_OCCLUDED_ON_TOP
         if (playY > 0) {
             const minY = -(stageBottom - stageTop) + stage.height() - MINVIS * 2
             if (stageTop < minY) {
                 stage.y(minY)
             }
-            if (stageTop > MINVIS) {
-                stage.y(MINVIS)
+            if (stageTop > MINVIS + FLOWCHART_OCCLUDED_ON_TOP) {
+                stage.y(MINVIS + FLOWCHART_OCCLUDED_ON_TOP)
             }
             vbar.show()
         } else {
-            stage.y(PADDING_BASE)
+            stage.y(PADDING_BASE + FLOWCHART_OCCLUDED_ON_TOP)
             vbar.hide()
         }
         const playX = stageRight - stageLeft - stage.width() + MINVIS * 4
@@ -1739,16 +1740,16 @@ function initFlowchart(id) {
         if (newScrollbarState !== oldScrollbarState) {
             oldScrollbarState = newScrollbarState
             if (vbar.visible()) {
-                const realHeight = stage.flogo_realHeight + (MINVIS * 3) / stage.scaleY()
-                let yPos = -((stage.y() - MINVIS) / stage.scaleY()) / (realHeight - stage.height() / stage.scaleY())
+                const realHeight = stage.flogo_realHeight + (MINVIS * 3 + FLOWCHART_OCCLUDED_ON_TOP) / stage.scaleY()
+                let yPos = -((stage.y() - MINVIS - FLOWCHART_OCCLUDED_ON_TOP) / stage.scaleY()) / (realHeight - stage.height() / stage.scaleY())
                 yPos = yPos < 0 ? 0 : yPos > 1 ? 1 : yPos
                 vbar.x((stage.width() - stage.x() - SCROLLBAR_THICKNESS - SCROLLBAR_PADDING) / stage.scaleX())
                 vbar.width(SCROLLBAR_THICKNESS / stage.scaleX())
-                const maxYSize = stage.height() * 0.9
-                let ySize = (500 * (stage.height() / stage.scaleY())) / realHeight
+                const maxYSize = (stage.height() - FLOWCHART_OCCLUDED_ON_TOP) * 0.9
+                let ySize = (500 * ((stage.height() - FLOWCHART_OCCLUDED_ON_TOP) / stage.scaleY())) / realHeight
                 ySize = ySize < 20 ? 20 : ySize > maxYSize ? maxYSize : ySize
                 vbar.height(ySize / stage.scaleY())
-                vbar.y((SCROLLBAR_PADDING + SCROLLBAR_THICKNESS + yPos * (stage.height() - ySize - 2 * (SCROLLBAR_PADDING + SCROLLBAR_THICKNESS)) - stage.y()) / stage.scaleY())
+                vbar.y((FLOWCHART_OCCLUDED_ON_TOP + SCROLLBAR_PADDING + SCROLLBAR_THICKNESS + yPos * (stage.height() - ySize - 2 * (SCROLLBAR_PADDING + SCROLLBAR_THICKNESS) - FLOWCHART_OCCLUDED_ON_TOP) - stage.y()) / stage.scaleY())
                 vbar.fill(SCROLLBAR_COLOR)
                 vbar.setHitStrokeWidth(SCROLLBAR_PADDING)
             }
@@ -1771,14 +1772,14 @@ function initFlowchart(id) {
     let yDragOff = 0,
         xDragOff = 0
     vbar.on("dragmove", (e) => {
-        const y = _extractCoordFromEvent(e.evt, "clientY", 0) - yDragOff - blockLayer.getCanvas()._canvas.getBoundingClientRect().top
+        const y = _extractCoordFromEvent(e.evt, "clientY", 0) - yDragOff - blockLayer.getCanvas()._canvas.getBoundingClientRect().top - FLOWCHART_OCCLUDED_ON_TOP
         const yTop = SCROLLBAR_PADDING + SCROLLBAR_THICKNESS,
             yBottom = stage.height() - (SCROLLBAR_PADDING + SCROLLBAR_THICKNESS) - vbar.height() * stage.scaleY()
-        let yPos = (y - yTop) / (yBottom - yTop)
+        let yPos = (y - yTop) / (yBottom - yTop - FLOWCHART_OCCLUDED_ON_TOP)
         yPos = yPos < 0 ? 0 : yPos > 1 ? 1 : yPos
-        const h = stage.flogo_realHeight * stage.scaleY() + MINVIS * 3 - stage.height()
+        const h = stage.flogo_realHeight * stage.scaleY() + MINVIS * 3 - stage.height() + FLOWCHART_OCCLUDED_ON_TOP
         yPos *= h
-        stage.y(-yPos + MINVIS)
+        stage.y(-yPos + MINVIS + FLOWCHART_OCCLUDED_ON_TOP)
     })
     vbar.on("dragstart", (e) => {
         yDragOff = _extractCoordFromEvent(e.evt, "clientY", 0) - (vbar.y() * stage.scaleY() + stage.y()) - blockLayer.getCanvas()._canvas.getBoundingClientRect().top
@@ -1839,7 +1840,7 @@ function updateFlowchart(resetCamera = false) {
     blockLayer.add(i)
     if (resetCamera) {
         setFlowchartZoom(1)
-        setFlowchartCamera(stage.width() / 2 - i.flogo_connX, PADDING_BASE)
+        setFlowchartCamera(stage.width() / 2 - i.flogo_connX, PADDING_BASE + FLOWCHART_OCCLUDED_ON_TOP)
     }
 }
 

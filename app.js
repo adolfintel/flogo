@@ -1581,6 +1581,12 @@ function showPopup(d) {
     document.getElementById("popupBackdrop").classList.add("active")
 }
 
+function updateFlowchartOcclusion() {
+    const barBounds = document.getElementById("bar").getBoundingClientRect(),
+        fcBounds = document.getElementById("flowchartArea").getBoundingClientRect()
+    FLOWCHART_OCCLUDED_ON_TOP = barBounds.y + barBounds.height - fcBounds.y
+}
+
 //-------- KEYBOARD SHORTCUTS --------
 function initKeyboardShortcuts() {
     document.body.addEventListener('keydown', e => {
@@ -1892,11 +1898,13 @@ function initApp() {
                         e.flogo_stage.getLayers()[0].getCanvas().setPixelRatio(window.devicePixelRatio)
                         e.flogo_stage.draw()
                     })
+                    updateFlowchartOcclusion()
                 }
             }
             const endOfLoad = () => {
                 applyBrowserThemeColorFromCSS()
                 edit_shapeFollower()
+                updateFlowchartOcclusion()
                 updateFlowchart(true)
                 pixelRatioChangeHandler()
                 updateWindowTitle()
@@ -1922,6 +1930,7 @@ function initApp() {
         })
     })
     window.addEventListener("resize", closePopup)
+    window.addEventListener("resize", updateFlowchartOcclusion)
     window.onbeforeunload = (e) => {
         if (document.getElementById("errorScreen").style.display === "block") return
         if (undoHistoryPtr <= 1) return
@@ -2021,6 +2030,7 @@ function loadTheme(name, callback) {
         SMALL_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-small-threshold", 45, document.body))
         applyBrowserThemeColorFromCSS()
         storage.theme = name
+        updateFlowchartOcclusion()
         loadFlowchartThemeFromCSS(() => {
             insert_preparePopups()
             edit_prepareGraphics()

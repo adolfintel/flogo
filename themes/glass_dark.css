@@ -6,8 +6,8 @@
 }
 
 #bar {
-    background: url('colors.webp');
-    background-size: cover;
+    background: #20202040;
+    backdrop-filter: blur(1rem);
 }
 
 div.popup {
@@ -35,6 +35,7 @@ div.popup.visible {
     transition: left 0.5s, right 0.5s;
     transform: none !important;
     /*neutralizes the 1 frame jitter workaround in toggleConsoleArea*/
+    top: 0;
 }
 
 #variablesArea {
