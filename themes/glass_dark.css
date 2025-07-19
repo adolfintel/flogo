@@ -33,6 +33,8 @@ div.popup.visible {
 
 #flowchartArea {
     transition: left 0.5s, right 0.5s;
+    transform: none !important;
+    /*neutralizes the 1 frame jitter workaround in toggleConsoleArea*/
 }
 
 #variablesArea {

@@ -1539,7 +1539,19 @@ function autoLayout(first = false) {
 function toggleVariablesArea() {
     const va = document.getElementById("variablesArea")
     va.classList.toggle("expanded")
-    document.getElementById("flowchartArea").classList.toggle("variablesExpanded")
+    //workaround: there is a 1 frame "jitter" in the layout when flowchartArea is resized because konva won't redraw until the frame after our layout shift. To workaround this, we add a transform that moves the old content in the new place, and remove it the very next frame after konva has drawn the new content in the correct spot. This issue is not visible in the right side, so toggleConsoleArea doesn't have this code
+    const fc = document.getElementById("flowchartArea")
+    fc.classList.toggle("variablesExpanded")
+    if (fc.classList.contains("variablesExpanded")) {
+        fc.style.transform = "translateX(calc(var(--layout-variablesArea-width) * -1))"
+    } else {
+        fc.style.transform = "translateX(var(--layout-variablesArea-width))"
+    }
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            fc.style.transform = ""
+        })
+    })
     lastToggled = va
 }
 
