@@ -14,34 +14,50 @@
     <link rel="manifest" href="manifest.json">
     <script type="text/javascript" src="settingsStorage.js"></script>
     <script type="text/javascript">
+        let crashHandlerMode = 0 //0=reload on error, 1=show crash screen
         window.onerror = function(e, url, line) {
-            console.log("Unhandled exception caught: " + e + " in " + url + "@" + line + ", showing error screen")
-            window.onerror = null
-            try {
-                document.getElementById("theme").remove()
-            } catch (ex) {}
-            setTimeout(() => {
+            console.log("Unhandled exception caught: " + e + " in " + url + "@" + line + ", handling error")
+            const rok = document.getElementById("error_recoveryOk"),
+                rf = document.getElementById("error_recoveryFailed"),
+                rnn = document.getElementById("error_recoveryNotNecessary")
+            if (crashHandlerMode === 1) {
+                window.onerror = null
                 try {
-                    document.querySelectorAll("body>*").forEach(e => e.style.display = "none")
+                    document.getElementById("theme").remove()
                 } catch (ex) {}
-                try {
-                    document.getElementById("errorScreen").style.display = "block"
+                setTimeout(() => {
                     try {
-                        storage.recovery = save(false)
-                        document.getElementById("error_recovery").style.display = "block"
-                        document.getElementById("error_restart").style.display = "none"
-                    } catch (ex) {
-                        document.getElementById("error_recovery").style.display = "none"
-                        document.getElementById("error_restart").style.display = "block"
-                        delete storage.recovery
-                    }
-                } catch (ex) {
-                    try {
-                        delete storage.recovery
+                        document.querySelectorAll("body>*").forEach(e => e.style.display = "none")
                     } catch (ex) {}
-                    window.location.reload()
-                }
-            }, 100)
+                    try {
+                        document.getElementById("errorScreen").style.display = "block"
+                        try {
+                            const res = saveProgramForRecovery()
+                            if (res === 1) {
+                                rok.style.display = "block"
+                                rf.style.display = "none"
+                                rnn.style.display = "none"
+                            } else {
+                                rok.style.display = "none"
+                                rf.style.display = "none"
+                                rnn.style.display = "block"
+                            }
+                        } catch (ex) {
+                            rok.style.display = "none"
+                            rf.style.display = "block"
+                            rnn.style.display = "none"
+                            delete storage.recovery
+                        }
+                    } catch (ex) {
+                        try {
+                            delete storage.recovery
+                        } catch (ex) {}
+                        window.location.reload()
+                    }
+                }, 0)
+            } else if (crashHandlerMode === 0) {
+                window.location.reload()
+            }
         }
     </script>
     <script type="text/javascript" src="pwa.js"></script>
@@ -122,11 +138,6 @@
             font-size: 6rem;
             display: block;
         }
-
-        #error_recovery,
-        #error_restart {
-            display: none;
-        }
     </style>
 </head>
 
@@ -145,13 +156,17 @@
         <p>
             Flogo has crashed. This is not a problem with your program but a bug in Flogo.
         </p>
-        <p id="error_recovery">
+        <p id="error_recoveryOk">
             <b>Your program can be recovered.</b><br>
             <button onclick="window.location.reload()" class="important">Restart Flogo</button>
         </p>
-        <p id="error_restart">
+        <p id="error_recoveryFailed">
             <b>Unfortunately, your program was lost in the crash.</b><br>
             <button onclick="window.location.reload()" class="danger">Restart Flogo</button>
+        </p>
+        <p id="error_recoveryNotNecessary">
+            <b>Try restarting the app, if the problem persists, try another browser.</b><br>
+            <button onclick="window.location.reload()" class="important">Restart Flogo</button>
         </p>
     </div>
     <div id="errorRec" class="popup noAutoClose">

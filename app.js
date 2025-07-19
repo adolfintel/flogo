@@ -1887,6 +1887,8 @@ function initApp() {
                 updateWindowTitle()
                 if (typeof storage.recovery !== "undefined") {
                     showPopup("errorRec")
+                } else {
+                    crashHandlerMode = 1
                 }
             }
             if (typeof storage.theme !== "undefined") {
@@ -1964,12 +1966,23 @@ function recoverProgram() {
     saveToHistory()
     delete storage.recovery
     updateWindowTitle()
+    crashHandlerMode = 1
     closePopup(true)
 }
 
 function deleteRecovery() {
     delete storage.recovery
+    crashHandlerMode = 1
     closePopup(true)
+}
+
+function saveProgramForRecovery() {
+    if (program.body.length !== 0 || Object.keys(variables).length !== 0) {
+        storage.recovery = save(false)
+        return 1
+    } else {
+        return 0
+    }
 }
 
 function loadTheme(name, callback) {
