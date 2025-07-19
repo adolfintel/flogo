@@ -1559,7 +1559,7 @@ function initFlowchart(id) {
             stageRight = stage.x() + stage.flogo_realWidth * stage.scaleX()
         const playY = stageBottom - stageTop + MINVIS - stage.height()
         if (playY > 0) {
-            const minY = -(stageBottom - stageTop) + stage.height() - MINVIS
+            const minY = -(stageBottom - stageTop) + stage.height() - MINVIS * 2
             if (stageTop < minY) {
                 stage.y(minY)
             }
@@ -1571,12 +1571,12 @@ function initFlowchart(id) {
             stage.y(PADDING_BASE)
             vbar.hide()
         }
-        const playX = stageRight - stageLeft - stage.width()
+        const playX = stageRight - stageLeft - stage.width() + MINVIS * 4
         const chartMidX = (stage.flogo_realWidth * stage.scaleX()) / 2
         if (playX > 0) {
             const midX = stage.width() / 2
-            const minX = midX - playX / 2 - MINVIS,
-                maxX = midX + playX / 2 + MINVIS
+            const minX = midX - playX / 2 - MINVIS * 2,
+                maxX = midX + playX / 2 + MINVIS * 2
             const stageMidX = (stageLeft + stageRight) / 2
             if (stageMidX < minX) {
                 stage.x(minX - chartMidX)
@@ -1739,7 +1739,7 @@ function initFlowchart(id) {
         if (newScrollbarState !== oldScrollbarState) {
             oldScrollbarState = newScrollbarState
             if (vbar.visible()) {
-                const realHeight = stage.flogo_realHeight + (MINVIS * 2) / stage.scaleY()
+                const realHeight = stage.flogo_realHeight + (MINVIS * 3) / stage.scaleY()
                 let yPos = -((stage.y() - MINVIS) / stage.scaleY()) / (realHeight - stage.height() / stage.scaleY())
                 yPos = yPos < 0 ? 0 : yPos > 1 ? 1 : yPos
                 vbar.x((stage.width() - stage.x() - SCROLLBAR_THICKNESS - SCROLLBAR_PADDING) / stage.scaleX())
@@ -1753,8 +1753,8 @@ function initFlowchart(id) {
                 vbar.setHitStrokeWidth(SCROLLBAR_PADDING)
             }
             if (hbar.visible()) {
-                const realWidth = stage.flogo_realWidth + (MINVIS * 2) / stage.scaleX()
-                let xPos = -((stage.x() - MINVIS) / stage.scaleX()) / (realWidth - stage.width() / stage.scaleX())
+                const realWidth = stage.flogo_realWidth + (MINVIS * 8) / stage.scaleX()
+                let xPos = -((stage.x() - MINVIS * 4) / stage.scaleX()) / (realWidth - stage.width() / stage.scaleX())
                 xPos = xPos < 0 ? 0 : xPos > 1 ? 1 : xPos
                 hbar.y((stage.height() - stage.y() - SCROLLBAR_THICKNESS - SCROLLBAR_PADDING) / stage.scaleY())
                 hbar.height(SCROLLBAR_THICKNESS / stage.scaleY())
@@ -1776,7 +1776,7 @@ function initFlowchart(id) {
             yBottom = stage.height() - (SCROLLBAR_PADDING + SCROLLBAR_THICKNESS) - vbar.height() * stage.scaleY()
         let yPos = (y - yTop) / (yBottom - yTop)
         yPos = yPos < 0 ? 0 : yPos > 1 ? 1 : yPos
-        const h = stage.flogo_realHeight * stage.scaleY() + MINVIS * 2 - stage.height()
+        const h = stage.flogo_realHeight * stage.scaleY() + MINVIS * 3 - stage.height()
         yPos *= h
         stage.y(-yPos + MINVIS)
     })
@@ -1789,9 +1789,9 @@ function initFlowchart(id) {
             xRight = stage.width() - (SCROLLBAR_PADDING + SCROLLBAR_THICKNESS) - hbar.width() * stage.scaleX()
         let xPos = (x - xLeft) / (xRight - xLeft)
         xPos = xPos < 0 ? 0 : xPos > 1 ? 1 : xPos
-        const w = stage.flogo_realWidth * stage.scaleX() + MINVIS * 2 - stage.width()
+        const w = stage.flogo_realWidth * stage.scaleX() + MINVIS * 8 - stage.width()
         xPos *= w
-        stage.x(-xPos + MINVIS)
+        stage.x(-xPos + MINVIS * 4)
     })
     hbar.on("dragstart", (e) => {
         xDragOff = _extractCoordFromEvent(e.evt, "clientX", 0) - (hbar.x() * stage.scaleX() + stage.x()) - blockLayer.getCanvas()._canvas.getBoundingClientRect().left
