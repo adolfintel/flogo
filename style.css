@@ -113,8 +113,8 @@
     --insert-Tall-Padding-belowRow: 20;
     --insert-Tall-Padding-spaceBetweenInstructions: 20;
     --crash-Padding-spaceFromInstruction: 10;
-    --layout-large-threshold: 75;
-    --layout-small-threshold: 45;
+    --layout-large-threshold: 80;
+    --layout-small-threshold: 55;
     --layout-consoleArea-width: 25rem;
     --layout-variablesArea-width: 20rem;
     --toast-background: #ffffffd0;
