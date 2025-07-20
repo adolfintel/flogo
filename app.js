@@ -1419,6 +1419,16 @@ function openSettings() {
     document.getElementById("settings_fps").checked = storage.showFps === "true"
     document.getElementById("settings_allowZoomOnFlowchart").checked = _allowZoomOnFlowchart
     document.getElementById("settings_altTurboTSlice").checked = _altTurboTSlice
+    const badge = document.getElementById("versionTypeBadge")
+    if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+        badge.innerText = "PWA"
+        badge.style.background = "#5a0ec9"
+        badge.style.color = "#ffffff"
+    } else {
+        badge.innerText = "Web"
+        badge.style.background = "#f1582f"
+        badge.style.color = "#ffffff"
+    }
     showPopup("settings")
 }
 

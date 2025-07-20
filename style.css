@@ -1018,6 +1018,14 @@ div.settings_tab.selected {
     text-align: center;
 }
 
+#versionTypeBadge {
+    border-radius: 0.1rem;
+    margin: 0 0.5rem;
+    padding: 0 0.2rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
 #metadata_buttons,
 #style_buttons,
 #about_buttons,
