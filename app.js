@@ -1493,8 +1493,8 @@ function man_scrollTo(name) {
 
 //-------- LAYOUT-RELATED STUFF --------
 
-let LARGE_LAYOUT_THRESHOLD = 75 //>=75rem, the app will start with both side bars expanded
-let SMALL_LAYOUT_THRESHOLD = 45 //<=45rem, the app will not allow you to keep both bars expanded at the same time
+let LARGE_LAYOUT_THRESHOLD = 80 //>=80rem, the app will start with both side bars expanded
+let SMALL_LAYOUT_THRESHOLD = 55 //<=55rem, the app will not allow you to keep both bars expanded at the same time
 let lastToggled = null
 
 function autoLayout(first = false) {
