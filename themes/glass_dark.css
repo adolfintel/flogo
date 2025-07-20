@@ -1,23 +1,34 @@
 :root {
     --browser-theme-color: #202020;
     --ui-color-background1: #202020;
+    --ui-color-form-background: #383838;
+}
+
+#editor {
     --ui-color-form-background: #404040a0;
     --ui-color-form-disabled: #808080a0;
 }
 
 #bar {
-    background: #20202040;
+    background: #28282840;
     backdrop-filter: blur(1rem);
+    border-bottom-width: var(--ui-measure-border-medium);
+
+}
+
+#man {
+    background: var(--ui-color-background1);
 }
 
 div.popup {
     border: var(--ui-measure-border-thick) solid #ffffff20;
     border-radius: var(--ui-measure-border-radius);
-    background: #00000040;
+    background: #20202040;
     backdrop-filter: blur(1rem);
-    transition: transform 0.3s, opacity 0.3s, display 0.3s allow-discrete;
-    transform: scale(0.975);
+    transition: transform 0.25s, opacity 0.25s, display 0.25s allow-discrete;
+    transform: scale(0.98);
     opacity: 0;
+    box-shadow: 0 0.25rem 2rem #00000060;
 }
 
 div.popup.visible {
@@ -26,13 +37,13 @@ div.popup.visible {
 
     @starting-style {
         /*Note: this only works properly in chromium-based browsers*/
-        transform: scale(1.025);
+        transform: scale(1.02);
         opacity: 0;
     }
 }
 
 #flowchartArea {
-    transition: left 0.5s, right 0.5s;
+    transition: left 0.15s, right 0.15s;
     transform: none !important;
     /*neutralizes the 1 frame jitter workaround in toggleConsoleArea*/
     top: 0;
@@ -43,7 +54,7 @@ div.popup.visible {
 }
 
 #variablesArea {
-    left: -20rem;
+    left: calc(var(--layout-variablesArea-width) * -1);
 }
 
 #variablesArea.expanded {
@@ -51,7 +62,7 @@ div.popup.visible {
 
     @starting-style {
         /*Note: this only works properly in chromium-based browsers*/
-        left: -20rem;
+        left: calc(var(--layout-variablesArea-width) * -1);
     }
 }
 
@@ -64,17 +75,21 @@ div.popup.visible {
 }
 
 #consoleArea {
-    right: -25rem;
+    right: calc(var(--layout-consoleArea-width) * -1);
 }
 
 #consoleArea.expanded {
     right: 0;
 
     @starting-style {
-        right: -25rem;
+        right: calc(var(--layout-consoleArea-width) * -1);
     }
 }
 
 #consoleExpander {
     transition: right 0.3s;
+}
+
+div.toast {
+    backdrop-filter: blur(1rem);
 }
