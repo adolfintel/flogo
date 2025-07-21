@@ -1997,11 +1997,11 @@ function initApp() {
     document.body.addEventListener("dragover", (e) => e.preventDefault())
     document.body.addEventListener("drop", (e) => {
         e.preventDefault()
-        closePopup(true)
         if (e.dataTransfer.items) {
             if (document.getElementById("errorScreen").style.display === "block") return
             if (e.dataTransfer.items.length !== 1) return
             if (e.dataTransfer.items[0].kind !== "file") return
+            closePopup(true)
             const intState = interpreter.getState()
             if (intState === STATE_RUNNING || intState === STATE_PAUSED) {
                 stopProgram()
