@@ -1214,6 +1214,8 @@ function variablesEditor_moveVariableAtDropIndicator(v) {
         if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
         list.removeChild(after)
         before.after(after)
+    } else {
+        return
     }
     variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList()
     saveToHistory()
