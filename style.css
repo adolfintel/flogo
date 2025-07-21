@@ -733,6 +733,20 @@ div.variable:not(.editing) .edit {
     margin: var(--ui-measure-spacer-medium) auto;
 }
 
+#variableDropIndicator {
+    position: fixed;
+    left: 0;
+    width: var(--layout-variablesArea-width);
+    height: var(--ui-measure-spacer-small);
+    z-index: 999;
+    background: var(--ui-color-accent1);
+    display: none;
+}
+
+#variableDropIndicator.visible {
+    display: block;
+}
+
 #variablesArea.expanded {
     display: block;
 }

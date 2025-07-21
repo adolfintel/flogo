@@ -824,10 +824,15 @@ function variablesEditor_createVariable(name) {
     v.className = "variable"
     v.flogo_variable = name
     v.draggable = true
-    v.ondragstart = () => {
+    v.ondragstart = e => {
+        if (e.target !== v) e.preventDefault()
         dragging = v
     }
-    v.ondragend = () => {
+    v.ondragend = e => {
+        if (enableWorkaroundsForWebKitBecauseItFuckingSucks || e.dataTransfer.dropEffect !== "none") {
+            variablesEditor_moveVariableAtDropIndicator(v)
+        }
+        variablesEditor_hideVariableDropIndicator()
         dragging = null
     }
     const nt = document.createElement("div")
@@ -902,8 +907,12 @@ function variablesEditor_createVariable(name) {
     }
     btns.appendChild(confirmEditBtn)
     nt.appendChild(btns)
-    nt.ondrop = (e) => {
-        variablesEditor_moveVariableBefore(dragging, v)
+    nt.ondragenter = () => {
+        if (dragging !== v && v.previousSibling !== dragging) {
+            variablesEditor_placeVariableDropIndicatorBefore(v)
+        } else {
+            variablesEditor_hideVariableDropIndicator()
+        }
     }
     v.appendChild(nt)
     const valVis = document.createElement("div")
@@ -962,8 +971,12 @@ function variablesEditor_createVariable(name) {
         del: delBtn,
         init: init
     }
-    valVis.ondrop = valEdit.ondrop = (e) => {
-        variablesEditor_moveVariableAfter(dragging, v)
+    valEdit.ondragenter = valVis.ondragenter = () => {
+        if (dragging !== v && v.nextSibling !== dragging) {
+            variablesEditor_placeVariableDropIndicatorAfter(v)
+        } else {
+            variablesEditor_hideVariableDropIndicator()
+        }
     }
     valEdit.flogo_init = init
     valEdit.flogo_initVal = initVal
@@ -985,24 +998,6 @@ function variablesEditor_createVariable(name) {
         }
     }
     return v
-}
-
-function variablesEditor_moveVariableBefore(before, after) {
-    if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
-    const list = document.getElementById("variableList")
-    list.removeChild(before)
-    list.insertBefore(before, after)
-    variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList()
-    saveToHistory()
-}
-
-function variablesEditor_moveVariableAfter(after, before) {
-    if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
-    const list = document.getElementById("variableList")
-    list.removeChild(after)
-    before.after(after)
-    variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList()
-    saveToHistory()
 }
 
 function variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList() {
@@ -1173,6 +1168,57 @@ function variablesEditor_disable() {
     })
 }
 
+function variablesEditor_makeVariableDropIndicator() {
+    const d = document.createElement("div")
+    d.id = "variableDropIndicator"
+    return d
+}
+
+function variablesEditor_placeVariableDropIndicatorBefore(v) {
+    const d = document.getElementById("variableDropIndicator")
+    const vb = v.getBoundingClientRect()
+    d.classList.add("visible")
+    d.style.top = (vb.y - d.getBoundingClientRect().height) + "px"
+    d.flogo_placeBefore = v
+    d.flogo_placeAfter = null
+}
+
+function variablesEditor_placeVariableDropIndicatorAfter(v) {
+    const d = document.getElementById("variableDropIndicator")
+    const vb = v.getBoundingClientRect()
+    d.classList.add("visible")
+    d.style.top = (vb.y + vb.height) + "px"
+    d.flogo_placeBefore = null
+    d.flogo_placeAfter = v
+}
+
+function variablesEditor_hideVariableDropIndicator() {
+    const d = document.getElementById("variableDropIndicator")
+    d.classList.remove("visible")
+    d.flogo_placeBefore = null
+    d.flogo_placeAfter = null
+}
+
+function variablesEditor_moveVariableAtDropIndicator(v) {
+    const d = document.getElementById("variableDropIndicator")
+    const list = document.getElementById("variableList")
+    if (d.flogo_placeBefore !== null) {
+        const before = v,
+            after = d.flogo_placeBefore
+        if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
+        list.removeChild(before)
+        list.insertBefore(before, after)
+    } else if (d.flogo_placeAfter !== null) {
+        const before = d.flogo_placeAfter,
+            after = v
+        if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
+        list.removeChild(after)
+        before.after(after)
+    }
+    variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList()
+    saveToHistory()
+}
+
 function updateVariableValues() {
     requestAnimationFrame(updateVariableValues)
     const vars = document.querySelectorAll("#variableList > div.variable")
@@ -1189,6 +1235,7 @@ function recreateVariableList() {
         list.appendChild(div)
     }
     list.appendChild(variablesEditor_makeAddBtn())
+    list.appendChild(variablesEditor_makeVariableDropIndicator())
 }
 
 function variablesEditor_cancelAllEdits() {
