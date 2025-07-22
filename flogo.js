@@ -535,7 +535,6 @@ function evaluateExpression(text) {
  *      Equivalent to this code when going down: var=from; while(from>=to){ body; var-=step }
  *      In other words, extremes are included in the range.
  *      Expressions can be used in the various fields.
- * - Breakpoint: simply pauses execution when the instruction is executed.
  *
  * The implementation of each instruction is relatively simple and modular.
  * Instructions are objects of a class that represents their type, such as the Assignment or the If class.
@@ -860,6 +859,35 @@ For.fromSimpleObject = function(o) {
 }
 registerInstructionType(For, "Loops")
 
+//-------- TOOLS --------
+/*
+ * This section implements 2 additional instructions:
+ * - Comment: a simple comment block that allows you to store text but does nothing when executed
+ * - Breakpoint: automatically pauses the program when the execution reaches it
+ */
+
+function Comment(text = null) {
+    this.text = text
+}
+Comment.prototype = {
+    constructor: Comment,
+    tick: function() {
+        interpreter.currentInstruction = this
+        return true
+    },
+    toSimpleObject: function() {
+        return {
+            type: "Comment",
+            text: this.text,
+        }
+    },
+}
+Comment.fromSimpleObject = function(o) {
+    if (o.type !== "Comment") throw "Not a Comment"
+    return new Comment(o.text)
+}
+registerInstructionType(Comment, "Tools")
+
 function Breakpoint() {}
 Breakpoint.prototype = {
     constructor: Breakpoint,
@@ -885,6 +913,121 @@ Breakpoint.fromSimpleObject = function(o) {
     return new Breakpoint()
 }
 registerInstructionType(Breakpoint, "Tools")
+
+//--------  INPUT/OUTPUT --------
+/*
+ * This section implements 2 additional instructions:
+ * - Input: reads a variable
+ * - Output: prints a message
+ *
+ * To keep the core and UI separated, these instructions expect the UI to implement the following methods:
+ * - ui_output(text,newLine): called when the program needs to output some text. newLine is a boolean that controls whether the new "message" is a whole message (true) or if it needs to be added to the previous one (false), allowing for easier concatenation without using the + operator
+ * - ui_input(var,type,callback): called when the program needs to read something from the user. The callback is a function that the UI can call when the user enters the input and allows the Input instruction to continue.
+ * Example:
+ *      function ui_input(variable,type,callback){
+ *          ...prepare input form...
+ *          confirmButton.onclick=function(){
+ *              callback(textBox.value)
+ *          }
+ *      }
+ * If these functions are not implemented in the UI, Flogo will fall back to using alert and prompt, which is useful for testing
+ */
+
+function Input(variable = null) {
+    this.variable = variable
+}
+Input.prototype = {
+    constructor: Input,
+    tick: function() {
+        interpreter.currentInstruction = this
+        if (typeof this.state === "undefined") {
+            if (this.variable === null) throw "Incomplete instruction"
+            if (typeof variables[this.variable] === "undefined") throw "Variable does not exist: " + this.variable
+            this.state = null
+            if (typeof ui_input !== "undefined") {
+                interpreter.preventTurbo = true
+                ui_input(this.variable, variables[this.variable].type, (val) => {
+                    interpreter.preventTurbo = false
+                    this.state = val
+                })
+                return false
+            } else {
+                interpreter.preventTurbo = true
+                this.state = prompt(this.variable)
+                interpreter.preventTurbo = false
+                return false
+            }
+        } else {
+            if (this.state === null) {
+                return false
+            } else {
+                switch (variables[this.variable].type) {
+                    case "integer":
+                    case "real": {
+                        if (isNaN(this.state)) throw "Not a number"
+                        variables[this.variable].value = Number(this.state)
+                    }
+                    break
+                    case "string": {
+                        variables[this.variable].value = this.state
+                    }
+                    break
+                    case "boolean": {
+                        if (this.state !== "true" && this.state !== "false") throw "Not a valid boolean"
+                        variables[this.variable].value = this.state === "true"
+                    }
+                    break
+                    default: {
+                        throw "Unknown variable type: " + variables[this.variable].type
+                    }
+                }
+                delete this.state
+                return true
+            }
+        }
+    },
+    toSimpleObject: function() {
+        return {
+            type: "Input",
+            variable: this.variable,
+        }
+    },
+}
+Input.fromSimpleObject = function(o) {
+    return new Input(o.variable)
+}
+registerInstructionType(Input, "Interaction")
+
+function Output(expression = null, newLine = true) {
+    this.expression = expression
+    this.newLine = newLine
+}
+Output.prototype = {
+    constructor: Output,
+    tick: function() {
+        interpreter.currentInstruction = this
+        if (this.expression === null) throw "Incomplete instruction"
+        let val = evaluateExpression(this.expression)
+        val = "" + val
+        if (typeof ui_output !== "undefined") {
+            ui_output(val, this.newLine)
+        } else {
+            alert(val)
+        }
+        return true
+    },
+    toSimpleObject: function() {
+        return {
+            type: "Output",
+            expression: this.expression,
+            newLine: this.newLine,
+        }
+    },
+}
+Output.fromSimpleObject = function(o) {
+    return new Output(o.expression, o.newLine)
+}
+registerInstructionType(Output, "Interaction")
 
 /*
  * Main interpreter loop implementation (interpreter variable).
@@ -1050,147 +1193,6 @@ const mainLoop = function _mainLoop() {
 }
 mainLoop()
 delete mainLoop
-
-//--------  INPUT/OUTPUT --------
-/*
- * This section implements 2 additional instructions:
- * - Input: reads a variable
- * - Output: prints a message
- *
- * To keep the core and UI separated, these instructions expect the UI to implement the following methods:
- * - ui_output(text,newLine): called when the program needs to output some text. newLine is a boolean that controls whether the new "message" is a whole message (true) or if it needs to be added to the previous one (false), allowing for easier concatenation without using the + operator
- * - ui_input(var,type,callback): called when the program needs to read something from the user. The callback is a function that the UI can call when the user enters the input and allows the Input instruction to continue.
- * Example:
- *      function ui_input(variable,type,callback){
- *          ...prepare input form...
- *          confirmButton.onclick=function(){
- *              callback(textBox.value)
- *          }
- *      }
- * If these functions are not implemented in the UI, Flogo will fall back to using alert and prompt, which is useful for testing
- */
-
-function Output(expression = null, newLine = true) {
-    this.expression = expression
-    this.newLine = newLine
-}
-Output.prototype = {
-    constructor: Output,
-    tick: function() {
-        interpreter.currentInstruction = this
-        if (this.expression === null) throw "Incomplete instruction"
-        let val = evaluateExpression(this.expression)
-        val = "" + val
-        if (typeof ui_output !== "undefined") {
-            ui_output(val, this.newLine)
-        } else {
-            alert(val)
-        }
-        return true
-    },
-    toSimpleObject: function() {
-        return {
-            type: "Output",
-            expression: this.expression,
-            newLine: this.newLine,
-        }
-    },
-}
-Output.fromSimpleObject = function(o) {
-    return new Output(o.expression, o.newLine)
-}
-registerInstructionType(Output, "Interaction")
-
-function Input(variable = null) {
-    this.variable = variable
-}
-Input.prototype = {
-    constructor: Input,
-    tick: function() {
-        interpreter.currentInstruction = this
-        if (typeof this.state === "undefined") {
-            if (this.variable === null) throw "Incomplete instruction"
-            if (typeof variables[this.variable] === "undefined") throw "Variable does not exist: " + this.variable
-            this.state = null
-            if (typeof ui_input !== "undefined") {
-                interpreter.preventTurbo = true
-                ui_input(this.variable, variables[this.variable].type, (val) => {
-                    interpreter.preventTurbo = false
-                    this.state = val
-                })
-                return false
-            } else {
-                interpreter.preventTurbo = true
-                this.state = prompt(this.variable)
-                interpreter.preventTurbo = false
-                return false
-            }
-        } else {
-            if (this.state === null) {
-                return false
-            } else {
-                switch (variables[this.variable].type) {
-                    case "integer":
-                    case "real": {
-                        if (isNaN(this.state)) throw "Not a number"
-                        variables[this.variable].value = Number(this.state)
-                    }
-                    break
-                    case "string": {
-                        variables[this.variable].value = this.state
-                    }
-                    break
-                    case "boolean": {
-                        if (this.state !== "true" && this.state !== "false") throw "Not a valid boolean"
-                        variables[this.variable].value = this.state === "true"
-                    }
-                    break
-                    default: {
-                        throw "Unknown variable type: " + variables[this.variable].type
-                    }
-                }
-                delete this.state
-                return true
-            }
-        }
-    },
-    toSimpleObject: function() {
-        return {
-            type: "Input",
-            variable: this.variable,
-        }
-    },
-}
-Input.fromSimpleObject = function(o) {
-    return new Input(o.variable)
-}
-registerInstructionType(Input, "Interaction")
-
-//-------- COMMENTS --------
-/*
- * Adds a simple comment block with some text in it. It does nothing when executed.
- */
-function Comment(text = null) {
-    this.text = text
-}
-Comment.prototype = {
-    constructor: Comment,
-    tick: function() {
-        interpreter.currentInstruction = this
-        return true
-    },
-    toSimpleObject: function() {
-        return {
-            type: "Comment",
-            text: this.text,
-        }
-    },
-}
-Comment.fromSimpleObject = function(o) {
-    if (o.type !== "Comment") throw "Not a Comment"
-    return new Comment(o.text)
-}
-registerInstructionType(Comment, "Tools")
 
 //-------- PROGRAM METADATA --------
 /*
