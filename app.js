@@ -4,6 +4,7 @@
  */
 
 const enableWorkaroundsForWebKitBecauseItFuckingSucks = /(apple)?webkit/i.test(navigator.userAgent) && !/(apple)?webkit\/537\.36/i.test(navigator.userAgent)
+const isMac = navigator.userAgent.toLowerCase().indexOf("macintosh") !== -1
 
 //-------- INSERT POPUP --------
 
@@ -1566,11 +1567,12 @@ function showPopup(d) {
 function initKeyboardShortcuts() {
     document.body.addEventListener('keydown', e => {
         if (document.getElementById("errorScreen").style.display === "block") return
+        const ctrlKey = isMac ? (e.ctrlKey || e.metaKey) : e.ctrlKey
         switch (e.key.toLowerCase()) {
             case 'z': {
                 if (e.target !== document.body) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
-                if (e.ctrlKey) {
+                if (ctrlKey) {
                     e.preventDefault()
                     const intState = interpreter.getState()
                     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
@@ -1589,7 +1591,7 @@ function initKeyboardShortcuts() {
             case 'y': {
                 if (e.target !== document.body) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
-                if (e.ctrlKey && !e.shiftKey) {
+                if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
                     const intState = interpreter.getState()
                     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
@@ -1604,7 +1606,7 @@ function initKeyboardShortcuts() {
                 const intState = interpreter.getState()
                 if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
-                if (e.ctrlKey && !e.shiftKey) {
+                if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
                     cutSelectedInstructions()
                     if (clipboard !== null) {
@@ -1622,7 +1624,7 @@ function initKeyboardShortcuts() {
                 const intState = interpreter.getState()
                 if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
-                if (e.ctrlKey && !e.shiftKey) {
+                if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
                     copySelectedInstructions()
                     if (clipboard !== null) {
@@ -1639,7 +1641,7 @@ function initKeyboardShortcuts() {
                 if (e.target !== document.body) return
                 const intState = interpreter.getState()
                 if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
-                if (e.ctrlKey && !e.shiftKey) {
+                if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
                     if (clipboard === null) return
                     if (clipboard.length === 1) {
@@ -1660,7 +1662,7 @@ function initKeyboardShortcuts() {
                 const intState = interpreter.getState()
                 if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
-                if (!e.ctrlKey && !e.shiftKey) {
+                if (!ctrlKey && !e.shiftKey) {
                     e.preventDefault()
                     if (selectedInstructions.length > 0) {
                         if (selectedInstructions.length === 1) {
@@ -1674,7 +1676,7 @@ function initKeyboardShortcuts() {
             };
             break
             case 'escape': {
-                if (!e.ctrlKey && !e.shiftKey) {
+                if (!ctrlKey && !e.shiftKey) {
                     const intState = interpreter.getState()
                     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                     if (document.querySelectorAll("div.popup.visible").length !== 0) {
