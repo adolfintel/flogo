@@ -22,10 +22,10 @@ let INSERT_FONT,
 let insert_targetIstruction, insert_targetPos
 
 function insert_createBlockDrawable(type) {
-    const b = new globalThis[type]().createDrawable().flogo_shapeOnly
+    const b = new instructionTypes[type]().createDrawable().flogo_shapeOnly
     b.removeEventListener("click dblclick tap touchstart touchend touchmove")
     b.on("click tap", () => {
-        const newInstr = new globalThis[type]()
+        const newInstr = new instructionTypes[type]()
         insert_targetIstruction.body.splice(insert_targetPos, 0, newInstr)
         saveToHistory()
         closePopup()
@@ -73,99 +73,34 @@ function prepare_insertWide() {
     })
     blockSelector.add(paste)
     s.flogo_xAfterClipboard = INSERT_WIDE_COLUMN_WIDTH
-    label = new Konva.Text({
-        x: s.flogo_xAfterClipboard,
-        y: 0,
-        width: INSERT_WIDE_COLUMN_WIDTH,
-        text: "Interaction",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-        align: "center",
-    })
-    const inputBlock = insert_createBlockDrawable("Input")
-    inputBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - inputBlock.flogo_width / 2)
-    inputBlock.y(label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL)
-    const outputBlock = insert_createBlockDrawable("Output")
-    outputBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - outputBlock.flogo_width / 2)
-    outputBlock.y(inputBlock.y() + inputBlock.flogo_height + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS)
-    blockSelector.add(label)
-    blockSelector.add(inputBlock)
-    blockSelector.add(outputBlock)
-    label = new Konva.Text({
-        x: INSERT_WIDE_COLUMN_WIDTH * 2,
-        y: 0,
-        width: INSERT_WIDE_COLUMN_WIDTH,
-        text: "Math",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-        align: "center",
-    })
-    const assignBlock = insert_createBlockDrawable("Assign")
-    assignBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - inputBlock.flogo_width / 2)
-    assignBlock.y(label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL)
-    blockSelector.add(label)
-    blockSelector.add(assignBlock)
-    label = new Konva.Text({
-        x: INSERT_WIDE_COLUMN_WIDTH * 3,
-        y: 0,
-        width: INSERT_WIDE_COLUMN_WIDTH,
-        text: "Selection",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-        align: "center",
-    })
-    const ifBlock = insert_createBlockDrawable("If")
-    ifBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - ifBlock.flogo_width / 2)
-    ifBlock.y(label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL)
-    blockSelector.add(label)
-    blockSelector.add(ifBlock)
-    label = new Konva.Text({
-        x: INSERT_WIDE_COLUMN_WIDTH * 4,
-        y: 0,
-        width: INSERT_WIDE_COLUMN_WIDTH,
-        text: "Loops",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-        align: "center",
-    })
-    const doWhileBlock = insert_createBlockDrawable("DoWhile")
-    doWhileBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - doWhileBlock.flogo_width / 2)
-    doWhileBlock.y(label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL)
-    const whileBlock = insert_createBlockDrawable("While")
-    whileBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - whileBlock.flogo_width / 2)
-    whileBlock.y(doWhileBlock.y() + doWhileBlock.flogo_height + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS)
-    const forBlock = insert_createBlockDrawable("For")
-    forBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - forBlock.flogo_width / 2)
-    forBlock.y(whileBlock.y() + whileBlock.flogo_height + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS)
-    blockSelector.add(label)
-    blockSelector.add(doWhileBlock)
-    blockSelector.add(whileBlock)
-    blockSelector.add(forBlock)
-    label = new Konva.Text({
-        x: INSERT_WIDE_COLUMN_WIDTH * 5,
-        y: 0,
-        width: INSERT_WIDE_COLUMN_WIDTH,
-        text: "Tools",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-        align: "center",
-    })
-    const commentBlock = insert_createBlockDrawable("Comment")
-    commentBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - commentBlock.flogo_width / 2)
-    commentBlock.y(label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL)
-    const bpBlock = insert_createBlockDrawable("Breakpoint")
-    bpBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - bpBlock.flogo_width / 2)
-    bpBlock.y(commentBlock.y() + commentBlock.flogo_height + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS)
-    blockSelector.add(label)
-    blockSelector.add(commentBlock)
-    blockSelector.add(bpBlock)
-    s.flogo_width = INSERT_WIDE_COLUMN_WIDTH * 6
-    s.flogo_height = forBlock.y() + forBlock.flogo_height
+    let x = INSERT_WIDE_COLUMN_WIDTH
+    let endY = paste.y() + paste.height()
+    for (const category in instructionCategories) {
+        label = new Konva.Text({
+            x: x,
+            y: 0,
+            width: INSERT_WIDE_COLUMN_WIDTH,
+            text: category,
+            fontSize: INSERT_FONT_SIZE,
+            fontFamily: INSERT_FONT,
+            fill: LINE_COLOR,
+            align: "center",
+        })
+        blockSelector.add(label)
+        let y = label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL
+        instructionCategories[category].forEach(instruction => {
+            const block = insert_createBlockDrawable(instruction.name)
+            block.x(x + INSERT_WIDE_COLUMN_WIDTH / 2 - block.flogo_width / 2)
+            block.y(y)
+            blockSelector.add(block)
+            y += block.flogo_height + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+        })
+        y -= WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+        if (y > endY) endY = y
+        x += INSERT_WIDE_COLUMN_WIDTH
+    }
+    s.flogo_width = x
+    s.flogo_height = endY
     s.flogo_pasteBtn = paste
     insertWide_stage = s
 }
@@ -204,89 +139,36 @@ function prepare_insertTall() {
     })
     blockSelector.add(paste)
     s.flogo_yAfterClipboard = paste.y() + paste.height() + TALL_INSERT_SPACE_BELOW_ROW
-    label = new Konva.Text({
-        x: 0,
-        y: s.flogo_yAfterClipboard,
-        text: "Interaction",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-    })
-    blockSelector.add(label)
-    const inputBlock = insert_createBlockDrawable("Input")
-    inputBlock.x(0)
-    inputBlock.y(label.y() + label.height() + TALL_INSERT_SPACE_BELOW_LABEL)
-    const outputBlock = insert_createBlockDrawable("Output")
-    outputBlock.x(inputBlock.x() + inputBlock.flogo_width + PADDING_BASE * 2)
-    outputBlock.y(inputBlock.y())
-    label = new Konva.Text({
-        x: 0,
-        y: inputBlock.y() + inputBlock.flogo_height + TALL_INSERT_SPACE_BELOW_ROW,
-        text: "Math",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-    })
-    blockSelector.add(label)
-    const assignBlock = insert_createBlockDrawable("Assign")
-    assignBlock.x(0)
-    assignBlock.y(label.y() + label.height() + TALL_INSERT_SPACE_BELOW_LABEL)
-    label = new Konva.Text({
-        x: 0,
-        y: assignBlock.y() + assignBlock.flogo_height + TALL_INSERT_SPACE_BELOW_ROW,
-        text: "Selection",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-    })
-    blockSelector.add(label)
-    const ifBlock = insert_createBlockDrawable("If")
-    ifBlock.x(0)
-    ifBlock.y(label.y() + label.height() + TALL_INSERT_SPACE_BELOW_LABEL)
-    label = new Konva.Text({
-        x: 0,
-        y: ifBlock.y() + ifBlock.flogo_height + TALL_INSERT_SPACE_BELOW_ROW,
-        text: "Loops",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-    })
-    blockSelector.add(label)
-    const doWhileBlock = insert_createBlockDrawable("DoWhile")
-    doWhileBlock.x(0)
-    doWhileBlock.y(label.y() + label.height() + TALL_INSERT_SPACE_BELOW_LABEL)
-    const whileBlock = insert_createBlockDrawable("While")
-    whileBlock.x(doWhileBlock.x() + doWhileBlock.flogo_width + PADDING_BASE * 2)
-    whileBlock.y(doWhileBlock.y())
-    const forBlock = insert_createBlockDrawable("For")
-    forBlock.x(whileBlock.x() + whileBlock.flogo_width + PADDING_BASE * 2)
-    forBlock.y(doWhileBlock.y())
-    label = new Konva.Text({
-        x: 0,
-        y: doWhileBlock.y() + doWhileBlock.flogo_height + TALL_INSERT_SPACE_BELOW_ROW,
-        text: "Tools",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-    })
-    blockSelector.add(label)
-    const commentBlock = insert_createBlockDrawable("Comment")
-    commentBlock.x(0)
-    commentBlock.y(label.y() + label.height() + TALL_INSERT_SPACE_BELOW_LABEL)
-    const bpBlock = insert_createBlockDrawable("Breakpoint")
-    bpBlock.x(commentBlock.x() + commentBlock.flogo_width + PADDING_BASE * 2)
-    bpBlock.y(commentBlock.y())
-    blockSelector.add(inputBlock)
-    blockSelector.add(outputBlock)
-    blockSelector.add(assignBlock)
-    blockSelector.add(ifBlock)
-    blockSelector.add(doWhileBlock)
-    blockSelector.add(whileBlock)
-    blockSelector.add(forBlock)
-    blockSelector.add(commentBlock)
-    blockSelector.add(bpBlock)
-    s.flogo_width = forBlock.x() + forBlock.flogo_width
-    s.flogo_height = bpBlock.y() + bpBlock.flogo_height
+    let y = s.flogo_yAfterClipboard
+    let endX = 0
+    for (const category in instructionCategories) {
+        label = new Konva.Text({
+            x: 0,
+            y: y,
+            text: "Interaction",
+            fontSize: INSERT_FONT_SIZE,
+            fontFamily: INSERT_FONT,
+            fill: LINE_COLOR,
+        })
+        blockSelector.add(label)
+        y += label.height() + TALL_INSERT_SPACE_BELOW_LABEL
+        let x = 0
+        let h = 0
+        instructionCategories[category].forEach(instruction => {
+            const block = insert_createBlockDrawable(instruction.name)
+            block.x(x)
+            block.y(y)
+            blockSelector.add(block)
+            if (block.flogo_height > h) h = block.flogo_height
+            x += block.flogo_width + TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+        })
+        x -= TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+        if (x > endX) endX = x
+        y += h + TALL_INSERT_SPACE_BELOW_ROW
+    }
+    y -= TALL_INSERT_SPACE_BELOW_ROW
+    s.flogo_width = endX
+    s.flogo_height = y
     s.flogo_pasteBtn = paste
     insertTall_stage = s
 }
@@ -503,7 +385,7 @@ function edit_prepareGraphics() {
         if (typeof e.flogo_stage !== "undefined") {
             e.flogo_stage.destroy()
         }
-        const shape = new globalThis[e.getAttribute("flogo_instruction")]().createDrawable().flogo_shapeOnly
+        const shape = new instructionTypes[e.getAttribute("flogo_instruction")]().createDrawable().flogo_shapeOnly
         shape.removeEventListener("click dblclick tap touchstart touchend")
         const gstage = new Konva.Stage({
             container: e,
@@ -646,7 +528,7 @@ function cutSelectedInstructions() {
 function pasteClipboard(parent, posInParent) {
     if (clipboard === null) return
     for (let i = 0; i < clipboard.length; i++) {
-        parent.body.splice(posInParent + i, 0, globalThis[clipboard[i].type].fromSimpleObject(clipboard[i]))
+        parent.body.splice(posInParent + i, 0, instructionTypes[clipboard[i].type].fromSimpleObject(clipboard[i]))
     }
     saveToHistory()
     cancelSelection()

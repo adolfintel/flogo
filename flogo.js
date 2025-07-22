@@ -547,6 +547,27 @@ function evaluateExpression(text) {
  * - fromSimpleObject(o): static method, transforms a simple object back into a regular instruction that can be executed and returns it. This method also recursively transforms any sub-instruction.
  */
 
+const instructionCategories = {
+    "Interaction": [],
+    "Math": [],
+    "Selection": [],
+    "Loops": [],
+    "Tools": []
+}
+const instructionTypes = {}
+
+function registerInstructionType(classref, category = null) {
+    if (typeof instructionTypes[classref.name] !== "undefined") throw "Already registered"
+    instructionTypes[classref.name] = classref
+    if (category !== null) {
+        if (typeof instructionCategories[category] !== "undefined") {
+            instructionCategories[category].push(classref)
+        } else {
+            instructionCategories[category] = [classref]
+        }
+    }
+}
+
 function InstructionSequence() {
     this.body = []
 }
@@ -581,9 +602,10 @@ InstructionSequence.prototype = {
 InstructionSequence.fromSimpleObject = function(o) {
     if (o.type !== "InstructionSequence") throw "Not an InstructionSequence"
     const r = new InstructionSequence()
-    o.body.forEach((i) => r.body.push(globalThis[i.type].fromSimpleObject(i)))
+    o.body.forEach((i) => r.body.push(instructionTypes[i.type].fromSimpleObject(i)))
     return r
 }
+registerInstructionType(InstructionSequence, null)
 
 function Assign(variable = null, expression = null) {
     this.variable = variable
@@ -610,6 +632,7 @@ Assign.fromSimpleObject = function(o) {
     if (o.type !== "Assign") throw "Not an Assign"
     return new Assign(o.variable, o.expression)
 }
+registerInstructionType(Assign, "Math")
 
 function If(condition = null, trueBranch = new InstructionSequence(), falseBranch = new InstructionSequence()) {
     this.condition = condition
@@ -648,10 +671,11 @@ If.prototype = {
 If.fromSimpleObject = function(o) {
     if (o.type !== "If") throw "Not an If"
     const r = new If(o.condition)
-    r.trueBranch = globalThis[o.trueBranch.type].fromSimpleObject(o.trueBranch)
-    r.falseBranch = globalThis[o.falseBranch.type].fromSimpleObject(o.falseBranch)
+    r.trueBranch = instructionTypes[o.trueBranch.type].fromSimpleObject(o.trueBranch)
+    r.falseBranch = instructionTypes[o.falseBranch.type].fromSimpleObject(o.falseBranch)
     return r
 }
+registerInstructionType(If, "Selection")
 
 function DoWhile(condition = null, body = new InstructionSequence()) {
     this.condition = condition
@@ -695,9 +719,10 @@ DoWhile.prototype = {
 DoWhile.fromSimpleObject = function(o) {
     if (o.type !== "DoWhile") throw "Not a DoWhile"
     const r = new DoWhile(o.condition)
-    r.body = globalThis[o.body.type].fromSimpleObject(o.body)
+    r.body = instructionTypes[o.body.type].fromSimpleObject(o.body)
     return r
 }
+registerInstructionType(DoWhile, "Loops")
 
 function While(condition = null, body = new InstructionSequence()) {
     this.condition = condition
@@ -739,9 +764,10 @@ While.prototype = {
 While.fromSimpleObject = function(o) {
     if (o.type !== "While") throw "Not a While"
     const r = new While(o.condition)
-    r.body = globalThis[o.body.type].fromSimpleObject(o.body)
+    r.body = instructionTypes[o.body.type].fromSimpleObject(o.body)
     return r
 }
+registerInstructionType(While, "Loops")
 
 function For(variable = null, from = null, to = null, step = "1", direction = "up", body = new InstructionSequence()) {
     this.variable = variable
@@ -829,9 +855,10 @@ For.prototype = {
 For.fromSimpleObject = function(o) {
     if (o.type !== "For") throw "Not a For"
     const r = new For(o.variable, o.from, o.to, o.step, o.direction)
-    r.body = globalThis[o.body.type].fromSimpleObject(o.body)
+    r.body = instructionTypes[o.body.type].fromSimpleObject(o.body)
     return r
 }
+registerInstructionType(For, "Loops")
 
 function Breakpoint() {}
 Breakpoint.prototype = {
@@ -857,6 +884,7 @@ Breakpoint.fromSimpleObject = function(o) {
     if (o.type !== "Breakpoint") throw "Not a Breakpoint"
     return new Breakpoint()
 }
+registerInstructionType(Breakpoint, "Tools")
 
 /*
  * Main interpreter loop implementation (interpreter variable).
@@ -1071,6 +1099,7 @@ Output.prototype = {
 Output.fromSimpleObject = function(o) {
     return new Output(o.expression, o.newLine)
 }
+registerInstructionType(Output, "Interaction")
 
 function Input(variable = null) {
     this.variable = variable
@@ -1135,6 +1164,7 @@ Input.prototype = {
 Input.fromSimpleObject = function(o) {
     return new Input(o.variable)
 }
+registerInstructionType(Input, "Interaction")
 
 //-------- COMMENTS --------
 /*
@@ -1160,6 +1190,7 @@ Comment.fromSimpleObject = function(o) {
     if (o.type !== "Comment") throw "Not a Comment"
     return new Comment(o.text)
 }
+registerInstructionType(Comment, "Tools")
 
 //-------- PROGRAM METADATA --------
 /*
