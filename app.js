@@ -4,6 +4,7 @@
  */
 
 const enableWorkaroundsForWebKitBecauseItFuckingSucks = /(apple)?webkit/i.test(navigator.userAgent) && !/(apple)?webkit\/537\.36/i.test(navigator.userAgent)
+const isMac = navigator.userAgent.toLowerCase().indexOf("macintosh") !== -1
 
 //-------- INSERT POPUP --------
 
@@ -1532,11 +1533,12 @@ function updateFlowchartOcclusion() {
 function initKeyboardShortcuts() {
     document.body.addEventListener('keydown', e => {
         if (document.getElementById("errorScreen").style.display === "block") return
+        const ctrlKey = isMac ? (e.ctrlKey || e.metaKey) : e.ctrlKey
         switch (e.key.toLowerCase()) {
             case 'z': {
                 if (e.target !== document.body) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
-                if (e.ctrlKey) {
+                if (ctrlKey) {
                     e.preventDefault()
                     const intState = interpreter.getState()
                     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
@@ -1555,7 +1557,7 @@ function initKeyboardShortcuts() {
             case 'y': {
                 if (e.target !== document.body) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
-                if (e.ctrlKey && !e.shiftKey) {
+                if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
                     const intState = interpreter.getState()
                     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
@@ -1570,16 +1572,16 @@ function initKeyboardShortcuts() {
                 const intState = interpreter.getState()
                 if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
-                if (e.ctrlKey && !e.shiftKey) {
+                if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
-                    cutSelectedInstructions()
-                    if (clipboard !== null) {
-                        if (clipboard.length === 1) {
+                    if (selectedInstructions.length > 0) {
+                        if (selectedInstructions.length === 1) {
                             toast("Cut")
                         } else {
-                            toast("Cut " + clipboard.length + " instructions")
+                            toast("Cut " + selectedInstructions.length + " instructions")
                         }
                     }
+                    cutSelectedInstructions()
                 }
             };
             break
@@ -1588,16 +1590,16 @@ function initKeyboardShortcuts() {
                 const intState = interpreter.getState()
                 if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
-                if (e.ctrlKey && !e.shiftKey) {
+                if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
-                    copySelectedInstructions()
-                    if (clipboard !== null) {
-                        if (clipboard.length === 1) {
+                    if (selectedInstructions.length > 0) {
+                        if (selectedInstructions.length === 1) {
                             toast("Copied")
                         } else {
-                            toast("Copied " + clipboard.length + " instructions")
+                            toast("Copied " + selectedInstructions.length + " instructions")
                         }
                     }
+                    copySelectedInstructions()
                 }
             };
             break
@@ -1605,18 +1607,23 @@ function initKeyboardShortcuts() {
                 if (e.target !== document.body) return
                 const intState = interpreter.getState()
                 if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
-                if (e.ctrlKey && !e.shiftKey) {
+                if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
                     if (clipboard === null) return
-                    if (clipboard.length === 1) {
-                        toast("Pasted")
-                    } else {
-                        toast("Pasted " + clipboard.length + " instructions")
-                    }
+                    let showToast = false
                     if (insertTall_stage.container().classList.contains("visible")) {
                         insertTall_stage.flogo_pasteBtn.eventListeners["click"][0].handler()
+                        showToast = true
                     } else if (insertWide_stage.container().classList.contains("visible")) {
                         insertWide_stage.flogo_pasteBtn.eventListeners["click"][0].handler()
+                        showToast = true
+                    }
+                    if (showToast) {
+                        if (clipboard.length === 1) {
+                            toast("Pasted")
+                        } else {
+                            toast("Pasted " + clipboard.length + " instructions")
+                        }
                     }
                 }
             };
@@ -1626,7 +1633,7 @@ function initKeyboardShortcuts() {
                 const intState = interpreter.getState()
                 if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
-                if (!e.ctrlKey && !e.shiftKey) {
+                if (!ctrlKey && !e.shiftKey) {
                     e.preventDefault()
                     if (selectedInstructions.length > 0) {
                         if (selectedInstructions.length === 1) {
@@ -1640,7 +1647,7 @@ function initKeyboardShortcuts() {
             };
             break
             case 'escape': {
-                if (!e.ctrlKey && !e.shiftKey) {
+                if (!ctrlKey && !e.shiftKey) {
                     const intState = interpreter.getState()
                     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
                     if (document.querySelectorAll("div.popup.visible").length !== 0) {
