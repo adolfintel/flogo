@@ -918,6 +918,22 @@ DoWhile.prototype.createDrawable = function() {
     group.flogo_width = b.x() + b.flogo_width
     group.flogo_height = condition.y() + condition.flogo_height
     group.flogo_connX = condition.flogo_width / 2
+    if (fText.x() < 0) {
+        const diff = condition.x() - fText.x()
+        group.children.forEach(e => {
+            e.x(e.x() + diff)
+        })
+        group.flogo_width += diff
+        group.flogo_connX += diff
+    }
+    if (tText.x() < 0) {
+        const diff = condition.x() - tText.x()
+        group.children.forEach(e => {
+            e.x(e.x() + diff)
+        })
+        group.flogo_width += diff
+        group.flogo_connX += diff
+    }
     group.flogo_highlightable = rect
     group.flogo_shapeOnly = condition
     this.drawable = group
@@ -1086,6 +1102,22 @@ While.prototype.createDrawable = function() {
     group.flogo_width = b.x() + b.flogo_width
     group.flogo_height = endY
     group.flogo_connX = condition.flogo_width / 2
+    if (fText.x() < 0) {
+        const diff = condition.x() - fText.x()
+        group.children.forEach(e => {
+            e.x(e.x() + diff)
+        })
+        group.flogo_width += diff
+        group.flogo_connX += diff
+    }
+    if (tText.x() < 0) {
+        const diff = condition.x() - tText.x()
+        group.children.forEach(e => {
+            e.x(e.x() + diff)
+        })
+        group.flogo_width += diff
+        group.flogo_connX += diff
+    }
     group.flogo_highlightable = rect
     group.flogo_shapeOnly = condition
     this.drawable = group
@@ -1256,6 +1288,22 @@ For.prototype.createDrawable = function() {
     group.flogo_width = b.x() + b.flogo_width
     group.flogo_height = endY
     group.flogo_connX = condition.flogo_width / 2
+    if (fText.x() < 0) {
+        const diff = condition.x() - fText.x()
+        group.children.forEach(e => {
+            e.x(e.x() + diff)
+        })
+        group.flogo_width += diff
+        group.flogo_connX += diff
+    }
+    if (tText.x() < 0) {
+        const diff = condition.x() - tText.x()
+        group.children.forEach(e => {
+            e.x(e.x() + diff)
+        })
+        group.flogo_width += diff
+        group.flogo_connX += diff
+    }
     group.flogo_highlightable = rect
     group.flogo_shapeOnly = condition
     this.drawable = group
