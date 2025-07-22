@@ -66,6 +66,9 @@ __Mini games__
 [Linux (AUR package)](https://aur.archlinux.org/packages/flogo)  
 [Linux (AppImage for all distros)](https://downloads.fdossena.com/geth.php?r=flogo-linux-appimage)  
 
+[macOS (dmg for Apple Silicon)](https://downloads.fdossena.com/geth.php?r=flogo-mac-arm)  
+[macOS (dmg for Intel)](https://downloads.fdossena.com/geth.php?r=flogo-mac-intel)  
+
 More versions will be added in future releases.
 
 ## License
