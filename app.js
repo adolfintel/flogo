@@ -1608,14 +1608,14 @@ function initKeyboardShortcuts() {
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
-                    cutSelectedInstructions()
-                    if (clipboard !== null) {
-                        if (clipboard.length === 1) {
+                    if (selectedInstructions.length > 0) {
+                        if (selectedInstructions.length === 1) {
                             toast("Cut")
                         } else {
-                            toast("Cut " + clipboard.length + " instructions")
+                            toast("Cut " + selectedInstructions.length + " instructions")
                         }
                     }
+                    cutSelectedInstructions()
                 }
             };
             break
@@ -1626,14 +1626,14 @@ function initKeyboardShortcuts() {
                 if (document.querySelectorAll("div.popup.visible").length !== 0) return
                 if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
-                    copySelectedInstructions()
-                    if (clipboard !== null) {
-                        if (clipboard.length === 1) {
+                    if (selectedInstructions.length > 0) {
+                        if (selectedInstructions.length === 1) {
                             toast("Copied")
                         } else {
-                            toast("Copied " + clipboard.length + " instructions")
+                            toast("Copied " + selectedInstructions.length + " instructions")
                         }
                     }
+                    copySelectedInstructions()
                 }
             };
             break
@@ -1644,15 +1644,20 @@ function initKeyboardShortcuts() {
                 if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
                     if (clipboard === null) return
-                    if (clipboard.length === 1) {
-                        toast("Pasted")
-                    } else {
-                        toast("Pasted " + clipboard.length + " instructions")
-                    }
+                    let showToast = false
                     if (insertTall_stage.container().classList.contains("visible")) {
                         insertTall_stage.flogo_pasteBtn.eventListeners["click"][0].handler()
+                        showToast = true
                     } else if (insertWide_stage.container().classList.contains("visible")) {
                         insertWide_stage.flogo_pasteBtn.eventListeners["click"][0].handler()
+                        showToast = true
+                    }
+                    if (showToast) {
+                        if (clipboard.length === 1) {
+                            toast("Pasted")
+                        } else {
+                            toast("Pasted " + clipboard.length + " instructions")
+                        }
                     }
                 }
             };
