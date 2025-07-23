@@ -544,6 +544,11 @@ function evaluateExpression(text) {
  *          The tick function of the "main" (the variable called program) is called repeatedly from the main loop; the call then continues recursively
  * - toSimpleObject(): returns a simplified version of this instruction that only contains the data that needs to be stored when the program is saved to JSON
  * - fromSimpleObject(o): static method, transforms a simple object back into a regular instruction that can be executed and returns it. This method also recursively transforms any sub-instruction.
+ *
+ * Instructions types need to be registered using the registerInstructionType(type,category) function.
+ * The function requires 2 parameters:
+ * - The class that implements the instruction type
+ * - Optionally, the category (there are 5 default categories: Interaction, Math, Selection, Loops, Tools). If not specified, the instruction will not be added to any category and it will not be visible to the user (although it will exist, see InstructionSequence for example)
  */
 
 const instructionCategories = {
