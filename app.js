@@ -1566,6 +1566,17 @@ function initKeyboardShortcuts() {
                 }
             };
             break
+            case 'a': {
+                if (e.target !== document.body) return
+                const intState = interpreter.getState()
+                if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+                if (document.querySelectorAll("div.popup.visible").length !== 0) return
+                if (ctrlKey && !e.shiftKey) {
+                    e.preventDefault()
+                    selectAllInstructions()
+                }
+            };
+            break
             case 'x': {
                 if (e.target !== document.body) return
                 const intState = interpreter.getState()

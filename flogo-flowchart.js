@@ -1437,6 +1437,13 @@ function deselectInstruction(instr) {
     }
 }
 
+function selectAllInstructions() {
+    cancelSelection()
+    program.body.forEach(i => {
+        selectInstruction(i, false)
+    })
+}
+
 function _block_dblclick(instr, e, parentInstr, parentPos) {
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
