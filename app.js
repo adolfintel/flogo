@@ -5,6 +5,8 @@
 
 const enableWorkaroundsForWebKitBecauseItFuckingSucks = /(apple)?webkit/i.test(navigator.userAgent) && !/(apple)?webkit\/537\.36/i.test(navigator.userAgent)
 
+const defaultTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? "default_dark" : "default_light"
+
 //-------- INSERT POPUP --------
 
 let insertWide_stage = null
@@ -1345,7 +1347,7 @@ function openSettings() {
     if (typeof storage.theme !== "undefined") {
         document.getElementById("style_theme").value = storage.theme
     } else {
-        document.getElementById("style_theme").value = "default_dark"
+        document.getElementById("style_theme").value = defaultTheme
     }
     document.getElementById("settings_fps").checked = storage.showFps === "true"
     document.getElementById("settings_allowZoomOnFlowchart").checked = _allowZoomOnFlowchart
@@ -1875,7 +1877,7 @@ function initApp() {
             if (typeof storage.theme !== "undefined") {
                 loadTheme(storage.theme, endOfLoad)
             } else {
-                loadTheme("default_dark", endOfLoad)
+                loadTheme(defaultTheme, endOfLoad)
             }
             recreateVariableList()
             updateVariableValues()
@@ -1998,7 +2000,7 @@ function loadTheme(name, callback) {
     }
     t.href = newTheme
     t.onerror = () => {
-        loadTheme("default_dark")
+        loadTheme(defaultTheme)
     }
     document.head.appendChild(t)
 }
