@@ -204,6 +204,7 @@ div.popup {
     z-index: 1000;
     background: var(--ui-color-background2);
     border: var(--ui-measure-border-thick) solid var(--ui-color-accent1);
+    border-radius: var(--ui-measure-border-radius);
 }
 
 div.popup.visible {

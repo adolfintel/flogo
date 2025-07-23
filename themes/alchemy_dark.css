@@ -98,3 +98,7 @@
     background-position: 50% 50%;
     opacity: 0.075;
 }
+
+div.popup {
+    border-radius: 0;
+}

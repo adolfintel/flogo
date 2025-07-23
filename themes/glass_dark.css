@@ -22,7 +22,6 @@
 
 div.popup {
     border: var(--ui-measure-border-thick) solid #ffffff20;
-    border-radius: var(--ui-measure-border-radius);
     background: #20202040;
     backdrop-filter: blur(1rem);
     transition: transform 0.25s, opacity 0.25s, display 0.25s allow-discrete;

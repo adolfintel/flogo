@@ -58,6 +58,7 @@
 
 div.popup {
     background: #202020;
+    border-radius: 0;
 }
 
 #variablesArea,

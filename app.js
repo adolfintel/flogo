@@ -1827,7 +1827,9 @@ function updateFps(t) {
 //-------- APPLICATION INITIALIZATION --------
 
 function initApp() {
-    document.getElementById("editor2").addEventListener("contextmenu", (e) => e.preventDefault()) //workaround: on some chromium-based browsers, this context menu gets accidentally triggered when right-clicking a block, despite it having display:none when the event is triggered
+    //workaround: on some chromium-based browsers, this context menu gets accidentally triggered when right-clicking a block, despite it having display:none when the event is triggered
+    document.getElementById("editor2").addEventListener("contextmenu", e => e.preventDefault())
+    document.getElementById("popupBackdrop").addEventListener("contextmenu", e => e.preventDefault())
     document.getElementById("fps").style.display = storage.showFps === "true" ? "block" : "none"
     updateFps()
     if (typeof storage.bkColor !== "undefined") {
