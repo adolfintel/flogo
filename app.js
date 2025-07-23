@@ -5,8 +5,6 @@
 
 const enableWorkaroundsForWebKitBecauseItFuckingSucks = /(apple)?webkit/i.test(navigator.userAgent) && !/(apple)?webkit\/537\.36/i.test(navigator.userAgent)
 
-const defaultTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? "default_dark" : "default_light"
-
 //-------- INSERT POPUP --------
 
 let insertWide_stage = null
@@ -1344,11 +1342,7 @@ function openSettings() {
     settings_selectTab("program_metadata")
     document.getElementById("metadata_title").value = metadata.title
     document.getElementById("metadata_author").value = metadata.author
-    if (typeof storage.theme !== "undefined") {
-        document.getElementById("style_theme").value = storage.theme
-    } else {
-        document.getElementById("style_theme").value = defaultTheme
-    }
+    document.getElementById("style_theme").value = getCurrentTheme()
     document.getElementById("settings_fps").checked = storage.showFps === "true"
     document.getElementById("settings_allowZoomOnFlowchart").checked = _allowZoomOnFlowchart
     document.getElementById("settings_altTurboTSlice").checked = _altTurboTSlice
@@ -1861,6 +1855,13 @@ function initApp() {
                     updateFlowchartOcclusion()
                 }
             }
+            const systemColorSchemeChangeHandler = () => {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                    if (typeof storage.theme === "undefined") {
+                        loadTheme(getDefaultTheme(), undefined, false)
+                    }
+                })
+            }
             const endOfLoad = () => {
                 applyBrowserThemeColorFromCSS()
                 edit_shapeFollower()
@@ -1868,17 +1869,14 @@ function initApp() {
                 updateFlowchart(true)
                 pixelRatioChangeHandler()
                 updateWindowTitle()
+                systemColorSchemeChangeHandler()
                 if (typeof storage.recovery !== "undefined") {
                     showPopup("errorRec")
                 } else {
                     crashHandlerMode = 1
                 }
             }
-            if (typeof storage.theme !== "undefined") {
-                loadTheme(storage.theme, endOfLoad)
-            } else {
-                loadTheme(defaultTheme, endOfLoad)
-            }
+            loadTheme(getCurrentTheme(), endOfLoad, false)
             recreateVariableList()
             updateVariableValues()
             setProgramExecutionMode()
@@ -1969,7 +1967,7 @@ function saveProgramForRecovery() {
     }
 }
 
-function loadTheme(name, callback) {
+function loadTheme(name, callback, saveToStorage = true) {
     let t = document.getElementById("theme")
     const newTheme = "themes/" + name + ".css"
     if (t !== null && t.href.endsWith(newTheme)) {
@@ -1989,7 +1987,9 @@ function loadTheme(name, callback) {
         LARGE_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-large-threshold", 80, document.body))
         SMALL_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-small-threshold", 55, document.body))
         applyBrowserThemeColorFromCSS()
-        storage.theme = name
+        if (saveToStorage) {
+            storage.theme = name
+        }
         updateFlowchartOcclusion()
         loadFlowchartThemeFromCSS(() => {
             insert_preparePopups()
@@ -2000,7 +2000,23 @@ function loadTheme(name, callback) {
     }
     t.href = newTheme
     t.onerror = () => {
-        loadTheme(defaultTheme)
+        loadTheme(getDefaultTheme(), callback, false)
     }
     document.head.appendChild(t)
+}
+
+function getDefaultTheme() {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return "default_dark"
+    } else {
+        return "default_light"
+    }
+}
+
+function getCurrentTheme() {
+    if (typeof storage.theme !== "undefined") {
+        return storage.theme
+    } else {
+        return getDefaultTheme()
+    }
 }
