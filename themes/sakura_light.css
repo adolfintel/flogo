@@ -59,7 +59,6 @@
     --flowchart-Font-family: 'Caveat';
     --flowchart-Font-svgEmbeddableFile: 'themes/Caveat-Regular.woff2';
     --flowchart-Block-font-size: 15;
-    --flowchart-Block-text-maxWidth: 30;
     --flowchart-Block-wrapMode: old;
     --flowchart-Line-thickness: 1.75;
     --flowchart-Line-arrow-size: 5;
@@ -69,8 +68,8 @@
     --flowchart-selected-color1: #be6d75;
     --flowchart-selected-color2: #b02020;
     --flowchart-selected-color3: #ffffff;
-    --flowchart-Block-text-maxWidth: 55;
-    --flowchart-Comment-text-maxWidth: 70;
+    --flowchart-Block-text-maxWidth: 20;
+    --flowchart-Comment-text-maxWidth: 23;
     --flowchart-Padding-base: 7;
     --insert-Wide-columnWidth: 7;
     --flowchart-scrollbar-color: #00000060;
@@ -132,4 +131,12 @@
 
 #editor2>div:hover {
     color: var(--ui-color-text);
+}
+
+#input_send {
+    background: var(--ui-color-accent2);
+}
+
+#input:focus {
+    box-shadow: 0 0 0 var(--ui-measure-border-thick) var(--ui-color-accent2) inset;
 }

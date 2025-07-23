@@ -23,7 +23,7 @@ function _isValidVariableName(name) {
     if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name)) {
         return false
     }
-    if (["true", "false", "PI", "E"].includes(name)) {
+    if (["true", "false", "PI", "E", "CURRENT_DAY", "CURRENT_MONTH", "CURRENT_YEAR", "CURRENT_HOURS", "CURRENT_MINUTES", "CURRENT_SECONDS"].includes(name)) {
         return false
     }
     return true
@@ -122,13 +122,13 @@ function removeVariable(name) {
  * Math operators: ^ * / % + -
  * Comparison operators: < > <= >= == !=
  * Logical operators: ! && ||
- * Literals and constants: true, false, PI, E
- * Built-in functions: abs, sqrt, sin, cos, tan, asin, acos, atan, ln, log(base,val) ceil, floor, round, toFixed(val,digits), random (real between 0 and 1), len, charAt(string,index), codeToChar, charToCode, strToReal, strToInt, currentTime
+ * Literals and constants: true, false, PI, E, CURRENT_DAY, CURRENT_MONTH, CURRENT_YEAR, CURRENT_HOURS, CURRENT_MINUTES, CURRENT_SECONDS
+ * Built-in functions: abs, sqrt, sin, cos, tan, asin, acos, atan, ln, log(base,val) ceil, floor, round, toFixed(val,digits), random (real between 0 and 1), len, charAt(string,index), codeToChar, charToCode, strToReal, strToInt
  * Round brackets are allowed in expressions
  * Strings are delimited by single or double quotes
  * Trigonometric functions work with rads
  * + does both sum and string concatenation
- * Expressions are always evaluated fully (no lazy evaluation)
+ * Expressions are evaluated using lazy evaluation
  *
  * The evaluateExpression function takes an expression in the form of text, parses and executes it; it returns the computed result of the expression or throws an exception in case of errors such as unclosed brackets, uninitialized variables, etc.
  */
@@ -141,6 +141,13 @@ jsep.addLiteral("true", true)
 jsep.addLiteral("false", false)
 jsep.addLiteral("PI", Math.PI)
 jsep.addLiteral("E", Math.E)
+jsep.addLiteral("CURRENT_DAY", null)
+jsep.addLiteral("CURRENT_MONTH", null)
+jsep.addLiteral("CURRENT_YEAR", null)
+jsep.addLiteral("CURRENT_HOURS", null)
+jsep.addLiteral("CURRENT_MINUTES", null)
+jsep.addLiteral("CURRENT_SECONDS", null)
+jsep.addLiteral("CURRENT_TS", null)
 jsep.addUnaryOp("-", 1)
 jsep.addUnaryOp("!", 1)
 jsep.addUnaryOp("+", 1)
@@ -165,11 +172,47 @@ function evaluateExpression(text) {
     const expr_rec = (n) => {
         switch (n.type) {
             case jsep.LITERAL: {
-                return n.value
+                if (n.value !== null) {
+                    return n.value
+                } else {
+                    switch (n.raw) {
+                        case "CURRENT_DAY": {
+                            return new Date().getDate()
+                        }
+                        break
+                        case "CURRENT_MONTH": {
+                            return new Date().getMonth() + 1
+                        }
+                        break
+                        case "CURRENT_YEAR": {
+                            return new Date().getFullYear()
+                        }
+                        break
+                        case "CURRENT_HOURS": {
+                            return new Date().getHours()
+                        }
+                        break
+                        case "CURRENT_MINUTES": {
+                            return new Date().getMinutes()
+                        }
+                        break
+                        case "CURRENT_SECONDS": {
+                            return new Date().getSeconds()
+                        }
+                        break
+                        case "CURRENT_TS": {
+                            return performance.now()
+                        }
+                        break
+                        default: {
+                            throw "Syntax error"
+                        }
+                    }
+                }
             }
             break
             case jsep.IDENTIFIER: {
-                if (typeof variables[n.name] === "undefined") throw "Variable does not exist " + n.name
+                if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
                 if (variables[n.name].value === null) throw "Variable not initialized: " + n.name
                 return variables[n.name].value
             }
@@ -199,88 +242,101 @@ function evaluateExpression(text) {
             }
             break
             case jsep.BINARY_EXP: {
-                const left = expr_rec(n.left)
-                const right = expr_rec(n.right)
-                switch (n.operator) {
-                    case "^": {
-                        if (typeof left !== "number" || typeof right !== "number") throw "Power requires 2 numbers"
-                        return Math.pow(left, right)
+                if (n.operator === "&&" || n.operator === "||") { // && and || need to be treated differently for lazy evaluation
+                    switch (n.operator) {
+                        case "&&": {
+                            const left = expr_rec(n.left)
+                            if (typeof left !== "boolean") throw "Not a valid condition"
+                            if (!left) return false
+                            const right = expr_rec(n.right)
+                            if (typeof right !== "boolean") throw "Not a valid condition"
+                            return left && right
+                        }
+                        break
+                        case "||": {
+                            const left = expr_rec(n.left)
+                            if (typeof left !== "boolean") throw "Not a valid condition"
+                            if (left) return true
+                            const right = expr_rec(n.right)
+                            if (typeof right !== "boolean") throw "Not a valid condition"
+                            return left || right
+                        }
+                        break
                     }
-                    break
-                    case "*": {
-                        if (typeof left !== "number" || typeof right !== "number") throw "Multiplication requires 2 numbers"
-                        return left * right
-                    }
-                    break
-                    case "/": {
-                        if (typeof left !== "number" || typeof right !== "number") throw "Division requires 2 numbers"
-                        if (right === 0) throw "Division by 0"
-                        return left / right
-                    }
-                    break
-                    case "%": {
-                        if (typeof left !== "number" || typeof right !== "number") throw "Modulus requires 2 numbers"
-                        if (right === 0) throw "Modulus by 0"
-                        return left % right
-                    }
-                    break
-                    case "+": {
-                        if ((typeof left !== "number" || typeof right !== "number") && !(typeof left === "string" || typeof right === "string"))
-                            throw "Addition can only add numbers or concatenate strings"
-                        return left + right
-                    }
-                    break
-                    case "-": {
-                        if (typeof left !== "number" || typeof right !== "number") throw "Subtraction requires 2 numbers"
-                        return left - right
-                    }
-                    break
-                    case "<": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        if (typeof left === "boolean" || typeof right === "boolean") throw "< can't compare booleans"
-                        return left < right
-                    }
-                    break
-                    case ">": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        if (typeof left === "boolean" || typeof right === "boolean") throw "> can't compare booleans"
-                        return left > right
-                    }
-                    break
-                    case "<=": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        if (typeof left === "boolean" || typeof right === "boolean") throw "<= can't compare booleans"
-                        return left <= right
-                    }
-                    break
-                    case ">=": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        if (typeof left === "boolean" || typeof right === "boolean") throw ">= can't compare booleans"
-                        return left >= right
-                    }
-                    break
-                    case "==": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        return left == right
-                    }
-                    break
-                    case "!=": {
-                        if (typeof left !== typeof right) throw "Can't compare different types"
-                        return left != right
-                    }
-                    break
-                    case "&&": {
-                        if (typeof left !== "boolean" || typeof right !== "boolean") throw "Not a valid condition"
-                        return left && right
-                    }
-                    break
-                    case "||": {
-                        if (typeof left !== "boolean" || typeof right !== "boolean") throw "Not a valid condition"
-                        return left || right
-                    }
-                    break
-                    default: {
-                        throw "Invalid operator: " + n.operator
+                } else {
+                    const left = expr_rec(n.left)
+                    const right = expr_rec(n.right)
+                    switch (n.operator) {
+                        case "^": {
+                            if (typeof left !== "number" || typeof right !== "number") throw "Power requires 2 numbers"
+                            return Math.pow(left, right)
+                        }
+                        break
+                        case "*": {
+                            if (typeof left !== "number" || typeof right !== "number") throw "Multiplication requires 2 numbers"
+                            return left * right
+                        }
+                        break
+                        case "/": {
+                            if (typeof left !== "number" || typeof right !== "number") throw "Division requires 2 numbers"
+                            if (right === 0) throw "Division by 0"
+                            return left / right
+                        }
+                        break
+                        case "%": {
+                            if (typeof left !== "number" || typeof right !== "number") throw "Modulus requires 2 numbers"
+                            if (right === 0) throw "Modulus by 0"
+                            return left % right
+                        }
+                        break
+                        case "+": {
+                            if ((typeof left !== "number" || typeof right !== "number") && !(typeof left === "string" || typeof right === "string"))
+                                throw "Addition can only add numbers or concatenate strings"
+                            return left + right
+                        }
+                        break
+                        case "-": {
+                            if (typeof left !== "number" || typeof right !== "number") throw "Subtraction requires 2 numbers"
+                            return left - right
+                        }
+                        break
+                        case "<": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            if (typeof left === "boolean" || typeof right === "boolean") throw "< can't compare booleans"
+                            return left < right
+                        }
+                        break
+                        case ">": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            if (typeof left === "boolean" || typeof right === "boolean") throw "> can't compare booleans"
+                            return left > right
+                        }
+                        break
+                        case "<=": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            if (typeof left === "boolean" || typeof right === "boolean") throw "<= can't compare booleans"
+                            return left <= right
+                        }
+                        break
+                        case ">=": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            if (typeof left === "boolean" || typeof right === "boolean") throw ">= can't compare booleans"
+                            return left >= right
+                        }
+                        break
+                        case "==": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            return left == right
+                        }
+                        break
+                        case "!=": {
+                            if (typeof left !== typeof right) throw "Can't compare different types"
+                            return left != right
+                        }
+                        break
+                        default: {
+                            throw "Invalid operator: " + n.operator
+                        }
                     }
                 }
             }
@@ -452,12 +508,6 @@ function evaluateExpression(text) {
                         return Math.trunc(val)
                     }
                     break
-                    case "currentTime": {
-                        //TODO: maybe add functions for current date, month, year?
-                        if (n.arguments.length !== 0) throw "currentTime takes no arguments"
-                        return performance.now()
-                    }
-                    break
                     default: {
                         throw "Function does not exist: " + n.callee.name
                     }
@@ -485,7 +535,6 @@ function evaluateExpression(text) {
  *      Equivalent to this code when going down: var=from; while(from>=to){ body; var-=step }
  *      In other words, extremes are included in the range.
  *      Expressions can be used in the various fields.
- * - Breakpoint: simply pauses execution when the instruction is executed.
  *
  * The implementation of each instruction is relatively simple and modular.
  * Instructions are objects of a class that represents their type, such as the Assignment or the If class.
@@ -495,7 +544,33 @@ function evaluateExpression(text) {
  *          The tick function of the "main" (the variable called program) is called repeatedly from the main loop; the call then continues recursively
  * - toSimpleObject(): returns a simplified version of this instruction that only contains the data that needs to be stored when the program is saved to JSON
  * - fromSimpleObject(o): static method, transforms a simple object back into a regular instruction that can be executed and returns it. This method also recursively transforms any sub-instruction.
+ *
+ * Instructions types need to be registered using the registerInstructionType(type,category) function.
+ * The function requires 2 parameters:
+ * - The class that implements the instruction type
+ * - Optionally, the category (there are 5 default categories: Interaction, Math, Selection, Loops, Tools). If not specified, the instruction will not be added to any category and it will not be visible to the user (although it will exist, see InstructionSequence for example)
  */
+
+const instructionCategories = {
+    "Interaction": [],
+    "Math": [],
+    "Selection": [],
+    "Loops": [],
+    "Tools": []
+}
+const instructionTypes = {}
+
+function registerInstructionType(classref, category = null) {
+    if (typeof instructionTypes[classref.name] !== "undefined") throw "Already registered"
+    instructionTypes[classref.name] = classref
+    if (category !== null) {
+        if (typeof instructionCategories[category] !== "undefined") {
+            instructionCategories[category].push(classref)
+        } else {
+            instructionCategories[category] = [classref]
+        }
+    }
+}
 
 function InstructionSequence() {
     this.body = []
@@ -531,9 +606,10 @@ InstructionSequence.prototype = {
 InstructionSequence.fromSimpleObject = function(o) {
     if (o.type !== "InstructionSequence") throw "Not an InstructionSequence"
     const r = new InstructionSequence()
-    o.body.forEach((i) => r.body.push(globalThis[i.type].fromSimpleObject(i)))
+    o.body.forEach((i) => r.body.push(instructionTypes[i.type].fromSimpleObject(i)))
     return r
 }
+registerInstructionType(InstructionSequence, null)
 
 function Assign(variable = null, expression = null) {
     this.variable = variable
@@ -560,6 +636,7 @@ Assign.fromSimpleObject = function(o) {
     if (o.type !== "Assign") throw "Not an Assign"
     return new Assign(o.variable, o.expression)
 }
+registerInstructionType(Assign, "Math")
 
 function If(condition = null, trueBranch = new InstructionSequence(), falseBranch = new InstructionSequence()) {
     this.condition = condition
@@ -598,10 +675,11 @@ If.prototype = {
 If.fromSimpleObject = function(o) {
     if (o.type !== "If") throw "Not an If"
     const r = new If(o.condition)
-    r.trueBranch = globalThis[o.trueBranch.type].fromSimpleObject(o.trueBranch)
-    r.falseBranch = globalThis[o.falseBranch.type].fromSimpleObject(o.falseBranch)
+    r.trueBranch = instructionTypes[o.trueBranch.type].fromSimpleObject(o.trueBranch)
+    r.falseBranch = instructionTypes[o.falseBranch.type].fromSimpleObject(o.falseBranch)
     return r
 }
+registerInstructionType(If, "Selection")
 
 function DoWhile(condition = null, body = new InstructionSequence()) {
     this.condition = condition
@@ -645,9 +723,10 @@ DoWhile.prototype = {
 DoWhile.fromSimpleObject = function(o) {
     if (o.type !== "DoWhile") throw "Not a DoWhile"
     const r = new DoWhile(o.condition)
-    r.body = globalThis[o.body.type].fromSimpleObject(o.body)
+    r.body = instructionTypes[o.body.type].fromSimpleObject(o.body)
     return r
 }
+registerInstructionType(DoWhile, "Loops")
 
 function While(condition = null, body = new InstructionSequence()) {
     this.condition = condition
@@ -689,9 +768,10 @@ While.prototype = {
 While.fromSimpleObject = function(o) {
     if (o.type !== "While") throw "Not a While"
     const r = new While(o.condition)
-    r.body = globalThis[o.body.type].fromSimpleObject(o.body)
+    r.body = instructionTypes[o.body.type].fromSimpleObject(o.body)
     return r
 }
+registerInstructionType(While, "Loops")
 
 function For(variable = null, from = null, to = null, step = "1", direction = "up", body = new InstructionSequence()) {
     this.variable = variable
@@ -779,9 +859,39 @@ For.prototype = {
 For.fromSimpleObject = function(o) {
     if (o.type !== "For") throw "Not a For"
     const r = new For(o.variable, o.from, o.to, o.step, o.direction)
-    r.body = globalThis[o.body.type].fromSimpleObject(o.body)
+    r.body = instructionTypes[o.body.type].fromSimpleObject(o.body)
     return r
 }
+registerInstructionType(For, "Loops")
+
+//-------- TOOLS --------
+/*
+ * This section implements 2 additional instructions:
+ * - Comment: a simple comment block that allows you to store text but does nothing when executed
+ * - Breakpoint: automatically pauses the program when the execution reaches it
+ */
+
+function Comment(text = null) {
+    this.text = text
+}
+Comment.prototype = {
+    constructor: Comment,
+    tick: function() {
+        interpreter.currentInstruction = this
+        return true
+    },
+    toSimpleObject: function() {
+        return {
+            type: "Comment",
+            text: this.text,
+        }
+    },
+}
+Comment.fromSimpleObject = function(o) {
+    if (o.type !== "Comment") throw "Not a Comment"
+    return new Comment(o.text)
+}
+registerInstructionType(Comment, "Tools")
 
 function Breakpoint() {}
 Breakpoint.prototype = {
@@ -807,6 +917,122 @@ Breakpoint.fromSimpleObject = function(o) {
     if (o.type !== "Breakpoint") throw "Not a Breakpoint"
     return new Breakpoint()
 }
+registerInstructionType(Breakpoint, "Tools")
+
+//--------  INPUT/OUTPUT --------
+/*
+ * This section implements 2 additional instructions:
+ * - Input: reads a variable
+ * - Output: prints a message
+ *
+ * To keep the core and UI separated, these instructions expect the UI to implement the following methods:
+ * - ui_output(text,newLine): called when the program needs to output some text. newLine is a boolean that controls whether the new "message" is a whole message (true) or if it needs to be added to the previous one (false), allowing for easier concatenation without using the + operator
+ * - ui_input(var,type,callback): called when the program needs to read something from the user. The callback is a function that the UI can call when the user enters the input and allows the Input instruction to continue.
+ * Example:
+ *      function ui_input(variable,type,callback){
+ *          ...prepare input form...
+ *          confirmButton.onclick=function(){
+ *              callback(textBox.value)
+ *          }
+ *      }
+ * If these functions are not implemented in the UI, Flogo will fall back to using alert and prompt, which is useful for testing
+ */
+
+function Input(variable = null) {
+    this.variable = variable
+}
+Input.prototype = {
+    constructor: Input,
+    tick: function() {
+        interpreter.currentInstruction = this
+        if (typeof this.state === "undefined") {
+            if (this.variable === null) throw "Incomplete instruction"
+            if (typeof variables[this.variable] === "undefined") throw "Variable does not exist: " + this.variable
+            this.state = null
+            if (typeof ui_input !== "undefined") {
+                interpreter.preventTurbo = true
+                ui_input(this.variable, variables[this.variable].type, (val) => {
+                    interpreter.preventTurbo = false
+                    this.state = val
+                })
+                return false
+            } else {
+                interpreter.preventTurbo = true
+                this.state = prompt(this.variable)
+                interpreter.preventTurbo = false
+                return false
+            }
+        } else {
+            if (this.state === null) {
+                return false
+            } else {
+                switch (variables[this.variable].type) {
+                    case "integer":
+                    case "real": {
+                        if (isNaN(this.state)) throw "Not a number"
+                        variables[this.variable].value = Number(this.state)
+                    }
+                    break
+                    case "string": {
+                        variables[this.variable].value = this.state
+                    }
+                    break
+                    case "boolean": {
+                        if (this.state !== "true" && this.state !== "false") throw "Not a valid boolean"
+                        variables[this.variable].value = this.state === "true"
+                    }
+                    break
+                    default: {
+                        throw "Unknown variable type: " + variables[this.variable].type
+                    }
+                }
+                delete this.state
+                return true
+            }
+        }
+    },
+    toSimpleObject: function() {
+        return {
+            type: "Input",
+            variable: this.variable,
+        }
+    },
+}
+Input.fromSimpleObject = function(o) {
+    return new Input(o.variable)
+}
+registerInstructionType(Input, "Interaction")
+
+function Output(expression = null, newLine = true) {
+    this.expression = expression
+    this.newLine = newLine
+}
+Output.prototype = {
+    constructor: Output,
+    tick: function() {
+        interpreter.currentInstruction = this
+        if (this.expression === null) throw "Incomplete instruction"
+        let val = evaluateExpression(this.expression)
+        val = "" + val
+        if (typeof ui_output !== "undefined") {
+            ui_output(val, this.newLine)
+        } else {
+            alert(val)
+        }
+        return true
+    },
+    toSimpleObject: function() {
+        return {
+            type: "Output",
+            expression: this.expression,
+            newLine: this.newLine,
+        }
+    },
+}
+Output.fromSimpleObject = function(o) {
+    return new Output(o.expression, o.newLine)
+}
+registerInstructionType(Output, "Interaction")
 
 /*
  * Main interpreter loop implementation (interpreter variable).
@@ -972,144 +1198,6 @@ const mainLoop = function _mainLoop() {
 }
 mainLoop()
 delete mainLoop
-
-//--------  INPUT/OUTPUT --------
-/*
- * This section implements 2 additional instructions:
- * - Input: reads a variable
- * - Output: prints a message
- *
- * To keep the core and UI separated, these instructions expect the UI to implement the following methods:
- * - ui_output(text,newLine): called when the program needs to output some text. newLine is a boolean that controls whether the new "message" is a whole message (true) or if it needs to be added to the previous one (false), allowing for easier concatenation without using the + operator
- * - ui_input(var,type,callback): called when the program needs to read something from the user. The callback is a function that the UI can call when the user enters the input and allows the Input instruction to continue.
- * Example:
- *      function ui_input(variable,type,callback){
- *          ...prepare input form...
- *          confirmButton.onclick=function(){
- *              callback(textBox.value)
- *          }
- *      }
- * If these functions are not implemented in the UI, Flogo will fall back to using alert and prompt, which is useful for testing
- */
-
-function Output(expression = null, newLine = true) {
-    this.expression = expression
-    this.newLine = newLine
-}
-Output.prototype = {
-    constructor: Output,
-    tick: function() {
-        interpreter.currentInstruction = this
-        if (this.expression === null) throw "Incomplete instruction"
-        let val = evaluateExpression(this.expression)
-        val = "" + val
-        if (typeof ui_output !== "undefined") {
-            ui_output(val, this.newLine)
-        } else {
-            alert(val)
-        }
-        return true
-    },
-    toSimpleObject: function() {
-        return {
-            type: "Output",
-            expression: this.expression,
-            newLine: this.newLine,
-        }
-    },
-}
-Output.fromSimpleObject = function(o) {
-    return new Output(o.expression, o.newLine)
-}
-
-function Input(variable = null) {
-    this.variable = variable
-}
-Input.prototype = {
-    constructor: Input,
-    tick: function() {
-        interpreter.currentInstruction = this
-        if (typeof this.state === "undefined") {
-            if (this.variable === null) throw "Incomplete instruction"
-            if (typeof variables[this.variable] === "undefined") throw "Variable does not exist: " + this.variable
-            this.state = null
-            if (typeof ui_input !== "undefined") {
-                interpreter.preventTurbo = true
-                ui_input(this.variable, variables[this.variable].type, (val) => {
-                    interpreter.preventTurbo = false
-                    this.state = val
-                })
-                return false
-            } else {
-                interpreter.preventTurbo = true
-                this.state = prompt(this.variable)
-                interpreter.preventTurbo = false
-                return false
-            }
-        } else {
-            if (this.state === null) {
-                return false
-            } else {
-                switch (variables[this.variable].type) {
-                    case "integer":
-                    case "real": {
-                        if (isNaN(this.state)) throw "Not a number"
-                        variables[this.variable].value = Number(this.state)
-                    }
-                    break
-                    case "string": {
-                        variables[this.variable].value = this.state
-                    }
-                    break
-                    case "boolean": {
-                        if (this.state !== "true" && this.state !== "false") throw "Not a valid boolean"
-                        variables[this.variable].value = this.state === "true"
-                    }
-                    break
-                    default: {
-                        throw "Unknown variable type: " + variables[this.variable].type
-                    }
-                }
-                delete this.state
-                return true
-            }
-        }
-    },
-    toSimpleObject: function() {
-        return {
-            type: "Input",
-            variable: this.variable,
-        }
-    },
-}
-Input.fromSimpleObject = function(o) {
-    return new Input(o.variable)
-}
-
-//-------- COMMENTS --------
-/*
- * Adds a simple comment block with some text in it. It does nothing when executed.
- */
-function Comment(text = null) {
-    this.text = text
-}
-Comment.prototype = {
-    constructor: Comment,
-    tick: function() {
-        interpreter.currentInstruction = this
-        return true
-    },
-    toSimpleObject: function() {
-        return {
-            type: "Comment",
-            text: this.text,
-        }
-    },
-}
-Comment.fromSimpleObject = function(o) {
-    if (o.type !== "Comment") throw "Not a Comment"
-    return new Comment(o.text)
-}
 
 //-------- PROGRAM METADATA --------
 /*

@@ -22,10 +22,10 @@ let INSERT_FONT,
 let insert_targetIstruction, insert_targetPos
 
 function insert_createBlockDrawable(type) {
-    const b = new globalThis[type]().createDrawable().flogo_shapeOnly
+    const b = new instructionTypes[type]().createDrawable().flogo_shapeOnly
     b.removeEventListener("click dblclick tap touchstart touchend touchmove")
     b.on("click tap", () => {
-        const newInstr = new globalThis[type]()
+        const newInstr = new instructionTypes[type]()
         insert_targetIstruction.body.splice(insert_targetPos, 0, newInstr)
         saveToHistory()
         closePopup()
@@ -73,99 +73,34 @@ function prepare_insertWide() {
     })
     blockSelector.add(paste)
     s.flogo_xAfterClipboard = INSERT_WIDE_COLUMN_WIDTH
-    label = new Konva.Text({
-        x: s.flogo_xAfterClipboard,
-        y: 0,
-        width: INSERT_WIDE_COLUMN_WIDTH,
-        text: "Interaction",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-        align: "center",
-    })
-    const inputBlock = insert_createBlockDrawable("Input")
-    inputBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - inputBlock.flogo_width / 2)
-    inputBlock.y(label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL)
-    const outputBlock = insert_createBlockDrawable("Output")
-    outputBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - outputBlock.flogo_width / 2)
-    outputBlock.y(inputBlock.y() + inputBlock.flogo_height + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS)
-    blockSelector.add(label)
-    blockSelector.add(inputBlock)
-    blockSelector.add(outputBlock)
-    label = new Konva.Text({
-        x: INSERT_WIDE_COLUMN_WIDTH * 2,
-        y: 0,
-        width: INSERT_WIDE_COLUMN_WIDTH,
-        text: "Math",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-        align: "center",
-    })
-    const assignBlock = insert_createBlockDrawable("Assign")
-    assignBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - inputBlock.flogo_width / 2)
-    assignBlock.y(label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL)
-    blockSelector.add(label)
-    blockSelector.add(assignBlock)
-    label = new Konva.Text({
-        x: INSERT_WIDE_COLUMN_WIDTH * 3,
-        y: 0,
-        width: INSERT_WIDE_COLUMN_WIDTH,
-        text: "Selection",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-        align: "center",
-    })
-    const ifBlock = insert_createBlockDrawable("If")
-    ifBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - ifBlock.flogo_width / 2)
-    ifBlock.y(label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL)
-    blockSelector.add(label)
-    blockSelector.add(ifBlock)
-    label = new Konva.Text({
-        x: INSERT_WIDE_COLUMN_WIDTH * 4,
-        y: 0,
-        width: INSERT_WIDE_COLUMN_WIDTH,
-        text: "Loops",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-        align: "center",
-    })
-    const doWhileBlock = insert_createBlockDrawable("DoWhile")
-    doWhileBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - doWhileBlock.flogo_width / 2)
-    doWhileBlock.y(label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL)
-    const whileBlock = insert_createBlockDrawable("While")
-    whileBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - whileBlock.flogo_width / 2)
-    whileBlock.y(doWhileBlock.y() + doWhileBlock.flogo_height + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS)
-    const forBlock = insert_createBlockDrawable("For")
-    forBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - forBlock.flogo_width / 2)
-    forBlock.y(whileBlock.y() + whileBlock.flogo_height + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS)
-    blockSelector.add(label)
-    blockSelector.add(doWhileBlock)
-    blockSelector.add(whileBlock)
-    blockSelector.add(forBlock)
-    label = new Konva.Text({
-        x: INSERT_WIDE_COLUMN_WIDTH * 5,
-        y: 0,
-        width: INSERT_WIDE_COLUMN_WIDTH,
-        text: "Tools",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-        align: "center",
-    })
-    const commentBlock = insert_createBlockDrawable("Comment")
-    commentBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - commentBlock.flogo_width / 2)
-    commentBlock.y(label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL)
-    const bpBlock = insert_createBlockDrawable("Breakpoint")
-    bpBlock.x(label.x() + INSERT_WIDE_COLUMN_WIDTH / 2 - bpBlock.flogo_width / 2)
-    bpBlock.y(commentBlock.y() + commentBlock.flogo_height + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS)
-    blockSelector.add(label)
-    blockSelector.add(commentBlock)
-    blockSelector.add(bpBlock)
-    s.flogo_width = INSERT_WIDE_COLUMN_WIDTH * 6
-    s.flogo_height = forBlock.y() + forBlock.flogo_height
+    let x = INSERT_WIDE_COLUMN_WIDTH
+    let endY = paste.y() + paste.height()
+    for (const category in instructionCategories) {
+        label = new Konva.Text({
+            x: x,
+            y: 0,
+            width: INSERT_WIDE_COLUMN_WIDTH,
+            text: category,
+            fontSize: INSERT_FONT_SIZE,
+            fontFamily: INSERT_FONT,
+            fill: LINE_COLOR,
+            align: "center",
+        })
+        blockSelector.add(label)
+        let y = label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL
+        instructionCategories[category].forEach(instruction => {
+            const block = insert_createBlockDrawable(instruction.name)
+            block.x(x + INSERT_WIDE_COLUMN_WIDTH / 2 - block.flogo_width / 2)
+            block.y(y)
+            blockSelector.add(block)
+            y += block.flogo_height + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+        })
+        y -= WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+        if (y > endY) endY = y
+        x += INSERT_WIDE_COLUMN_WIDTH
+    }
+    s.flogo_width = x
+    s.flogo_height = endY
     s.flogo_pasteBtn = paste
     insertWide_stage = s
 }
@@ -204,89 +139,36 @@ function prepare_insertTall() {
     })
     blockSelector.add(paste)
     s.flogo_yAfterClipboard = paste.y() + paste.height() + TALL_INSERT_SPACE_BELOW_ROW
-    label = new Konva.Text({
-        x: 0,
-        y: s.flogo_yAfterClipboard,
-        text: "Interaction",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-    })
-    blockSelector.add(label)
-    const inputBlock = insert_createBlockDrawable("Input")
-    inputBlock.x(0)
-    inputBlock.y(label.y() + label.height() + TALL_INSERT_SPACE_BELOW_LABEL)
-    const outputBlock = insert_createBlockDrawable("Output")
-    outputBlock.x(inputBlock.x() + inputBlock.flogo_width + PADDING_BASE * 2)
-    outputBlock.y(inputBlock.y())
-    label = new Konva.Text({
-        x: 0,
-        y: inputBlock.y() + inputBlock.flogo_height + TALL_INSERT_SPACE_BELOW_ROW,
-        text: "Math",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-    })
-    blockSelector.add(label)
-    const assignBlock = insert_createBlockDrawable("Assign")
-    assignBlock.x(0)
-    assignBlock.y(label.y() + label.height() + TALL_INSERT_SPACE_BELOW_LABEL)
-    label = new Konva.Text({
-        x: 0,
-        y: assignBlock.y() + assignBlock.flogo_height + TALL_INSERT_SPACE_BELOW_ROW,
-        text: "Selection",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-    })
-    blockSelector.add(label)
-    const ifBlock = insert_createBlockDrawable("If")
-    ifBlock.x(0)
-    ifBlock.y(label.y() + label.height() + TALL_INSERT_SPACE_BELOW_LABEL)
-    label = new Konva.Text({
-        x: 0,
-        y: ifBlock.y() + ifBlock.flogo_height + TALL_INSERT_SPACE_BELOW_ROW,
-        text: "Loops",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-    })
-    blockSelector.add(label)
-    const doWhileBlock = insert_createBlockDrawable("DoWhile")
-    doWhileBlock.x(0)
-    doWhileBlock.y(label.y() + label.height() + TALL_INSERT_SPACE_BELOW_LABEL)
-    const whileBlock = insert_createBlockDrawable("While")
-    whileBlock.x(doWhileBlock.x() + doWhileBlock.flogo_width + PADDING_BASE * 2)
-    whileBlock.y(doWhileBlock.y())
-    const forBlock = insert_createBlockDrawable("For")
-    forBlock.x(whileBlock.x() + whileBlock.flogo_width + PADDING_BASE * 2)
-    forBlock.y(doWhileBlock.y())
-    label = new Konva.Text({
-        x: 0,
-        y: doWhileBlock.y() + doWhileBlock.flogo_height + TALL_INSERT_SPACE_BELOW_ROW,
-        text: "Tools",
-        fontSize: INSERT_FONT_SIZE,
-        fontFamily: INSERT_FONT,
-        fill: LINE_COLOR,
-    })
-    blockSelector.add(label)
-    const commentBlock = insert_createBlockDrawable("Comment")
-    commentBlock.x(0)
-    commentBlock.y(label.y() + label.height() + TALL_INSERT_SPACE_BELOW_LABEL)
-    const bpBlock = insert_createBlockDrawable("Breakpoint")
-    bpBlock.x(commentBlock.x() + commentBlock.flogo_width + PADDING_BASE * 2)
-    bpBlock.y(commentBlock.y())
-    blockSelector.add(inputBlock)
-    blockSelector.add(outputBlock)
-    blockSelector.add(assignBlock)
-    blockSelector.add(ifBlock)
-    blockSelector.add(doWhileBlock)
-    blockSelector.add(whileBlock)
-    blockSelector.add(forBlock)
-    blockSelector.add(commentBlock)
-    blockSelector.add(bpBlock)
-    s.flogo_width = forBlock.x() + forBlock.flogo_width
-    s.flogo_height = bpBlock.y() + bpBlock.flogo_height
+    let y = s.flogo_yAfterClipboard
+    let endX = 0
+    for (const category in instructionCategories) {
+        label = new Konva.Text({
+            x: 0,
+            y: y,
+            text: "Interaction",
+            fontSize: INSERT_FONT_SIZE,
+            fontFamily: INSERT_FONT,
+            fill: LINE_COLOR,
+        })
+        blockSelector.add(label)
+        y += label.height() + TALL_INSERT_SPACE_BELOW_LABEL
+        let x = 0
+        let h = 0
+        instructionCategories[category].forEach(instruction => {
+            const block = insert_createBlockDrawable(instruction.name)
+            block.x(x)
+            block.y(y)
+            blockSelector.add(block)
+            if (block.flogo_height > h) h = block.flogo_height
+            x += block.flogo_width + TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+        })
+        x -= TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+        if (x > endX) endX = x
+        y += h + TALL_INSERT_SPACE_BELOW_ROW
+    }
+    y -= TALL_INSERT_SPACE_BELOW_ROW
+    s.flogo_width = endX
+    s.flogo_height = y
     s.flogo_pasteBtn = paste
     insertTall_stage = s
 }
@@ -503,7 +385,7 @@ function edit_prepareGraphics() {
         if (typeof e.flogo_stage !== "undefined") {
             e.flogo_stage.destroy()
         }
-        const shape = new globalThis[e.getAttribute("flogo_instruction")]().createDrawable().flogo_shapeOnly
+        const shape = new instructionTypes[e.getAttribute("flogo_instruction")]().createDrawable().flogo_shapeOnly
         shape.removeEventListener("click dblclick tap touchstart touchend")
         const gstage = new Konva.Stage({
             container: e,
@@ -646,7 +528,7 @@ function cutSelectedInstructions() {
 function pasteClipboard(parent, posInParent) {
     if (clipboard === null) return
     for (let i = 0; i < clipboard.length; i++) {
-        parent.body.splice(posInParent + i, 0, globalThis[clipboard[i].type].fromSimpleObject(clipboard[i]))
+        parent.body.splice(posInParent + i, 0, instructionTypes[clipboard[i].type].fromSimpleObject(clipboard[i]))
     }
     saveToHistory()
     cancelSelection()
@@ -770,6 +652,7 @@ function ui_onProgramEnd() {
     d.innerText = "Program finished"
     document.getElementById("log").prepend(d)
     variablesEditor_enable()
+    centerFlowchartOnProgramEnd()
     //resetVariables()
 }
 
@@ -823,10 +706,15 @@ function variablesEditor_createVariable(name) {
     v.className = "variable"
     v.flogo_variable = name
     v.draggable = true
-    v.ondragstart = () => {
+    v.ondragstart = e => {
+        if (e.target !== v) e.preventDefault()
         dragging = v
     }
-    v.ondragend = () => {
+    v.ondragend = e => {
+        if (enableWorkaroundsForWebKitBecauseItFuckingSucks || e.dataTransfer.dropEffect !== "none") {
+            variablesEditor_moveVariableAtDropIndicator(v)
+        }
+        variablesEditor_hideVariableDropIndicator()
         dragging = null
     }
     const nt = document.createElement("div")
@@ -901,8 +789,12 @@ function variablesEditor_createVariable(name) {
     }
     btns.appendChild(confirmEditBtn)
     nt.appendChild(btns)
-    nt.ondrop = (e) => {
-        variablesEditor_moveVariableBefore(dragging, v)
+    nt.ondragenter = () => {
+        if (dragging !== v && v.previousSibling !== dragging) {
+            variablesEditor_placeVariableDropIndicatorBefore(v)
+        } else {
+            variablesEditor_hideVariableDropIndicator()
+        }
     }
     v.appendChild(nt)
     const valVis = document.createElement("div")
@@ -961,8 +853,12 @@ function variablesEditor_createVariable(name) {
         del: delBtn,
         init: init
     }
-    valVis.ondrop = valEdit.ondrop = (e) => {
-        variablesEditor_moveVariableAfter(dragging, v)
+    valEdit.ondragenter = valVis.ondragenter = () => {
+        if (dragging !== v && v.nextSibling !== dragging) {
+            variablesEditor_placeVariableDropIndicatorAfter(v)
+        } else {
+            variablesEditor_hideVariableDropIndicator()
+        }
     }
     valEdit.flogo_init = init
     valEdit.flogo_initVal = initVal
@@ -984,24 +880,6 @@ function variablesEditor_createVariable(name) {
         }
     }
     return v
-}
-
-function variablesEditor_moveVariableBefore(before, after) {
-    if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
-    const list = document.getElementById("variableList")
-    list.removeChild(before)
-    list.insertBefore(before, after)
-    variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList()
-    saveToHistory()
-}
-
-function variablesEditor_moveVariableAfter(after, before) {
-    if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
-    const list = document.getElementById("variableList")
-    list.removeChild(after)
-    before.after(after)
-    variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList()
-    saveToHistory()
 }
 
 function variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList() {
@@ -1172,6 +1050,59 @@ function variablesEditor_disable() {
     })
 }
 
+function variablesEditor_makeVariableDropIndicator() {
+    const d = document.createElement("div")
+    d.id = "variableDropIndicator"
+    return d
+}
+
+function variablesEditor_placeVariableDropIndicatorBefore(v) {
+    const d = document.getElementById("variableDropIndicator")
+    const vb = v.getBoundingClientRect()
+    d.classList.add("visible")
+    d.style.top = (vb.y - d.getBoundingClientRect().height) + "px"
+    d.flogo_placeBefore = v
+    d.flogo_placeAfter = null
+}
+
+function variablesEditor_placeVariableDropIndicatorAfter(v) {
+    const d = document.getElementById("variableDropIndicator")
+    const vb = v.getBoundingClientRect()
+    d.classList.add("visible")
+    d.style.top = (vb.y + vb.height) + "px"
+    d.flogo_placeBefore = null
+    d.flogo_placeAfter = v
+}
+
+function variablesEditor_hideVariableDropIndicator() {
+    const d = document.getElementById("variableDropIndicator")
+    d.classList.remove("visible")
+    d.flogo_placeBefore = null
+    d.flogo_placeAfter = null
+}
+
+function variablesEditor_moveVariableAtDropIndicator(v) {
+    const d = document.getElementById("variableDropIndicator")
+    const list = document.getElementById("variableList")
+    if (d.flogo_placeBefore !== null) {
+        const before = v,
+            after = d.flogo_placeBefore
+        if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
+        list.removeChild(before)
+        list.insertBefore(before, after)
+    } else if (d.flogo_placeAfter !== null) {
+        const before = d.flogo_placeAfter,
+            after = v
+        if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
+        list.removeChild(after)
+        before.after(after)
+    } else {
+        return
+    }
+    variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList()
+    saveToHistory()
+}
+
 function updateVariableValues() {
     requestAnimationFrame(updateVariableValues)
     const vars = document.querySelectorAll("#variableList > div.variable")
@@ -1188,6 +1119,7 @@ function recreateVariableList() {
         list.appendChild(div)
     }
     list.appendChild(variablesEditor_makeAddBtn())
+    list.appendChild(variablesEditor_makeVariableDropIndicator())
 }
 
 function variablesEditor_cancelAllEdits() {
@@ -1354,7 +1286,7 @@ function saveProgram() {
     if (state === STATE_RUNNING || state === STATE_PAUSED) {
         stopProgram()
     }
-    if(!isElectron()) toast("Starting download")
+    if (!isElectron()) toast("Starting download")
     download()
 }
 
@@ -1410,20 +1342,16 @@ function openSettings() {
     settings_selectTab("program_metadata")
     document.getElementById("metadata_title").value = metadata.title
     document.getElementById("metadata_author").value = metadata.author
-    if (typeof storage.theme !== "undefined") {
-        document.getElementById("style_theme").value = storage.theme
-    } else {
-        document.getElementById("style_theme").value = "default_dark"
-    }
+    document.getElementById("style_theme").value = getCurrentTheme()
     document.getElementById("settings_fps").checked = storage.showFps === "true"
     document.getElementById("settings_allowZoomOnFlowchart").checked = _allowZoomOnFlowchart
     document.getElementById("settings_altTurboTSlice").checked = _altTurboTSlice
     const badge = document.getElementById("versionTypeBadge")
-    if(isElectron()){
+    if (isElectron()) {
         badge.innerText = "Electron " + process.versions.electron
         badge.style.background = "#9feaf9"
         badge.style.color = "#2b2e3a"
-    }else{
+    } else {
         if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
             badge.innerText = "PWA"
             badge.style.background = "#5a0ec9"
@@ -1460,6 +1388,11 @@ function settings_setTheme() {
     loadTheme(document.getElementById("style_theme").value)
 }
 
+function settings_bkColor_changed() {
+    const val = document.getElementById("settings_bkColor").checked
+    storage.bkColor = val
+}
+
 function settings_fps_changed() {
     const val = document.getElementById("settings_fps").checked
     storage.showFps = val
@@ -1478,9 +1411,20 @@ function settings_altTurboTSlice_changed() {
     _altTurboTSlice = val
 }
 
+function settings_downloadSVG() {
+    downloadSVG(undefined, document.getElementById("settings_bkColor").checked)
+}
+
+function settings_downloadPNG() {
+    downloadPNG(undefined, document.getElementById("settings_bkColor").checked)
+}
+
 function showLicense() {
-    closePopup(true)
-    showPopup("licenseViewer")
+    document.getElementById("licenseViewer").classList.add("visible")
+}
+
+function hideLicense() {
+    document.getElementById("licenseViewer").classList.remove("visible")
 }
 
 //-------- MANUAL STUFF --------
@@ -1538,7 +1482,19 @@ function autoLayout(first = false) {
 function toggleVariablesArea() {
     const va = document.getElementById("variablesArea")
     va.classList.toggle("expanded")
-    document.getElementById("flowchartArea").classList.toggle("variablesExpanded")
+    //workaround: there is a 1 frame "jitter" in the layout when flowchartArea is resized because konva won't redraw until the frame after our layout shift. To workaround this, we add a transform that moves the old content in the new place, and remove it the very next frame after konva has drawn the new content in the correct spot. This issue is not visible in the right side, so toggleConsoleArea doesn't have this code
+    const fc = document.getElementById("flowchartArea")
+    fc.classList.toggle("variablesExpanded")
+    if (fc.classList.contains("variablesExpanded")) {
+        fc.style.transform = "translateX(calc(var(--layout-variablesArea-width) * -1))"
+    } else {
+        fc.style.transform = "translateX(var(--layout-variablesArea-width))"
+    }
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            fc.style.transform = ""
+        })
+    })
     lastToggled = va
 }
 
@@ -1566,6 +1522,12 @@ function showPopup(d) {
     if (typeof d === "string") d = document.getElementById(d)
     d.classList.add("visible")
     document.getElementById("popupBackdrop").classList.add("active")
+}
+
+function updateFlowchartOcclusion() {
+    const barBounds = document.getElementById("bar").getBoundingClientRect(),
+        fcBounds = document.getElementById("flowchartArea").getBoundingClientRect()
+    FLOWCHART_OCCLUDED_ON_TOP = barBounds.y + barBounds.height - fcBounds.y
 }
 
 //-------- KEYBOARD SHORTCUTS --------
@@ -1603,6 +1565,17 @@ function initKeyboardShortcuts() {
                     if (undoHistoryPtr >= undoHistory.length) return
                     toast("Redo")
                     redo()
+                }
+            };
+            break
+            case 'a': {
+                if (e.target !== document.body) return
+                const intState = interpreter.getState()
+                if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+                if (document.querySelectorAll("div.popup.visible").length !== 0) return
+                if (ctrlKey && !e.shiftKey) {
+                    e.preventDefault()
+                    selectAllInstructions()
                 }
             };
             break
@@ -1857,9 +1830,12 @@ function initApp() {
     document.getElementById("editor2").addEventListener("contextmenu", (e) => e.preventDefault()) //workaround: on some chromium-based browsers, this context menu gets accidentally triggered when right-clicking a block, despite it having display:none when the event is triggered
     document.getElementById("fps").style.display = storage.showFps === "true" ? "block" : "none"
     updateFps()
+    if (typeof storage.bkColor !== "undefined") {
+        document.getElementById("settings_bkColor").checked = storage.bkColor === "true"
+    }
     if (typeof storage.allowZoomOnFlowchart !== "undefined") {
         _allowZoomOnFlowchart = storage.allowZoomOnFlowchart === "true"
-    }else{
+    } else {
         _allowZoomOnFlowchart = isElectron()
     }
     if (typeof storage.altTurboTSlice !== "undefined") {
@@ -1884,23 +1860,31 @@ function initApp() {
                         e.flogo_stage.getLayers()[0].getCanvas().setPixelRatio(window.devicePixelRatio)
                         e.flogo_stage.draw()
                     })
+                    updateFlowchartOcclusion()
                 }
+            }
+            const systemColorSchemeChangeHandler = () => {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                    if (typeof storage.theme === "undefined") {
+                        loadTheme(getDefaultTheme(), undefined, false)
+                    }
+                })
             }
             const endOfLoad = () => {
                 applyBrowserThemeColorFromCSS()
                 edit_shapeFollower()
+                updateFlowchartOcclusion()
                 updateFlowchart(true)
                 pixelRatioChangeHandler()
                 updateWindowTitle()
+                systemColorSchemeChangeHandler()
                 if (typeof storage.recovery !== "undefined") {
                     showPopup("errorRec")
+                } else {
+                    crashHandlerMode = 1
                 }
             }
-            if (typeof storage.theme !== "undefined") {
-                loadTheme(storage.theme, endOfLoad)
-            } else {
-                loadTheme("default_dark", endOfLoad)
-            }
+            loadTheme(getCurrentTheme(), endOfLoad, false)
             recreateVariableList()
             updateVariableValues()
             setProgramExecutionMode()
@@ -1912,12 +1896,13 @@ function initApp() {
         })
     })
     window.addEventListener("resize", closePopup)
-    if(!isElectron()){
+    window.addEventListener("resize", updateFlowchartOcclusion)
+    if (!isElectron()) {
         window.onbeforeunload = (e) => {
             if (document.getElementById("errorScreen").style.display === "block") return
-                if (undoHistoryPtr <= 1) return
-                    e.preventDefault()
-                    e.returnValue = ""
+            if (undoHistoryPtr <= 1) return
+            e.preventDefault()
+            e.returnValue = ""
         }
     }
     document.body.addEventListener("dragover", (e) => e.preventDefault())
@@ -1961,7 +1946,7 @@ function initApp() {
             }
         }
     })
-    if(isElectron()){
+    if (isElectron()) {
         const {
             ipcRenderer,
             shell
@@ -2009,15 +1994,26 @@ function recoverProgram() {
     saveToHistory()
     delete storage.recovery
     updateWindowTitle()
+    crashHandlerMode = 1
     closePopup(true)
 }
 
 function deleteRecovery() {
     delete storage.recovery
+    crashHandlerMode = 1
     closePopup(true)
 }
 
-function loadTheme(name, callback) {
+function saveProgramForRecovery() {
+    if (program.body.length !== 0 || Object.keys(variables).length !== 0) {
+        storage.recovery = save(false)
+        return 1
+    } else {
+        return 0
+    }
+}
+
+function loadTheme(name, callback, saveToStorage = true) {
     let t = document.getElementById("theme")
     const newTheme = "themes/" + name + ".css"
     if (t !== null && t.href.endsWith(newTheme)) {
@@ -2034,10 +2030,13 @@ function loadTheme(name, callback) {
     closePopup()
     document.getElementById("loadOverlay").style.display = "block"
     t.onload = () => {
-        LARGE_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-large-threshold", 75, document.body))
-        SMALL_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-small-threshold", 45, document.body))
+        LARGE_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-large-threshold", 80, document.body))
+        SMALL_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-small-threshold", 55, document.body))
         applyBrowserThemeColorFromCSS()
-        storage.theme = name
+        if (saveToStorage) {
+            storage.theme = name
+        }
+        updateFlowchartOcclusion()
         loadFlowchartThemeFromCSS(() => {
             insert_preparePopups()
             edit_prepareGraphics()
@@ -2047,7 +2046,23 @@ function loadTheme(name, callback) {
     }
     t.href = newTheme
     t.onerror = () => {
-        loadTheme("default_dark")
+        loadTheme(getDefaultTheme(), callback, false)
     }
     document.head.appendChild(t)
+}
+
+function getDefaultTheme() {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return "default_dark"
+    } else {
+        return "default_light"
+    }
+}
+
+function getCurrentTheme() {
+    if (typeof storage.theme !== "undefined") {
+        return storage.theme
+    } else {
+        return getDefaultTheme()
+    }
 }

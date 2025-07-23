@@ -61,7 +61,8 @@ let ASSIGN_COLOR1,
     SCROLLBAR_THICKNESS,
     SCROLLBAR_COLOR,
     SCROLLBAR_PADDING,
-    MINVIS
+    MINVIS,
+    FLOWCHART_OCCLUDED_ON_TOP = 0
 
 let _allowZoomOnFlowchart = false
 
@@ -1072,8 +1073,8 @@ While.prototype.createDrawable = function() {
     }
     const arrowOut = new Konva.Arrow({
         x: condition.flogo_width / 2,
-        y: condition.flogo_height,
-        points: [0, 0, 0, b.flogo_height + SPACE_BETWEEN_INSTRUCTIONS * 2],
+        y: 0,
+        points: [0, condition.flogo_height, 0, endY],
         pointerLength: 0,
         pointerWidth: 0,
         fill: LINE_COLOR,
@@ -1250,8 +1251,8 @@ For.prototype.createDrawable = function() {
     }
     const arrowOut = new Konva.Arrow({
         x: condition.flogo_width / 2,
-        y: condition.flogo_height,
-        points: [0, 0, 0, b.flogo_height + SPACE_BETWEEN_INSTRUCTIONS * 2],
+        y: 0,
+        points: [0, condition.flogo_height, 0, endY],
         pointerLength: 0,
         pointerWidth: 0,
         fill: LINE_COLOR,
@@ -1436,10 +1437,17 @@ function deselectInstruction(instr) {
     }
 }
 
+function selectAllInstructions() {
+    cancelSelection()
+    program.body.forEach(i => {
+        selectInstruction(i, false)
+    })
+}
+
 function _block_dblclick(instr, e, parentInstr, parentPos) {
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
-    const ctrlKey = isMac?(e.evt.ctrlKey||e.evt.metaKey):e.evt.ctrlKey
+    const ctrlKey = isMac ? (e.evt.ctrlKey || e.evt.metaKey) : e.evt.ctrlKey
     if (ctrlKey) return
     if (e.evt.button === 2) return
     _dispatchEdit(instr, e, parentInstr, parentPos)
@@ -1449,7 +1457,7 @@ function _block_click(instr, e, parentInstr, parentPos) {
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
     const rightClick = e.type === "click" && e.evt.button === 2
-    const ctrlKey = isMac?(e.evt.ctrlKey||e.evt.metaKey):e.evt.ctrlKey
+    const ctrlKey = isMac ? (e.evt.ctrlKey || e.evt.metaKey) : e.evt.ctrlKey
     if (rightClick) {
         if (!selectedInstructions.includes(instr)) {
             selectInstruction(instr, !ctrlKey)
@@ -1547,7 +1555,7 @@ function initFlowchart(id) {
         cornerRadius: Infinity,
         dragBoundFunc: function(pos) {
             pos.x = stage.width() - SCROLLBAR_PADDING - SCROLLBAR_THICKNESS
-            if (pos.y < SCROLLBAR_PADDING + SCROLLBAR_THICKNESS) pos.y = SCROLLBAR_PADDING + SCROLLBAR_THICKNESS
+            if (pos.y < SCROLLBAR_PADDING + SCROLLBAR_THICKNESS + FLOWCHART_OCCLUDED_ON_TOP) pos.y = SCROLLBAR_PADDING + SCROLLBAR_THICKNESS + FLOWCHART_OCCLUDED_ON_TOP
             if (pos.y + vbar.height() * stage.scaleY() > stage.height() - SCROLLBAR_PADDING - SCROLLBAR_THICKNESS)
                 pos.y = stage.height() - SCROLLBAR_PADDING - SCROLLBAR_THICKNESS - vbar.height() * stage.scaleY()
             return pos
@@ -1593,26 +1601,26 @@ function initFlowchart(id) {
             stageLeft = stage.x(),
             stageBottom = stage.y() + stage.flogo_realHeight * stage.scaleY(),
             stageRight = stage.x() + stage.flogo_realWidth * stage.scaleX()
-        const playY = stageBottom - stageTop + MINVIS - stage.height()
+        const playY = stageBottom - stageTop + MINVIS - stage.height() + FLOWCHART_OCCLUDED_ON_TOP
         if (playY > 0) {
-            const minY = -(stageBottom - stageTop) + stage.height() - MINVIS
+            const minY = -(stageBottom - stageTop) + stage.height() - MINVIS * 2
             if (stageTop < minY) {
                 stage.y(minY)
             }
-            if (stageTop > MINVIS) {
-                stage.y(MINVIS)
+            if (stageTop > MINVIS + FLOWCHART_OCCLUDED_ON_TOP) {
+                stage.y(MINVIS + FLOWCHART_OCCLUDED_ON_TOP)
             }
             vbar.show()
         } else {
-            stage.y(PADDING_BASE)
+            stage.y(PADDING_BASE + FLOWCHART_OCCLUDED_ON_TOP)
             vbar.hide()
         }
-        const playX = stageRight - stageLeft - stage.width()
+        const playX = stageRight - stageLeft - stage.width() + MINVIS * 4
         const chartMidX = (stage.flogo_realWidth * stage.scaleX()) / 2
         if (playX > 0) {
             const midX = stage.width() / 2
-            const minX = midX - playX / 2 - MINVIS,
-                maxX = midX + playX / 2 + MINVIS
+            const minX = midX - playX / 2 - MINVIS * 2,
+                maxX = midX + playX / 2 + MINVIS * 2
             const stageMidX = (stageLeft + stageRight) / 2
             if (stageMidX < minX) {
                 stage.x(minX - chartMidX)
@@ -1627,7 +1635,7 @@ function initFlowchart(id) {
     }
     boundsFun()
     stage.on("wheel", (e) => {
-        const ctrlKey = isMac?(e.evt.ctrlKey||e.evt.metaKey):e.evt.ctrlKey
+        const ctrlKey = isMac ? (e.evt.ctrlKey || e.evt.metaKey) : e.evt.ctrlKey
         if (ctrlKey) {
             if (!_allowZoomOnFlowchart) return
             e.evt.preventDefault()
@@ -1776,22 +1784,22 @@ function initFlowchart(id) {
         if (newScrollbarState !== oldScrollbarState) {
             oldScrollbarState = newScrollbarState
             if (vbar.visible()) {
-                const realHeight = stage.flogo_realHeight + (MINVIS * 2) / stage.scaleY()
-                let yPos = -((stage.y() - MINVIS) / stage.scaleY()) / (realHeight - stage.height() / stage.scaleY())
+                const realHeight = stage.flogo_realHeight + (MINVIS * 3 + FLOWCHART_OCCLUDED_ON_TOP) / stage.scaleY()
+                let yPos = -((stage.y() - MINVIS - FLOWCHART_OCCLUDED_ON_TOP) / stage.scaleY()) / (realHeight - stage.height() / stage.scaleY())
                 yPos = yPos < 0 ? 0 : yPos > 1 ? 1 : yPos
                 vbar.x((stage.width() - stage.x() - SCROLLBAR_THICKNESS - SCROLLBAR_PADDING) / stage.scaleX())
                 vbar.width(SCROLLBAR_THICKNESS / stage.scaleX())
-                const maxYSize = stage.height() * 0.9
-                let ySize = (500 * (stage.height() / stage.scaleY())) / realHeight
+                const maxYSize = (stage.height() - FLOWCHART_OCCLUDED_ON_TOP) * 0.9
+                let ySize = (500 * ((stage.height() - FLOWCHART_OCCLUDED_ON_TOP) / stage.scaleY())) / realHeight
                 ySize = ySize < 20 ? 20 : ySize > maxYSize ? maxYSize : ySize
                 vbar.height(ySize / stage.scaleY())
-                vbar.y((SCROLLBAR_PADDING + SCROLLBAR_THICKNESS + yPos * (stage.height() - ySize - 2 * (SCROLLBAR_PADDING + SCROLLBAR_THICKNESS)) - stage.y()) / stage.scaleY())
+                vbar.y((FLOWCHART_OCCLUDED_ON_TOP + SCROLLBAR_PADDING + SCROLLBAR_THICKNESS + yPos * (stage.height() - ySize - 2 * (SCROLLBAR_PADDING + SCROLLBAR_THICKNESS) - FLOWCHART_OCCLUDED_ON_TOP) - stage.y()) / stage.scaleY())
                 vbar.fill(SCROLLBAR_COLOR)
                 vbar.setHitStrokeWidth(SCROLLBAR_PADDING)
             }
             if (hbar.visible()) {
-                const realWidth = stage.flogo_realWidth + (MINVIS * 2) / stage.scaleX()
-                let xPos = -((stage.x() - MINVIS) / stage.scaleX()) / (realWidth - stage.width() / stage.scaleX())
+                const realWidth = stage.flogo_realWidth + (MINVIS * 8) / stage.scaleX()
+                let xPos = -((stage.x() - MINVIS * 4) / stage.scaleX()) / (realWidth - stage.width() / stage.scaleX())
                 xPos = xPos < 0 ? 0 : xPos > 1 ? 1 : xPos
                 hbar.y((stage.height() - stage.y() - SCROLLBAR_THICKNESS - SCROLLBAR_PADDING) / stage.scaleY())
                 hbar.height(SCROLLBAR_THICKNESS / stage.scaleY())
@@ -1808,14 +1816,14 @@ function initFlowchart(id) {
     let yDragOff = 0,
         xDragOff = 0
     vbar.on("dragmove", (e) => {
-        const y = _extractCoordFromEvent(e.evt, "clientY", 0) - yDragOff - blockLayer.getCanvas()._canvas.getBoundingClientRect().top
+        const y = _extractCoordFromEvent(e.evt, "clientY", 0) - yDragOff - blockLayer.getCanvas()._canvas.getBoundingClientRect().top - FLOWCHART_OCCLUDED_ON_TOP
         const yTop = SCROLLBAR_PADDING + SCROLLBAR_THICKNESS,
             yBottom = stage.height() - (SCROLLBAR_PADDING + SCROLLBAR_THICKNESS) - vbar.height() * stage.scaleY()
-        let yPos = (y - yTop) / (yBottom - yTop)
+        let yPos = (y - yTop) / (yBottom - yTop - FLOWCHART_OCCLUDED_ON_TOP)
         yPos = yPos < 0 ? 0 : yPos > 1 ? 1 : yPos
-        const h = stage.flogo_realHeight * stage.scaleY() + MINVIS * 2 - stage.height()
+        const h = stage.flogo_realHeight * stage.scaleY() + MINVIS * 3 - stage.height() + FLOWCHART_OCCLUDED_ON_TOP
         yPos *= h
-        stage.y(-yPos + MINVIS)
+        stage.y(-yPos + MINVIS + FLOWCHART_OCCLUDED_ON_TOP)
     })
     vbar.on("dragstart", (e) => {
         yDragOff = _extractCoordFromEvent(e.evt, "clientY", 0) - (vbar.y() * stage.scaleY() + stage.y()) - blockLayer.getCanvas()._canvas.getBoundingClientRect().top
@@ -1826,9 +1834,9 @@ function initFlowchart(id) {
             xRight = stage.width() - (SCROLLBAR_PADDING + SCROLLBAR_THICKNESS) - hbar.width() * stage.scaleX()
         let xPos = (x - xLeft) / (xRight - xLeft)
         xPos = xPos < 0 ? 0 : xPos > 1 ? 1 : xPos
-        const w = stage.flogo_realWidth * stage.scaleX() + MINVIS * 2 - stage.width()
+        const w = stage.flogo_realWidth * stage.scaleX() + MINVIS * 8 - stage.width()
         xPos *= w
-        stage.x(-xPos + MINVIS)
+        stage.x(-xPos + MINVIS * 4)
     })
     hbar.on("dragstart", (e) => {
         xDragOff = _extractCoordFromEvent(e.evt, "clientX", 0) - (hbar.x() * stage.scaleX() + stage.x()) - blockLayer.getCanvas()._canvas.getBoundingClientRect().left
@@ -1843,7 +1851,7 @@ function initFlowchart(id) {
 }
 
 function ensureInstructionVisibleInFlowchart(i) {
-    if (i !== null && i.drawable.flogo_highlightable !== null) {
+    if (i !== null && i.drawable.flogo_highlightable !== null && !stage.isDragging()) {
         let ipos = i.drawable.flogo_highlightable.absolutePosition()
         const x = ipos.x + i.drawable.flogo_highlightable.width() * stage.scaleX()
         const y = ipos.y + i.drawable.flogo_highlightable.height() * stage.scaleY()
@@ -1876,7 +1884,7 @@ function updateFlowchart(resetCamera = false) {
     blockLayer.add(i)
     if (resetCamera) {
         setFlowchartZoom(1)
-        setFlowchartCamera(stage.width() / 2 - i.flogo_connX, PADDING_BASE)
+        setFlowchartCamera(stage.width() / 2 - i.flogo_connX, PADDING_BASE + FLOWCHART_OCCLUDED_ON_TOP)
     }
 }
 
@@ -1896,6 +1904,14 @@ function setFlowchartCamera(x, y) {
         x: x,
         y: y,
     })
+}
+
+function centerFlowchartOnProgramEnd() {
+    if (stage.isDragging()) return
+    const p = blockLayer.children[0]
+    const x = stage.width() / 2 - p.flogo_connX * stage.scaleX()
+    const y = -p.flogo_height * stage.scaleY()
+    setFlowchartCamera(x, y)
 }
 
 function _getCSSVal(name, defaultValue, element = blockLayer.getCanvas()._canvas) {
@@ -1983,7 +1999,7 @@ async function _fontToBase64(url) {
     return `data:font/woff2;base64,${base64}`
 }
 
-function downloadSVG(name) {
+function downloadSVG(name, background = true) {
     const oldX = stage.x(),
         oldY = stage.y(),
         oldZ = stage.scale()
@@ -2001,7 +2017,12 @@ function downloadSVG(name) {
     })
     stage.draw()
     let out = tempCtx.getSerializedSvg()
-    out = out.replace(/<rect[a-zA-Z0-9\s="#.()]*\/>/, "") //gets rid of the background rect
+    const bkColor = _getCSSVal("--ui-color-background1", null, document.body)
+    if (background && bkColor !== null) {
+        out = out.replace(/<rect[a-zA-Z0-9\s="#.()]*\/>/, `<rect x="0" y="0" width="${tempCtx.width}" height="${tempCtx.height}" fill="${bkColor}"/>`)
+    } else {
+        out = out.replace(/<rect[a-zA-Z0-9\s="#.()]*\/>/, "")
+    }
     blockLayer.canvas.context._context = oldContext
     stage.x(oldX)
     stage.y(oldY)
@@ -2046,7 +2067,7 @@ function downloadSVG(name) {
     }
 }
 
-function downloadPNG(name, superSampling = 2) {
+function downloadPNG(name, background = true, superSampling = 2) {
     const oldX = stage.x(),
         oldY = stage.y(),
         oldZ = stage.scale()
@@ -2067,8 +2088,28 @@ function downloadPNG(name, superSampling = 2) {
         x: superSampling,
         y: superSampling,
     })
+    let rect = null
+    if (background) {
+        const bkColor = _getCSSVal("--ui-color-background1", null, document.body)
+        if (bkColor !== null) {
+            rect = new Konva.Rect({
+                fill: bkColor
+            })
+            rect.position({
+                x: stage.x() - cw / 2,
+                y: stage.y() - ch / 2
+            })
+            rect.width(cw)
+            rect.height(ch)
+            blockLayer.add(rect)
+            rect.moveToBottom()
+        }
+    }
     stage.draw()
     const out = tempCanvas.toDataURL("image/png")
+    if (rect !== null) {
+        rect.destroy()
+    }
     blockLayer.canvas.context._context = oldContext
     stage.x(oldX)
     stage.y(oldY)

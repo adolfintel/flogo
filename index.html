@@ -5,39 +5,59 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
+    <meta name="description" content="Create and run programs using flow charts">
+    <meta name="keywords" content="flowchart, teaching tools, programming language for beginners, pwa">
+    <meta name="author" content="Federico Dossena">
+    <meta name="image" content="https://fdossena.com/flogo/cover.jpg">
     <title>Flogo</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="manifest" href="manifest.json">
     <script type="text/javascript" src="platformSpecific.js"></script>
     <script type="text/javascript">
+        let crashHandlerMode = 0 //0=reload on error, 1=show crash screen
         window.onerror = function(e, url, line) {
-            console.log("Unhandled exception caught: " + e + " in " + url + "@" + line + ", showing error screen")
-            window.onerror = null
-            try {
-                document.getElementById("theme").remove()
-            } catch (ex) {}
-            setTimeout(() => {
+            console.log("Unhandled exception caught: " + e + " in " + url + "@" + line + ", handling error")
+            const rok = document.getElementById("error_recoveryOk"),
+                rf = document.getElementById("error_recoveryFailed"),
+                rnn = document.getElementById("error_recoveryNotNecessary")
+            if (crashHandlerMode === 1) {
+                window.onerror = null
                 try {
-                    document.querySelectorAll("body>*").forEach(e => e.style.display = "none")
+                    document.getElementById("theme").remove()
                 } catch (ex) {}
-                try {
-                    document.getElementById("errorScreen").style.display = "block"
+                setTimeout(() => {
                     try {
-                        storage.recovery = save(false)
-                        document.getElementById("error_recovery").style.display = "block"
-                        document.getElementById("error_restart").style.display = "none"
-                    } catch (ex) {
-                        document.getElementById("error_recovery").style.display = "none"
-                        document.getElementById("error_restart").style.display = "block"
-                        delete storage.recovery
-                    }
-                } catch (ex) {
-                    try {
-                        delete storage.recovery
+                        document.querySelectorAll("body>*").forEach(e => e.style.display = "none")
                     } catch (ex) {}
-                    window.location.reload()
-                }
-            }, 100)
+                    try {
+                        document.getElementById("errorScreen").style.display = "block"
+                        try {
+                            const res = saveProgramForRecovery()
+                            if (res === 1) {
+                                rok.style.display = "block"
+                                rf.style.display = "none"
+                                rnn.style.display = "none"
+                            } else {
+                                rok.style.display = "none"
+                                rf.style.display = "none"
+                                rnn.style.display = "block"
+                            }
+                        } catch (ex) {
+                            rok.style.display = "none"
+                            rf.style.display = "block"
+                            rnn.style.display = "none"
+                            delete storage.recovery
+                        }
+                    } catch (ex) {
+                        try {
+                            delete storage.recovery
+                        } catch (ex) {}
+                        window.location.reload()
+                    }
+                }, 0)
+            } else if (crashHandlerMode === 0) {
+                window.location.reload()
+            }
         }
     </script>
     <script type="text/javascript" src="lib/jsep.iife.min.js"></script>
@@ -117,11 +137,6 @@
             font-size: 6rem;
             display: block;
         }
-
-        #error_recovery,
-        #error_restart {
-            display: none;
-        }
     </style>
 </head>
 
@@ -140,13 +155,17 @@
         <p>
             Flogo has crashed. This is not a problem with your program but a bug in Flogo.
         </p>
-        <p id="error_recovery">
+        <p id="error_recoveryOk">
             <b>Your program can be recovered.</b><br>
             <button onclick="window.location.reload()" class="important">Restart Flogo</button>
         </p>
-        <p id="error_restart">
+        <p id="error_recoveryFailed">
             <b>Unfortunately, your program was lost in the crash.</b><br>
             <button onclick="window.location.reload()" class="danger">Restart Flogo</button>
+        </p>
+        <p id="error_recoveryNotNecessary">
+            <b>Try restarting the app, if the problem persists, try another browser.</b><br>
+            <button onclick="window.location.reload()" class="important">Restart Flogo</button>
         </p>
     </div>
     <div id="errorRec" class="popup noAutoClose">
@@ -422,10 +441,11 @@
             <div class="autoVert">
                 <div>
                     Export image
-                    <button onclick="downloadSVG()">SVG</button>
-                    <button onclick="downloadPNG()">PNG</button>
+                    <button onclick="settings_downloadSVG()">SVG</button>
+                    <button onclick="settings_downloadPNG()">PNG</button>
                 </div>
                 <div>
+                    <input type="checkbox" id="settings_bkColor" onchange="settings_bkColor_changed()" checked><label for="settings_bkColor">Keep background color when exporting to SVG/PNG</label><br>
                     <input type="checkbox" id="settings_fps" onchange="settings_fps_changed()"><label for="settings_fps">FPS counter</label><br>
                     <input type="checkbox" id="settings_allowZoomOnFlowchart" onchange="settings_allowZoomOnFlowchart_changed()"><label for="settings_allowZoomOnFlowchart">Allow zooming of flowchart using Ctrl+Wheel</label><br>
                     <input type="checkbox" id="settings_altTurboTSlice" onchange="settings_altTurboTSlice_changed()"><label for="settings_altTurboTSlice">Longer timeslice in turbo mode (for low-end PCs)</label>
@@ -438,7 +458,7 @@
         <div id="settings_about" class="settings_tab">
             <div class="autoVert">
                 <div><img src="images/logo_large.webp" id="about_logo" alt="Logo"></div>
-                <div>Flogo - Version 1.0.4<span id="versionTypeBadge"></span></div>
+                <div>Flogo - Version 1.1.0 (dev)<span id="versionTypeBadge"></span></div>
                 <div>Made with ❤️ by <a href="https://fdossena.com" target="_blank">Federico Dossena</a></div>
                 <div>Distributed under the <a href="javascript:showLicense()">GNU AGPL v3</a> license</div>
                 <div><a href="https://fdossena.com/?p=flogo/index.frag" target="_blank">Website</a> | <a href="https://github.com/adolfintel/flogo" target="_blank">GitHub</a></div>
@@ -829,6 +849,30 @@
                         <td>E</td>
                         <td>2.718281828459045</td>
                     </tr>
+                    <tr>
+                        <td>CURRENT_DAY</td>
+                        <td>Current day of month</td>
+                    </tr>
+                    <tr>
+                        <td>CURRENT_MONTH</td>
+                        <td>Current month (1=January, 12=December)</td>
+                    </tr>
+                    <tr>
+                        <td>CURRENT_YEAR</td>
+                        <td>Current year</td>
+                    </tr>
+                    <tr>
+                        <td>CURRENT_HOURS</td>
+                        <td>Current hours (24h format)</td>
+                    </tr>
+                    <tr>
+                        <td>CURRENT_MINUTES</td>
+                        <td>Current minutes</td>
+                    </tr>
+                    <tr>
+                        <td>CURRENT_SECONDS</td>
+                        <td>Current seconds</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -836,7 +880,7 @@
     </div>
     <div id="licenseViewer" class="popup noAutoClose">
         <iframe src="LICENSE.txt" id="license"></iframe>
-        <button id="license_close" onclick="closePopup(true)"><span class="icon material-icons-sharp">close</span></button>
+        <button id="license_close" onclick="hideLicense()"><span class="icon material-icons-sharp">close</span></button>
     </div>
     <script type="text/javascript">
         initApp()
