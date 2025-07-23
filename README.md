@@ -62,6 +62,7 @@ __Mini games__
 [Try Flogo](https://flogo.fdossena.com), it can run directly in your browser and be installed as a PWA.
 
 [Windows (x64)](https://downloads.fdossena.com/geth.php?r=flogo-win)  
+
 [Linux (AUR package)](https://aur.archlinux.org/packages/flogo)  
 [Linux (AppImage for all distros)](https://downloads.fdossena.com/geth.php?r=flogo-linux-appimage)  
 
