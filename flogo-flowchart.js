@@ -1440,7 +1440,7 @@ function deselectInstruction(instr) {
 function _block_dblclick(instr, e, parentInstr, parentPos) {
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
-    const ctrlKey = isMac?(e.evt.ctrlKey||e.evt.metaKey):e.evt.ctrlKey
+    const ctrlKey = isMac ? (e.evt.ctrlKey || e.evt.metaKey) : e.evt.ctrlKey
     if (ctrlKey) return
     if (e.evt.button === 2) return
     _dispatchEdit(instr, e, parentInstr, parentPos)
@@ -1450,7 +1450,7 @@ function _block_click(instr, e, parentInstr, parentPos) {
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
     const rightClick = e.type === "click" && e.evt.button === 2
-    const ctrlKey = isMac?(e.evt.ctrlKey||e.evt.metaKey):e.evt.ctrlKey
+    const ctrlKey = isMac ? (e.evt.ctrlKey || e.evt.metaKey) : e.evt.ctrlKey
     if (rightClick) {
         if (!selectedInstructions.includes(instr)) {
             selectInstruction(instr, !ctrlKey)
@@ -1628,7 +1628,7 @@ function initFlowchart(id) {
     }
     boundsFun()
     stage.on("wheel", (e) => {
-        const ctrlKey = isMac?(e.evt.ctrlKey||e.evt.metaKey):e.evt.ctrlKey
+        const ctrlKey = isMac ? (e.evt.ctrlKey || e.evt.metaKey) : e.evt.ctrlKey
         if (ctrlKey) {
             if (!_allowZoomOnFlowchart) return
             e.evt.preventDefault()
