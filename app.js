@@ -4,7 +4,6 @@
  */
 
 const enableWorkaroundsForWebKitBecauseItFuckingSucks = /(apple)?webkit/i.test(navigator.userAgent) && !/(apple)?webkit\/537\.36/i.test(navigator.userAgent)
-const isMac = navigator.userAgent.toLowerCase().indexOf("macintosh") !== -1
 
 //-------- INSERT POPUP --------
 

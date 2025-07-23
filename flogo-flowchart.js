@@ -65,6 +65,8 @@ let ASSIGN_COLOR1,
 
 let _allowZoomOnFlowchart = false
 
+const isMac = navigator.userAgent.toLowerCase().indexOf("macintosh") !== -1 || navigator.userAgent.toLowerCase().indexOf("like mac os x") !== -1
+
 function _makeArrowHighlightable(arrow) {
     arrow.on("mouseover", () => {
         if (arrow.flogo_forceHighlighted) return
@@ -1437,7 +1439,8 @@ function deselectInstruction(instr) {
 function _block_dblclick(instr, e, parentInstr, parentPos) {
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
-    if (e.evt.ctrlKey) return
+    const ctrlKey = isMac?(e.evt.ctrlKey||e.evt.metaKey):e.evt.ctrlKey
+    if (ctrlKey) return
     if (e.evt.button === 2) return
     _dispatchEdit(instr, e, parentInstr, parentPos)
 }
@@ -1446,9 +1449,10 @@ function _block_click(instr, e, parentInstr, parentPos) {
     const intState = interpreter.getState()
     if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
     const rightClick = e.type === "click" && e.evt.button === 2
+    const ctrlKey = isMac?(e.evt.ctrlKey||e.evt.metaKey):e.evt.ctrlKey
     if (rightClick) {
         if (!selectedInstructions.includes(instr)) {
-            selectInstruction(instr, !e.evt.ctrlKey)
+            selectInstruction(instr, !ctrlKey)
         }
         _dispatchEdit2(instr, e, parentInstr, parentPos)
     } else {
@@ -1460,9 +1464,9 @@ function _block_click(instr, e, parentInstr, parentPos) {
             }
         } else {
             if (!selectedInstructions.includes(instr)) {
-                selectInstruction(instr, !e.evt.ctrlKey)
+                selectInstruction(instr, !ctrlKey)
             } else {
-                if (!e.evt.ctrlKey) {
+                if (!ctrlKey) {
                     selectInstruction(instr, true)
                 } else {
                     deselectInstruction(instr)
@@ -1623,7 +1627,8 @@ function initFlowchart(id) {
     }
     boundsFun()
     stage.on("wheel", (e) => {
-        if (e.evt.ctrlKey) {
+        const ctrlKey = isMac?(e.evt.ctrlKey||e.evt.metaKey):e.evt.ctrlKey
+        if (ctrlKey) {
             if (!_allowZoomOnFlowchart) return
             e.evt.preventDefault()
             const oldZoom = stage.scaleX()
