@@ -1986,8 +1986,8 @@ function loadTheme(name, callback) {
     closePopup()
     document.getElementById("loadOverlay").style.display = "block"
     t.onload = () => {
-        LARGE_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-large-threshold", 75, document.body))
-        SMALL_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-small-threshold", 45, document.body))
+        LARGE_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-large-threshold", 80, document.body))
+        SMALL_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-small-threshold", 55, document.body))
         applyBrowserThemeColorFromCSS()
         storage.theme = name
         updateFlowchartOcclusion()
