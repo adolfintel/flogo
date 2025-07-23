@@ -1,11 +1,13 @@
-const cacheName = "flogo-v1_0_3_release"
+//Service worker for PWA
+
+const cacheName = "flogo-v1_0_4"
 const appFiles = [
     "index.html",
     "pwa.js",
     "app.js",
     "flogo.js",
     "flogo-flowchart.js",
-    "settingsStorage.js",
+    "platformSpecific.js",
     "lib/jsep.iife.min.js",
     "lib/konva.min.js",
     "lib/svgcanvas.min.js",

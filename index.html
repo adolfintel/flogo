@@ -8,7 +8,7 @@
     <title>Flogo</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="manifest" href="manifest.json">
-    <script type="text/javascript" src="settingsStorage.js"></script>
+    <script type="text/javascript" src="platformSpecific.js"></script>
     <script type="text/javascript">
         window.onerror = function(e, url, line) {
             console.log("Unhandled exception caught: " + e + " in " + url + "@" + line + ", showing error screen")
@@ -40,7 +40,6 @@
             }, 100)
         }
     </script>
-    <script type="text/javascript" src="pwa.js"></script>
     <script type="text/javascript" src="lib/jsep.iife.min.js"></script>
     <script type="text/javascript" src="flogo.js"></script>
     <script type="text/javascript" src="lib/konva.min.js"></script>
@@ -439,7 +438,7 @@
         <div id="settings_about" class="settings_tab">
             <div class="autoVert">
                 <div><img src="images/logo_large.webp" id="about_logo" alt="Logo"></div>
-                <div>Flogo - Version 1.0.3<span id="versionTypeBadge"></span></div>
+                <div>Flogo - Version 1.0.4<span id="versionTypeBadge"></span></div>
                 <div>Made with ❤️ by <a href="https://fdossena.com" target="_blank">Federico Dossena</a></div>
                 <div>Distributed under the <a href="javascript:showLicense()">GNU AGPL v3</a> license</div>
                 <div><a href="https://fdossena.com/?p=flogo/index.frag" target="_blank">Website</a> | <a href="https://github.com/adolfintel/flogo" target="_blank">GitHub</a></div>

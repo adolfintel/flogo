@@ -1,0 +1,93 @@
+{
+  "name": "flogo",
+  "version": "1.0.4",
+  "description": "Create and run flow charts",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "buildwin": "electron-builder --win --x64 --dir",
+    "buildlinux": "electron-builder --linux --x64 --dir",
+    "buildlinuxappimage": "electron-builder --linux AppImage --x64",
+    "buildmacarm": "electron-builder --mac --arm64 --dir",
+    "buildmacarmdmg": "electron-builder --mac --arm64",
+    "buildmacintel": "electron-builder --mac --x64 --dir",
+    "buildmacinteldmg": "electron-builder --mac --x64"
+  },
+  "author": "Federico Dossena",
+  "license": "AGPL-3.0-or-later",
+  "private": false,
+  "devDependencies": {
+    "electron": "^37.2.1",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "electron-context-menu": "^4.1.0",
+    "electron-store": "^10.1.0"
+  },
+  "build": {
+    "appId": "com.dosse.flogo",
+    "productName": "Flogo",
+    "files": [
+      "!_SETUP/",
+      "!out/",
+      "!icons/"
+    ],
+    "directories": {
+      "output": "out"
+    },
+    "linux": {
+      "category": "Education",
+      "icon": "icons/icon.png",
+      "mimeTypes": [
+        "application/x-flogo"
+      ],
+      "fileAssociations": [
+        {
+          "ext": "flogo",
+          "name": "Flogo Program",
+          "icon": "icons/icon_file.png",
+          "mimeType": "application/x-flogo"
+        }
+      ]
+    },
+    "win": {
+      "icon": "icons/winicon.ico"
+    },
+    "mac": {
+      "category": "public.app-category.education",
+      "target": [
+        "dmg"
+      ],
+      "icon": "icons/macicon.icns",
+      "extendInfo": {},
+      "fileAssociations": [
+        {
+          "ext": "flogo",
+          "name": "Flogo Program",
+          "icon": "icons/macicon_file.icns",
+          "role": "Editor"
+        }
+      ]
+    },
+    "dmg": {
+      "icon": "icons/macicon.icns",
+      "iconSize": 100,
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "width": 540,
+        "height": 380
+      }
+    }
+  }
+}

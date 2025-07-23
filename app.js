@@ -1354,7 +1354,7 @@ function saveProgram() {
     if (state === STATE_RUNNING || state === STATE_PAUSED) {
         stopProgram()
     }
-    toast("Starting download")
+    if(!isElectron()) toast("Starting download")
     download()
 }
 
@@ -1419,14 +1419,20 @@ function openSettings() {
     document.getElementById("settings_allowZoomOnFlowchart").checked = _allowZoomOnFlowchart
     document.getElementById("settings_altTurboTSlice").checked = _altTurboTSlice
     const badge = document.getElementById("versionTypeBadge")
-    if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
-        badge.innerText = "PWA"
-        badge.style.background = "#5a0ec9"
-        badge.style.color = "#ffffff"
-    } else {
-        badge.innerText = "Web"
-        badge.style.background = "#f1582f"
-        badge.style.color = "#ffffff"
+    if(isElectron()){
+        badge.innerText = "Electron " + process.versions.electron
+        badge.style.background = "#9feaf9"
+        badge.style.color = "#2b2e3a"
+    }else{
+        if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+            badge.innerText = "PWA"
+            badge.style.background = "#5a0ec9"
+            badge.style.color = "#ffffff"
+        } else {
+            badge.innerText = "Web"
+            badge.style.background = "#f1582f"
+            badge.style.color = "#ffffff"
+        }
     }
     showPopup("settings")
 }
@@ -1853,6 +1859,8 @@ function initApp() {
     updateFps()
     if (typeof storage.allowZoomOnFlowchart !== "undefined") {
         _allowZoomOnFlowchart = storage.allowZoomOnFlowchart === "true"
+    }else{
+        _allowZoomOnFlowchart = isElectron()
     }
     if (typeof storage.altTurboTSlice !== "undefined") {
         _altTurboTSlice = storage.altTurboTSlice === "true"
@@ -1904,11 +1912,13 @@ function initApp() {
         })
     })
     window.addEventListener("resize", closePopup)
-    window.onbeforeunload = (e) => {
-        if (document.getElementById("errorScreen").style.display === "block") return
-        if (undoHistoryPtr <= 1) return
-        e.preventDefault()
-        e.returnValue = ""
+    if(!isElectron()){
+        window.onbeforeunload = (e) => {
+            if (document.getElementById("errorScreen").style.display === "block") return
+                if (undoHistoryPtr <= 1) return
+                    e.preventDefault()
+                    e.returnValue = ""
+        }
     }
     document.body.addEventListener("dragover", (e) => e.preventDefault())
     document.body.addEventListener("drop", (e) => {
@@ -1951,6 +1961,42 @@ function initApp() {
             }
         }
     })
+    if(isElectron()){
+        const {
+            ipcRenderer,
+            shell
+        } = require('electron')
+        const fs = require('fs')
+        ipcRenderer.on('open-file', (e, path) => {
+            fs.readFile(path, (err, data) => {
+                loadFromFile(new Blob([data], {
+                    type: "application/octet-stream"
+                }), (e2) => {
+                    cancelSelection()
+                    recreateVariableList()
+                    resetConsole()
+                    clearHistory()
+                    saveToHistory()
+                    updateFlowchart(true)
+                    clipboard = null
+                    if (e2 !== null) {
+                        document.getElementById("loadError_details").innerText = e2
+                        showPopup("loadError")
+                    } else {
+                        toast("Program loaded")
+                    }
+                    document.getElementById("loadOverlay").style.display = "none"
+                    updateWindowTitle()
+                })
+            })
+        })
+        document.addEventListener('click', e => {
+            if (e.target.tagName === "A" && e.target.href.startsWith("http")) {
+                e.preventDefault()
+                shell.openExternal(e.target.href)
+            }
+        })
+    }
     if (enableWorkaroundsForWebKitBecauseItFuckingSucks) { //webkit-based browsers don't support file filters with multiple types
         document.getElementById("filePicker").removeAttribute("accept")
     }

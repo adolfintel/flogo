@@ -71,6 +71,9 @@ __Mini games__
 
 More versions will be added in future releases.
 
+## How to build
+See BUILDING.md for instructions on how to build the app.
+
 ## License
 Copyright (C) 2025 Federico Dossena
 
