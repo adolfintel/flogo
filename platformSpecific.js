@@ -8,6 +8,14 @@ function isElectron() {
     }
 }
 
+function isPWAInstalled() {
+    return navigator.standalone || window.matchMedia('(display-mode: standalone)').matches
+}
+
+const isMac = navigator.userAgent.toLowerCase().indexOf("macintosh") !== -1 || navigator.userAgent.toLowerCase().indexOf("like mac os x") !== -1
+
+const isWebKit = /(apple)?webkit/i.test(navigator.userAgent) && !/(apple)?webkit\/537\.36/i.test(navigator.userAgent)
+
 let storage //storage for settings (localStorage for PWA, electron-store for Electron)
 
 if (isElectron()) {

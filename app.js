@@ -3,8 +3,6 @@
  * Other important files are flogo.js (the main interpreter for programs), flogo-flowchart.js (flowchart drawing)
  */
 
-const enableWorkaroundsForWebKitBecauseItFuckingSucks = /(apple)?webkit/i.test(navigator.userAgent) && !/(apple)?webkit\/537\.36/i.test(navigator.userAgent)
-
 //-------- INSERT POPUP --------
 
 let insertWide_stage = null
@@ -239,7 +237,7 @@ function ui_insert(instruction, pos, evt, callback) {
         p = pt
     }
     showPopup(p)
-    if (enableWorkaroundsForWebKitBecauseItFuckingSucks) {
+    if (isWebKit) {
         insertTall_stage.draw()
         insertWide_stage.draw()
     }
@@ -711,7 +709,7 @@ function variablesEditor_createVariable(name) {
         dragging = v
     }
     v.ondragend = e => {
-        if (enableWorkaroundsForWebKitBecauseItFuckingSucks || e.dataTransfer.dropEffect !== "none") {
+        if (isWebKit || e.dataTransfer.dropEffect !== "none") {
             variablesEditor_moveVariableAtDropIndicator(v)
         }
         variablesEditor_hideVariableDropIndicator()
@@ -1352,7 +1350,7 @@ function openSettings() {
         badge.style.background = "#9feaf9"
         badge.style.color = "#2b2e3a"
     } else {
-        if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+        if (isPWAInstalled()) {
             badge.innerText = "PWA"
             badge.style.background = "#5a0ec9"
             badge.style.color = "#ffffff"
@@ -1760,7 +1758,7 @@ function selectContents(element) {
 }
 
 function updateWindowTitle() {
-    if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+    if (isPWAInstalled()) {
         if (document.getElementById("loadOverlay").style.visible === "block") {
             document.title = "Loading"
         } else {
@@ -1984,7 +1982,7 @@ function initApp() {
             }
         })
     }
-    if (enableWorkaroundsForWebKitBecauseItFuckingSucks) { //webkit-based browsers don't support file filters with multiple types
+    if (isWebKit) { //webkit-based browsers don't support file filters with multiple types
         document.getElementById("filePicker").removeAttribute("accept")
     }
 }

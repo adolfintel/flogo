@@ -66,8 +66,6 @@ let ASSIGN_COLOR1,
 
 let _allowZoomOnFlowchart = false
 
-const isMac = navigator.userAgent.toLowerCase().indexOf("macintosh") !== -1 || navigator.userAgent.toLowerCase().indexOf("like mac os x") !== -1
-
 function _makeArrowHighlightable(arrow) {
     arrow.on("mouseover", () => {
         if (arrow.flogo_forceHighlighted) return
