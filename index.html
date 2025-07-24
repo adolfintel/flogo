@@ -178,36 +178,37 @@
         </p>
     </div>
     <div id="bar">
-        <span class="group">
-            <button id="newProgram" title="New" onclick="newProgram()"><span class="icon material-icons-sharp">note_add</span></button>
-            <button id="loadProgram" title="Load" onclick="loadProgram()"><span class="icon material-icons-sharp">folder_open</span></button>
-            <button id="saveProgram" title="Save" onclick="saveProgram()"><span class="icon material-icons-sharp">save_as</span></button>
-            <input type="file" id="filePicker" accept=".flogo">
-        </span>
-        <span class="separator"></span>
-        <span class="group">
-            <button id="runProgram" title="Run" onclick="runProgram()"><span class="icon material-icons-sharp">play_arrow</span></button>
-            <button id="pauseProgram" title="Pause" onclick="pauseProgram()"><span class="icon material-icons-sharp">pause</span></button>
-            <button id="stopProgram" title="Stop" onclick="stopProgram()"><span class="icon material-icons-sharp">stop</span></button>
-        </span>
-        <span class="separator"></span>
-        <span class="group">
-            <span class="icon material-icons-sharp">bolt</span><select id="executionMode" title="Execution mode" onchange="setProgramExecutionMode()">
-                <option value="turbo">Turbo</option>
-                <option value="normal" selected>Normal</option>
-                <option value="slow">Slow</option>
-                <option value="step">Manual</option>
-            </select>
-        </span>
-        <span class="separator"></span>
-        <span class="group">
-            <button id="undo" title="Undo" onclick="undo()"><span class="icon material-icons-sharp">undo</span></button>
-            <button id="redo" title="Redo" onclick="redo()"><span class="icon material-icons-sharp">redo</span></button>
-        </span>
-        <span id="bar_settings" class="group">
-            <button id="openManual" title="Documentation" onclick="openManual()"><span class="icon material-icons-sharp">question_mark</span></button>
-            <button id="openSettings" title="Settings" onclick="openSettings()"><span class="icon material-icons-sharp">settings</span></button>
-        </span>
+        <span id="expandBar" class="expandCollapse" onclick="expandBar()"><span class="icon material-icons-sharp">expand_more</span>More</span>
+        <span id="collapseBar" class="expandCollapse" onclick="collapseBar()"><span class="icon material-icons-sharp">expand_less</span>Less</span>
+        <div id="bar_contents">
+            <span class="group">
+                <button id="newProgram" title="New" onclick="newProgram()"><span class="icon material-icons-sharp">note_add</span></button>
+                <button id="loadProgram" title="Load" onclick="loadProgram()"><span class="icon material-icons-sharp">folder_open</span></button>
+                <button id="saveProgram" title="Save" onclick="saveProgram()"><span class="icon material-icons-sharp">save_as</span></button>
+                <input type="file" id="filePicker" accept=".flogo">
+            </span>
+            <span class="group">
+                <button id="runProgram" title="Run" onclick="runProgram()"><span class="icon material-icons-sharp">play_arrow</span></button>
+                <button id="pauseProgram" title="Pause" onclick="pauseProgram()"><span class="icon material-icons-sharp">pause</span></button>
+                <button id="stopProgram" title="Stop" onclick="stopProgram()"><span class="icon material-icons-sharp">stop</span></button>
+            </span>
+            <span class="group">
+                <span class="icon material-icons-sharp">bolt</span><select id="executionMode" title="Execution mode" onchange="setProgramExecutionMode()">
+                    <option value="turbo">Turbo</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="slow">Slow</option>
+                    <option value="step">Manual</option>
+                </select>
+            </span>
+            <span class="group">
+                <button id="undo" title="Undo" onclick="undo()"><span class="icon material-icons-sharp">undo</span></button>
+                <button id="redo" title="Redo" onclick="redo()"><span class="icon material-icons-sharp">redo</span></button>
+            </span>
+            <span id="bar_settings" class="group">
+                <button id="openManual" title="Documentation" onclick="openManual()"><span class="icon material-icons-sharp">question_mark</span></button>
+                <button id="openSettings" title="Settings" onclick="openSettings()"><span class="icon material-icons-sharp">settings</span></button>
+            </span>
+        </div>
     </div>
     <div id="fps"></div>
     <div id="flowchartArea"></div>

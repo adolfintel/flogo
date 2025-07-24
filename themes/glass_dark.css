@@ -13,7 +13,7 @@
     background: #28282840;
     backdrop-filter: blur(1rem);
     border-bottom-width: var(--ui-measure-border-medium);
-
+    transition: height 0.3s;
 }
 
 #man {

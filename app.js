@@ -1288,6 +1288,33 @@ function saveProgram() {
     download()
 }
 
+function updateBarHeight() {
+    const bar = document.getElementById("bar"),
+        bar_contentsHeight = document.getElementById("bar_contents").getBoundingClientRect().height
+    bar_restHeight = document.querySelectorAll("#bar .group")[0].getBoundingClientRect().height //horrible workaround to get the height of the bar at rest
+    if (bar_contentsHeight > bar_restHeight) {
+        bar.classList.add("small")
+    } else {
+        bar.classList.remove("small")
+        bar.classList.remove("expanded")
+    }
+    if (bar.classList.contains("expanded")) {
+        bar.style.height = bar_contentsHeight + "px"
+    } else {
+        bar.style.height = ""
+    }
+}
+
+function expandBar() {
+    document.getElementById("bar").classList.add("expanded")
+    updateBarHeight()
+}
+
+function collapseBar() {
+    document.getElementById("bar").classList.remove("expanded")
+    updateBarHeight()
+}
+
 //-------- UNDO/REDO STUFF --------
 let undoHistory = []
 let undoHistoryPtr = 0
@@ -1523,8 +1550,8 @@ function showPopup(d) {
 }
 
 function updateFlowchartOcclusion() {
-    const barBounds = document.getElementById("bar").getBoundingClientRect(),
-        fcBounds = document.getElementById("flowchartArea").getBoundingClientRect()
+    const barBounds = document.querySelectorAll("#bar .group")[0].getBoundingClientRect() //horrible workaround to get the height of the bar at rest
+    fcBounds = document.getElementById("flowchartArea").getBoundingClientRect()
     FLOWCHART_OCCLUDED_ON_TOP = barBounds.y + barBounds.height - fcBounds.y
 }
 
@@ -1878,6 +1905,7 @@ function initApp() {
                 pixelRatioChangeHandler()
                 updateWindowTitle()
                 systemColorSchemeChangeHandler()
+                window.addEventListener('resize', updateBarHeight)
                 if (typeof storage.recovery !== "undefined") {
                     showPopup("errorRec")
                 } else {
@@ -2037,6 +2065,7 @@ function loadTheme(name, callback, saveToStorage = true) {
             storage.theme = name
         }
         updateFlowchartOcclusion()
+        updateBarHeight()
         loadFlowchartThemeFromCSS(() => {
             insert_preparePopups()
             edit_prepareGraphics()

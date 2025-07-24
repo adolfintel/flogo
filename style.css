@@ -924,9 +924,15 @@ div.variable:not(.editing) .edit {
     border-bottom: var(--ui-measure-border-thin) solid var(--ui-color-border1);
     color: var(--ui-color-text-accent);
     z-index: 99;
+    overflow: hidden;
+}
+
+#bar_contents {
     display: flex;
-    align-items: center;
     flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ui-measure-spacer-large);
+    row-gap: 0;
 }
 
 #bar .group {
@@ -975,16 +981,30 @@ div.variable:not(.editing) .edit {
     margin-left: auto;
 }
 
-@media all and (max-width: 32rem) {
-    #bar {
-        height: 5rem;
-    }
+#bar .expandCollapse {
+    display: none;
+}
 
-    #flowchartArea,
-    #variablesArea,
-    #consoleArea {
-        top: 5rem;
-    }
+#bar.small .expandCollapse {
+    display: inline-flex;
+    float: right;
+    align-items: center;
+    flex-direction: column;
+    line-height: 0;
+    justify-content: center;
+    width: 3rem;
+}
+
+#bar.small.expanded #expandBar {
+    display: none;
+}
+
+#bar.small:not(.expanded) #collapseBar {
+    display: none;
+}
+
+#bar.small #bar_settings {
+    margin-left: 0;
 }
 
 /* SETTINGS */
@@ -1170,8 +1190,8 @@ div.settings_tab.selected {
     text-align: center;
 }
 
-/* TOAST NOTIFICATIONS */
-div.toast {
+/* /* TOAST NOTIFICATIONS */
+*/ div.toast {
     z-index: 9999;
     position: fixed;
     bottom: 2rem;
