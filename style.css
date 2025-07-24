@@ -1206,8 +1206,8 @@ div.settings_tab.selected {
     text-align: center;
 }
 
-/* /* TOAST NOTIFICATIONS */
-*/ div.toast {
+/* TOAST NOTIFICATIONS */
+div.toast {
     z-index: 9999;
     position: fixed;
     bottom: 2rem;
