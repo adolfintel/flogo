@@ -8,6 +8,7 @@
     --ui-color-border1: #00000040;
     --ui-color-border2: #00000060;
     --ui-color-disabled: #808080;
+    --ui-color-form-shine: transparent;
     --ui-color-form-background: #d0d0d0;
     --ui-color-form-highlighted: #b0b0b0;
     --ui-color-form-text: #000000;
@@ -68,6 +69,14 @@
 
 #bar button[disabled] {
     color: #808080 !important;
+}
+
+button.important:hover,
+button.important:focus,
+button.danger:hover,
+button.danger:focus {
+    background: #ffffff;
+    color: #000000;
 }
 
 #settings {

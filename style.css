@@ -37,6 +37,7 @@
     --ui-color-form-border: #ffffff60;
     --ui-color-form-border-selected: #ffffffa0;
     --ui-color-form-disabled: #808080;
+    --ui-color-form-shine: #ffffff28;
     --ui-measure-border-thin: 1px;
     --ui-measure-border-medium: 0.1rem;
     --ui-measure-border-thick: 0.15rem;
@@ -282,14 +283,33 @@ button:focus {
     border-color: var(--ui-color-form-border-selected);
 }
 
+button.important,
+button.danger {
+    box-shadow: 0 2px 0 -1px var(--ui-color-form-shine) inset;
+}
+
 button.important {
     background: var(--ui-color-accent1);
     color: var(--ui-color-text-accent);
+    border-color: transparent;
 }
 
 button.danger {
     background: var(--ui-color-accent2);
     color: var(--ui-color-text-accent);
+    border-color: transparent;
+}
+
+button.important:hover,
+button.important:focus,
+button.danger:hover,
+button.danger:focus {
+    border-color: var(--ui-color-form-border-selected);
+}
+
+button.important:active,
+button.danger:active {
+    box-shadow: none;
 }
 
 button[disabled] {
@@ -624,10 +644,6 @@ div.sideHeader .icon {
     flex-grow: 1;
 }
 
-#newVariable {
-    flex: none;
-}
-
 div.variable {
     margin: var(--ui-measure-spacer-small);
     border: var(--ui-measure-border-thin) solid var(--ui-color-border1);
@@ -730,7 +746,7 @@ div.variable:not(.editing) .edit {
 }
 
 #newVariable {
-    display: block;
+    display: flex;
     margin: var(--ui-measure-spacer-medium) auto;
 }
 
