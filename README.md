@@ -34,7 +34,7 @@ __Flogo__ is a free and open source programming language for beginners, designed
 ## Example programs
 __Basics__
 * [Sum of 2 integers](https://downloads.fdossena.com/geth.php?r=flogo-demo-01)
-* [Seconds to minutes and seconds](https://downloads.fdossena.com/geth.php?r=flogo-demo-02)
+* [Seconds to hours, minutes and seconds](https://downloads.fdossena.com/geth.php?r=flogo-demo-02)
 * [Dice rolls](https://downloads.fdossena.com/geth.php?r=flogo-demo-03)
 
 __Loops__
@@ -50,30 +50,32 @@ __Strings__
 * [String trimming](https://downloads.fdossena.com/geth.php?r=flogo-demo-11)
 * [Tip calculator](https://downloads.fdossena.com/geth.php?r=flogo-demo-12)
 * [Anagram](https://downloads.fdossena.com/geth.php?r=flogo-demo-13)
+* [Date and Time](https://downloads.fdossena.com/geth.php?r=flogo-demo-16)
 
 __Mini games__
 * [Rock, paper, scissors](https://downloads.fdossena.com/geth.php?r=flogo-demo-14)
 * [Quasar (similar to blackjack)](https://downloads.fdossena.com/geth.php?r=flogo-demo-15)
 
 ## Future features
-* Arrays
-* Turtle graphics
+* Turtle graphics (Planned for v1.2 series)
+* Arrays (Planned for v1.3 series)
+* Functions (Planned for v1.4 series)
 
 ## Downloads
-[Try Flogo](https://flogo.fdossena.com), it can run directly in your browser and be installed as a PWA.
+[Run Flogo](https://flogo.fdossena.com), it runs directly in your browser and be installed as a PWA on any device.
 
 [Windows (x64)](https://downloads.fdossena.com/geth.php?r=flogo-win)  
+[Windows (ARM)](https://downloads.fdossena.com/geth.php?r=flogo-win-arm)  
 
 [Linux (AUR package)](https://aur.archlinux.org/packages/flogo)  
-[Linux (AppImage for all distros)](https://downloads.fdossena.com/geth.php?r=flogo-linux-appimage)  
+[Linux (AppImage for all distros, x64)](https://downloads.fdossena.com/geth.php?r=flogo-linux-appimage)  
+[Linux (AppImage for all distros, ARM)](https://downloads.fdossena.com/geth.php?r=flogo-linux-arm-appimage)  
 
 [macOS (dmg for Apple Silicon)](https://downloads.fdossena.com/geth.php?r=flogo-mac-arm)  
 [macOS (dmg for Intel)](https://downloads.fdossena.com/geth.php?r=flogo-mac-intel)  
 
-More versions will be added in future releases.
-
 ## How to build
-See BUILDING.md for instructions on how to build the app.
+If you're a developer, see `BUILDING.md` for instructions on how to build the app.
 
 ## License
 Copyright (C) 2025 Federico Dossena
@@ -91,4 +93,4 @@ __Credits:__
 * [Material Design Icons](https://marella.github.io/material-design-icons): Icons used throughout the application (Apache-2.0 License)
 * Fonts distributed under the [SIL Open Font License](https://openfontlicense.org/): Noto Sans, Roboto Mono, Monoton, Caveat, Cinzel
 * Some CC0 graphics from [SVG Repo](https://www.svgrepo.com/)
-* The electron-based versions of the app contain a modified icon from [KDE Breeze Icons](https://github.com/KDE/breeze-icons) (LGPL 2.1)
+* The Electron-based versions of the app contain a modified icon from [KDE Breeze Icons](https://github.com/KDE/breeze-icons) (LGPL 2.1)
