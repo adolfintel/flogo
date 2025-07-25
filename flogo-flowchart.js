@@ -1730,6 +1730,10 @@ function initFlowchart(id) {
     stage.on("touchend", () => {
         lastDist = 0
         lastCenter = null
+        if (_longPressTimeout !== null) {
+            clearTimeout(_longPressTimeout)
+            _longPressTimeout = null
+        }
     })
     let prevHighlightInstr = null
     const highlightFun = () => {
