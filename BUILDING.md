@@ -60,9 +60,9 @@ yarn run build-win-architecture
 
 Replacing `architecture` with either `x64` for an x86_64 build or `arm` for an aarch64 build.
 
-To build the installer (x64 only), enter the `_SETUP` folder, open `setup-win32.iss` in Inno Setup and hit Compile. This last step can be done in Wine if you're trying to build the Windows version from a Linux machine.
+To build the installer , enter the `_SETUP` folder, open `setup-win-x64.iss` or `setup-win-arm.iss` in Inno Setup and hit Compile. This last step can be done in Wine if you're trying to build the Windows version from a Linux machine.
 
-If everything goes right, you'll find the installer exe file in the `setup` folder inside `_SETUP`.
+If everything goes right, you'll find the installer exe files in the `setup` folder inside `_SETUP`.
 
 #### MacOS
 To build an unpacked MacOS version, use the following command:  
