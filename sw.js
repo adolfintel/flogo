@@ -4,7 +4,6 @@ const cacheName = "flogo-v1_1_0_release"
 
 const appFiles = [
     "index.html",
-    "pwa.js",
     "app.js",
     "flogo.js",
     "flogo-flowchart.js",
