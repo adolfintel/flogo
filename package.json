@@ -5,13 +5,16 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "buildwin": "electron-builder --win --x64 --dir",
-    "buildlinux": "electron-builder --linux --x64 --dir",
-    "buildlinuxappimage": "electron-builder --linux AppImage --x64",
-    "buildmacarm": "electron-builder --mac --arm64 --dir",
-    "buildmacarmdmg": "electron-builder --mac --arm64",
-    "buildmacintel": "electron-builder --mac --x64 --dir",
-    "buildmacinteldmg": "electron-builder --mac --x64"
+    "build-win-x64": "electron-builder --win --x64 --dir",
+    "build-win-arm": "electron-builder --win --arm64 --dir",
+    "build-linux-x64": "electron-builder --linux --x64 --dir",
+    "build-linux-x64-appimage": "electron-builder --linux AppImage --x64",
+    "build-linux-arm": "electron-builder --linux --arm64 --dir",
+    "build-linux-arm-appimage": "electron-builder --linux AppImage --arm64",
+    "build-mac-arm": "electron-builder --mac --arm64 --dir",
+    "build-mac-arm-dmg": "electron-builder --mac --arm64",
+    "build-mac-intel": "electron-builder --mac --x64 --dir",
+    "build-mac-intel-dmg": "electron-builder --mac --x64"
   },
   "author": "Federico Dossena",
   "license": "AGPL-3.0-or-later",
