@@ -1,6 +1,6 @@
 [![Flogo logo](images/logo_large.webp)](https://flogo.fdossena.com)
 
-__Flogo__ is a free and open source programming language for beginners, designed to learn programming basics within a friendly environment using flow charts.
+__Flogo__ is a free and open source programming language for beginners, designed for learning programming basics within a friendly environment using flow charts.
 
 [Try Flogo](https://flogo.fdossena.com)
 
