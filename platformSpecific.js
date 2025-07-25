@@ -57,4 +57,8 @@ if (isElectron()) {
             }
         })
     }
+    //Update window title to remove the "-Flogo" when the app is installed
+    window.onappinstalled = () => {
+        updateWindowTitle()
+    }
 }
