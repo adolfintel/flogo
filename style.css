@@ -37,7 +37,6 @@
     --ui-color-form-border: #ffffff60;
     --ui-color-form-border-selected: #ffffffa0;
     --ui-color-form-disabled: #808080;
-    --ui-color-form-shine: #ffffff28;
     --ui-measure-border-thin: 1px;
     --ui-measure-border-medium: 0.1rem;
     --ui-measure-border-thick: 0.15rem;
@@ -281,11 +280,6 @@ button * {
 button:hover,
 button:focus {
     border-color: var(--ui-color-form-border-selected);
-}
-
-button.important,
-button.danger {
-    box-shadow: 0 2px 0 -1px var(--ui-color-form-shine) inset;
 }
 
 button.important {
