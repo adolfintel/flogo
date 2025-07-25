@@ -1,6 +1,6 @@
 //Service worker for PWA
 
-const cacheName = "flogo-v1_1_0"
+const cacheName = "flogo-v1_1_0_release"
 
 const appFiles = [
     "index.html",
