@@ -75,6 +75,15 @@
     --flowchart-Comment-color3: #ffffff;
     --flowchart-Comment-dashLength: 10;
     --flowchart-Comment-text-maxLength: 350;
+    --flowchart-Turtle-Move-color1: #3b4f78;
+    --flowchart-Turtle-Move-color2: #5d7ebd;
+    --flowchart-Turtle-Move-color3: #ffffff;
+    --flowchart-Turtle-Turn-color1: #593b78;
+    --flowchart-Turtle-Turn-color2: #8d5dbd;
+    --flowchart-Turtle-Turn-color3: #ffffff;
+    --flowchart-Turtle-Home-color1: #593b78;
+    --flowchart-Turtle-Home-color2: #8d5dbd;
+    --flowchart-Turtle-Home-color3: #ffffff;
     --flowchart-Error-color1: #000000;
     --flowchart-Error-color2: #c00000;
     --flowchart-Error-color3: #ffffff;
@@ -474,6 +483,18 @@ div.sideHeader .icon {
 
 #editor_Breakpoint {
     width: 15rem;
+}
+
+#editor_Move {
+    width: 30rem;
+}
+
+#editor_Turn {
+    width: 30rem;
+}
+
+#editor_Home {
+    width: 20rem;
 }
 
 #editor_Comment textarea {
@@ -1198,6 +1219,33 @@ div.settings_tab.selected {
 
 #man h3 {
     text-align: center;
+}
+
+/* TURTLE GRAPHICS */
+#turtleArea {
+    position: fixed;
+    z-index: 199;
+    bottom: 0;
+    left: 0;
+    min-width: 25rem;
+    min-height: 25rem;
+    width: 75vw;
+    height: 75vh;
+    border: 1px solid green;
+    background: white;
+    display: none;
+}
+
+#turtleArea.visible {
+    display: block;
+}
+
+#ui_turtle_canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 /* TOAST NOTIFICATIONS */

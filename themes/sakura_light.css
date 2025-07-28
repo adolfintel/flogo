@@ -46,6 +46,15 @@
     --flowchart-Comment-color2: #808080;
     --flowchart-Comment-color3: #000000;
     --flowchart-Comment-dashLength: 4;
+    --flowchart-Turtle-Move-color1:#de9397;
+    --flowchart-Turtle-Move-color2:#a46d70;
+    --flowchart-Turtle-Move-color3:#000000;
+    --flowchart-Turtle-Turn-color1:#aaaa7f;
+    --flowchart-Turtle-Turn-color2:#868664;
+    --flowchart-Turtle-Turn-color3:#000000;
+    --flowchart-Turtle-Home-color1:#aaaa7f;
+    --flowchart-Turtle-Home-color2:#868664;
+    --flowchart-Turtle-Home-color3:#000000;
     --flowchart-Error-color1: #a5bbd3;
     --flowchart-Error-color2: #aa0000;
     --flowchart-Error-color3: #000000;

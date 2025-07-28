@@ -61,8 +61,8 @@
         }
     </script>
     <script type="text/javascript" src="lib/jsep.iife.min.js"></script>
-    <script type="text/javascript" src="flogo.js"></script>
     <script type="text/javascript" src="lib/konva.min.js"></script>
+    <script type="text/javascript" src="flogo.js"></script>
     <script type="text/javascript" src="lib/svgcanvas.min.js"></script>
     <script type="text/javascript" src="flogo-flowchart.js"></script>
     <script type="text/javascript" src="app.js"></script>
@@ -233,6 +233,10 @@
         </div>
     </div>
     <div id="consoleExpander" onclick="toggleConsoleArea()" ontouchstart="toggleConsoleArea()" class="expander"><span id="consoleExpander_icon" class="icon material-icons-sharp">chat_bubble</span><span class="text">Console</span></div>
+    <div id="turtleArea">
+        <!--TODO: make area draggable and resizeable-->
+        <div id="ui_turtle_canvas"></div>
+    </div>
     <div id="popupBackdrop" onclick="closePopup()"></div>
     <div id="insertWide" class="popup"></div>
     <div id="insertTall" class="popup"></div>
@@ -368,6 +372,43 @@
             <div class="editor_graphics_container">
                 <div class="editor_graphics" flogo_instruction="Breakpoint"></div>
                 <div class="editor_graphics_description">The program will automatically pause here</div>
+            </div>
+        </div>
+        <div id="editor_Move">
+            <div class="editor_graphics_container">
+                <div class="editor_graphics" flogo_instruction="Move"></div>
+                <div class="editor_graphics_description">A Move/Draw instruction moves the turtle by the specified distance. You can choose whether to draw a line to the new location or not</div>
+            </div>
+            <div class="autoVert">
+                <label for="editor_Move_expression">Expression</label>
+                <textarea id="editor_Move_expression" flogo_attr="expression" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+                <div>
+                    <input type="checkbox" id="editor_Move_draw" flogo_attr="draw">
+                    <label for="editor_Move_newLine">Draw</label>
+                </div>
+            </div>
+        </div>
+        <div id="editor_Turn">
+            <div class="editor_graphics_container">
+                <div class="editor_graphics" flogo_instruction="Turn"></div>
+                <div class="editor_graphics_description">A Turn instruction changes the angle of the turtle by the specified amount of degrees, turning it either right (clockwise) or left (counter-clockwise)</div>
+            </div>
+            <div class="autoVert">
+                <label for="editor_Turn_expression">Expression (degrees)</label>
+                <textarea id="editor_Turn_expression" flogo_attr="expression" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+                <div>
+                    <label for="editor_Turn_direction">Direction</label>
+                    <select id="editor_Turn_direction" flogo_attr="direction">
+                        <option value="cw">Right</option>
+                        <option value="ccw">Left</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id="editor_Home">
+            <div class="editor_graphics_container">
+                <div class="editor_graphics" flogo_instruction="Home"></div>
+                <div class="editor_graphics_description">The turtle will return to the center of the drawing area, pointing upwards</div>
             </div>
         </div>
         <div id="editor_buttons">

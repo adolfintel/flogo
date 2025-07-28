@@ -38,6 +38,15 @@
     --flowchart-Breakpoint-color3: #000000;
     --flowchart-Comment-color2: #808080;
     --flowchart-Comment-color3: #000000;
+    --flowchart-Turtle-Move-color1:#d8ffd8;
+    --flowchart-Turtle-Move-color2:#78a078;
+    --flowchart-Turtle-Move-color3:#184018;
+    --flowchart-Turtle-Turn-color1:#ffffd8;
+    --flowchart-Turtle-Turn-color2:#a0a078;
+    --flowchart-Turtle-Turn-color3:#404018;
+    --flowchart-Turtle-Home-color1:#ffffd8;
+    --flowchart-Turtle-Home-color2:#a0a078;
+    --flowchart-Turtle-Home-color3:#404018;
     --flowchart-Error-color1: #c00000;
     --flowchart-Error-color2: #000000;
     --flowchart-Error-color3: #ffffff;

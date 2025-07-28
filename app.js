@@ -386,21 +386,24 @@ function edit_prepareGraphics() {
         const shape = new instructionTypes[e.getAttribute("flogo_instruction")]().createDrawable().flogo_shapeOnly
         shape.removeEventListener("click dblclick tap touchstart touchend")
         const gstage = new Konva.Stage({
-            container: e,
-            width: shape.flogo_width + 2 * BLOCK_OUTLINE_THICKNESS,
-            height: shape.flogo_height + 2 * BLOCK_OUTLINE_THICKNESS
+            container: e
         })
         const layer = new Konva.Layer()
         gstage.add(layer)
         layer.add(shape)
         layer.getCanvas().setPixelRatio(window.devicePixelRatio)
-        gstage.position({
+        shape.position({
             x: 0,
             y: 0
         })
-        shape.position({
-            x: BLOCK_OUTLINE_THICKNESS,
-            y: BLOCK_OUTLINE_THICKNESS
+        const shapeBounds = shape.getClientRect()
+        gstage.size({
+            width: Math.ceil(shapeBounds.width + 2 * BLOCK_OUTLINE_THICKNESS),
+            height: Math.ceil(shapeBounds.height + 2 * BLOCK_OUTLINE_THICKNESS)
+        })
+        gstage.position({
+            x: Math.ceil(-shapeBounds.x),
+            y: Math.ceil(-shapeBounds.y)
         })
         e.style.width = gstage.width() + "px"
         e.style.height = gstage.height() + "px"
@@ -1166,6 +1169,7 @@ function runProgram() {
     const state = interpreter.getState()
     if (state === STATE_STOPPED || state === STATE_CRASHED) {
         resetConsole()
+        clearTurtle()
     }
     variablesEditor_cancelAllEdits()
     cancelSelection()
@@ -1183,6 +1187,8 @@ function stopProgram() {
     } else if (state === STATE_STOPPED || state === STATE_CRASHED) {
         resetVariables()
         resetConsole()
+        clearTurtle()
+        ui_turtle_hide()
     }
 }
 
@@ -1226,6 +1232,8 @@ function newProgram() {
         clearMetadata()
         recreateVariableList()
         resetConsole()
+        clearTurtle()
+        ui_turtle_hide()
         clearHistory()
         saveToHistory()
         updateFlowchart(true)
@@ -1254,6 +1262,8 @@ function loadProgram() {
                 cancelSelection()
                 recreateVariableList()
                 resetConsole()
+                clearTurtle()
+                ui_turtle_hide()
                 clearHistory()
                 saveToHistory()
                 updateFlowchart(true)
@@ -1464,6 +1474,15 @@ function man_scrollTo(name) {
     if (e !== null) {
         man.scrollTop = e.getBoundingClientRect().y - 10
     }
+}
+
+//-------- TURTLE GRAPHICS STUFF -------
+function ui_turtle_show() {
+    document.getElementById("turtleArea").classList.add("visible")
+}
+
+function ui_turtle_hide() {
+    document.getElementById("turtleArea").classList.remove("visible")
 }
 
 //-------- LAYOUT-RELATED STUFF --------
@@ -1917,6 +1936,7 @@ function initApp() {
             updateVariableValues()
             setProgramExecutionMode()
             resetConsole()
+            clearTurtle()
             saveToHistory()
             updateBar()
             autoLayout(true)
@@ -1953,6 +1973,8 @@ function initApp() {
                     cancelSelection()
                     recreateVariableList()
                     resetConsole()
+                    clearTurtle()
+                    ui_turtle_hide()
                     clearHistory()
                     saveToHistory()
                     updateFlowchart(true)
@@ -1988,6 +2010,8 @@ function initApp() {
                     cancelSelection()
                     recreateVariableList()
                     resetConsole()
+                    clearTurtle()
+                    ui_turtle_hide()
                     clearHistory()
                     saveToHistory()
                     updateFlowchart(true)

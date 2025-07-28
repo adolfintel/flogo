@@ -30,6 +30,15 @@ let ASSIGN_COLOR1,
     COMMENT_COLOR2,
     COMMENT_COLOR3,
     COMMENT_DASH_LENGTH,
+    TURTLE_MOVE_COLOR1,
+    TURTLE_MOVE_COLOR2,
+    TURTLE_MOVE_COLOR3,
+    TURTLE_TURN_COLOR1,
+    TURTLE_TURN_COLOR2,
+    TURTLE_TURN_COLOR3,
+    TURTLE_HOME_COLOR1,
+    TURTLE_HOME_COLOR2,
+    TURTLE_HOME_COLOR3,
     ERROR_COLOR1,
     ERROR_COLOR2,
     ERROR_COLOR3,
@@ -1295,6 +1304,203 @@ For.prototype.createDrawable = function() {
     return group
 }
 
+Move.prototype.createDrawable = function() {
+    let string = ""
+    if (this.expression === null || this.draw === null) {
+        string = "Move/Draw"
+    } else {
+        if (this.draw === true) {
+            string += "Draw"
+        } else {
+            string += "Move"
+        }
+        string += " " + this.expression
+    }
+    if (BLOCK_TEXT_WRAP_MODE === "new") {
+        string = _fitText(string, BLOCK_TEXT_MAX_WIDTH)
+    }
+    const text = new Konva.Text({
+        x: PADDING_BASE / 2,
+        y: 0,
+        text: string,
+        padding: PADDING_BASE,
+        fontSize: BLOCK_FONT_SIZE,
+        fontFamily: FLOWCHART_FONT,
+        fill: TURTLE_MOVE_COLOR3,
+        align: "center",
+        wrap: BLOCK_TEXT_WRAP_MODE === "new" ? "none" : "word",
+    })
+    if (BLOCK_TEXT_WRAP_MODE !== "new" && text.width() > BLOCK_TEXT_MAX_WIDTH * BLOCK_FONT_SIZE) {
+        text.width(BLOCK_TEXT_MAX_WIDTH * BLOCK_FONT_SIZE)
+    }
+    const tw = text.width(),
+        th = text.height()
+    const rect = new Konva.Line({
+        points: [0, 0, tw, 0, tw + PADDING_BASE, th / 2, tw, th, 0, th, PADDING_BASE, th / 2],
+        fill: TURTLE_MOVE_COLOR1,
+        stroke: TURTLE_MOVE_COLOR2,
+        strokeWidth: BLOCK_OUTLINE_THICKNESS,
+        closed: true,
+    })
+    rect.flogo_originalFill = rect.fill()
+    rect.flogo_originalStroke = rect.stroke()
+    rect.flogo_text = [text]
+    rect.flogo_originalTextColor = text.fill()
+    const group = new Konva.Group({
+        x: 0,
+        y: 0,
+    })
+    group.add(rect)
+    group.add(text)
+    group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.flogo_width = rect.width()
+    group.flogo_height = rect.height()
+    group.flogo_connX = group.flogo_width / 2
+    group.flogo_highlightable = rect
+    group.flogo_shapeOnly = group
+    this.drawable = group
+    return group
+}
+
+Turn.prototype.createDrawable = function() {
+    let string = "Turn"
+    const complete = this.expression !== null && this.directories !== null
+    if (complete) {
+        /*switch(this.direction){
+            case "cw":{
+                string+=" right";
+            };break
+            case "ccw":{
+                string+=" left";
+            };break
+        }*/
+        string += " " + this.expression
+    }
+    if (BLOCK_TEXT_WRAP_MODE === "new") {
+        string = _fitText(string, BLOCK_TEXT_MAX_WIDTH)
+    }
+    const text = new Konva.Text({
+        x: 0,
+        y: -PADDING_BASE / 2,
+        text: string,
+        padding: PADDING_BASE * 1.25,
+        fontSize: BLOCK_FONT_SIZE,
+        fontFamily: FLOWCHART_FONT,
+        fill: TURTLE_TURN_COLOR3,
+        align: "center",
+        wrap: BLOCK_TEXT_WRAP_MODE === "new" ? "none" : "word",
+    })
+    if (BLOCK_TEXT_WRAP_MODE !== "new" && text.width() > BLOCK_TEXT_MAX_WIDTH * BLOCK_FONT_SIZE) {
+        text.width(BLOCK_TEXT_MAX_WIDTH * BLOCK_FONT_SIZE)
+    }
+    const tw = text.width(),
+        th = text.height()
+    let points
+    if (complete) {
+        switch (this.direction) {
+            case "cw": {
+                points = [0, PADDING_BASE, tw, PADDING_BASE, tw, 0, tw + PADDING_BASE * 1.5, PADDING_BASE / 2 + th / 2, tw, th + PADDING_BASE, tw, th, 0, th]
+            };
+            break
+            case "ccw": {
+                points = [PADDING_BASE * 1.5, PADDING_BASE, tw + PADDING_BASE * 1.5, PADDING_BASE, tw + PADDING_BASE * 1.5, th, PADDING_BASE * 1.5, th, PADDING_BASE * 1.5, th + PADDING_BASE, 0, PADDING_BASE / 2 + th / 2, PADDING_BASE * 1.5, 0]
+                text.x(PADDING_BASE * 1.5)
+            };
+            break
+        }
+    } else {
+        points = [PADDING_BASE * 1.5, PADDING_BASE, tw + PADDING_BASE * 1.5, PADDING_BASE, tw + PADDING_BASE * 1.5, 0, tw + 2 * PADDING_BASE * 1.5, PADDING_BASE / 2 + th / 2, tw + PADDING_BASE * 1.5, th + PADDING_BASE, tw + PADDING_BASE * 1.5, th, PADDING_BASE * 1.5, th, PADDING_BASE * 1.5, th + PADDING_BASE, 0, PADDING_BASE / 2 + th / 2, PADDING_BASE * 1.5, 0]
+        text.x(PADDING_BASE * 1.5)
+    }
+    const rect = new Konva.Line({
+        x: 0,
+        y: -PADDING_BASE,
+        points: points,
+        fill: TURTLE_TURN_COLOR1,
+        stroke: TURTLE_TURN_COLOR2,
+        strokeWidth: BLOCK_OUTLINE_THICKNESS,
+        closed: true,
+    })
+    rect.flogo_originalFill = rect.fill()
+    rect.flogo_originalStroke = rect.stroke()
+    rect.flogo_text = [text]
+    rect.flogo_originalTextColor = text.fill()
+    const group = new Konva.Group({
+        x: 0,
+        y: 0,
+    })
+    group.add(rect)
+    group.add(text)
+    group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.flogo_width = rect.width()
+    group.flogo_height = rect.height() - 2 * PADDING_BASE
+    group.flogo_connX = group.flogo_width / 2
+    group.flogo_highlightable = rect
+    group.flogo_shapeOnly = group
+    this.drawable = group
+    return group
+}
+
+Home.prototype.createDrawable = function() {
+    let string = "Home"
+    if (BLOCK_TEXT_WRAP_MODE === "new") {
+        string = _fitText(string, BLOCK_TEXT_MAX_WIDTH)
+    }
+    const text = new Konva.Text({
+        x: 0,
+        y: PADDING_BASE / 2,
+        text: string,
+        padding: PADDING_BASE,
+        fontSize: BLOCK_FONT_SIZE,
+        fontFamily: FLOWCHART_FONT,
+        fill: TURTLE_HOME_COLOR3,
+        align: "center",
+        wrap: BLOCK_TEXT_WRAP_MODE === "new" ? "none" : "word",
+    })
+    if (BLOCK_TEXT_WRAP_MODE !== "new" && text.width() > BLOCK_TEXT_MAX_WIDTH * BLOCK_FONT_SIZE) {
+        text.width(BLOCK_TEXT_MAX_WIDTH * BLOCK_FONT_SIZE)
+    }
+    const tw = text.width(),
+        th = text.height()
+    const rect = new Konva.Line({
+        points: [0, PADDING_BASE, tw / 2, 0, tw, PADDING_BASE, tw, th + PADDING_BASE / 2, 0, th + PADDING_BASE / 2],
+        fill: TURTLE_HOME_COLOR1,
+        stroke: TURTLE_HOME_COLOR2,
+        strokeWidth: BLOCK_OUTLINE_THICKNESS,
+        closed: true,
+    })
+    rect.flogo_originalFill = rect.fill()
+    rect.flogo_originalStroke = rect.stroke()
+    rect.flogo_text = [text]
+    rect.flogo_originalTextColor = text.fill()
+    const group = new Konva.Group({
+        x: 0,
+        y: 0,
+    })
+    group.add(rect)
+    group.add(text)
+    group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
+    group.flogo_width = rect.width()
+    group.flogo_height = rect.height()
+    group.flogo_connX = group.flogo_width / 2
+    group.flogo_highlightable = rect
+    group.flogo_shapeOnly = group
+    this.drawable = group
+    return group
+}
+
 function _dispatchEdit(instruction, evt, parent, posInParent) {
     if (stage.isDragging()) {
         stage.stopDrag()
@@ -1954,6 +2160,15 @@ function loadFlowchartThemeFromCSS(callback) {
     COMMENT_COLOR2 = _getCSSVal("--flowchart-Comment-color2", "#cccccc")
     COMMENT_COLOR3 = _getCSSVal("--flowchart-Comment-color3", "#ffffff")
     COMMENT_DASH_LENGTH = Number(_getCSSVal("--flowchart-Comment-dashLength", 10))
+    TURTLE_MOVE_COLOR1 = _getCSSVal("--flowchart-Turtle-Move-color1", "#3b4f78")
+    TURTLE_MOVE_COLOR2 = _getCSSVal("--flowchart-Turtle-Move-color2", "#5d7ebd")
+    TURTLE_MOVE_COLOR3 = _getCSSVal("--flowchart-Turtle-Move-color3", "#ffffff")
+    TURTLE_TURN_COLOR1 = _getCSSVal("--flowchart-Turtle-Turn-color1", "#593b78")
+    TURTLE_TURN_COLOR2 = _getCSSVal("--flowchart-Turtle-Turn-color2", "#8d5dbd")
+    TURTLE_TURN_COLOR3 = _getCSSVal("--flowchart-Turtle-Turn-color3", "#ffffff")
+    TURTLE_HOME_COLOR1 = _getCSSVal("--flowchart-Turtle-Home-color1", "#593b78")
+    TURTLE_HOME_COLOR2 = _getCSSVal("--flowchart-Turtle-Home-color2", "#8d5dbd")
+    TURTLE_HOME_COLOR3 = _getCSSVal("--flowchart-Turtle-Home-color3", "#ffffff")
     ERROR_COLOR1 = _getCSSVal("--flowchart-Error-color1", "#000000")
     ERROR_COLOR2 = _getCSSVal("--flowchart-Error-color2", "#c00000")
     ERROR_COLOR3 = _getCSSVal("--flowchart-Error-color3", "#ffffff")

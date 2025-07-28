@@ -40,6 +40,15 @@
     --flowchart-Breakpoint-color3: #000000;
     --flowchart-Comment-color2: #000000;
     --flowchart-Comment-color3: #000000;
+    --flowchart-Turtle-Move-color1:transparent;
+    --flowchart-Turtle-Move-color2:#000000;
+    --flowchart-Turtle-Move-color3:#000000;
+    --flowchart-Turtle-Turn-color1:transparent;
+    --flowchart-Turtle-Turn-color2:#000000;
+    --flowchart-Turtle-Turn-color3:#000000;
+    --flowchart-Turtle-Home-color1:transparent;
+    --flowchart-Turtle-Home-color2:#000000;
+    --flowchart-Turtle-Home-color3:#000000;
     --flowchart-Error-color1: #c0c0c0;
     --flowchart-Error-color2: #000000;
     --flowchart-Error-color3: #000000;

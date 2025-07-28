@@ -1034,6 +1034,304 @@ Output.fromSimpleObject = function(o) {
 }
 registerInstructionType(Output, "Interaction")
 
+//--------  TURTLE GRAPHICS --------
+/*
+ * Turtle graphics is somewhat similar to the ancient LOGO programming language, or the python turtle library.
+ * The program controls a cursor called the turtle, and this turtle can move (with or without leaving a line behind it), it can turn by a certain amount of degrees left or right, and it can also teleport itself back to the home (the center of the screen).
+ *
+ * These instructions use the konva.js library.
+ *
+ * This section implements 3 instructions:
+ * - Move: moves the turtle. How much it moves is controlled by an expression, and it can also draw a line behind it or not
+ * - Turn: rotates the turtle in place, either right (clockwise) or left (counterclockwise). How many degrees it rotates by is controlled by an expression
+ * - Home: teleports the turtle back to the origin of the drawing, pointing upwards
+ *
+ * To keep the core and UI separated, these instructions expect the UI to implement the following method:
+ * - ui_turtle_show(): called when a turtle instruction is executed. You need to make the drawing area visible
+ * Also, it expects the drawing area to be a div with id="ui_turtle_canvas"
+ *
+ * Several functions are also implemented for convenience:
+ * - clearTurtle(): deletes the current drawing. You may want to call it before running the program, but it's not mandatory
+ * - hideTurtleCursor(): hides the turtle, leaving only the drawing visible
+ * - showTurtleCursor(): shows a previously hidden turtle
+ *
+ * There's also a setting that you might want to change:
+ * - TURTLE_MAXPOINTS: controls the maximum "complexity" of the drawing. By default it's set to 10000, but you can also set it to 0 to disable the limit, or any other positive number
+ *
+ */
+
+let _turtle_initialized = false
+let _turtle_stage = null,
+    _turtle_drawing = null,
+    _turtle_cursor = null
+let _turtle_x, _turtle_y, _turtle_rot
+
+function _turtle_init() {
+    if (!_turtle_initialized) {
+        _turtle_stage = new Konva.Stage({
+            container: "ui_turtle_canvas",
+        })
+        _turtle_drawing = new Konva.Layer({
+            listening: false
+        })
+        _turtle_cursor = new Konva.Layer({
+            listening: false
+        })
+        _turtle_stage.add(_turtle_drawing)
+        _turtle_stage.add(_turtle_cursor)
+        _turtle_makeCursor()
+        let bounds = null
+        const resizeFun = () => {
+            requestAnimationFrame(resizeFun)
+            if (window.devicePixelRatio !== _turtle_drawing.getCanvas().getPixelRatio()) {
+                _turtle_drawing.getCanvas().setPixelRatio(window.devicePixelRatio)
+            }
+            const b = _turtle_stage.container().getBoundingClientRect()
+            if (bounds === null || b.width !== bounds.width || b.height !== bounds.height) {
+                _turtle_stage.width(b.width)
+                _turtle_stage.height(b.height)
+                if (bounds !== null) {
+                    let dx = b.width - bounds.width,
+                        dy = b.height - bounds.height
+                    _turtle_stage.x(_turtle_stage.x() + dx / 2)
+                    _turtle_stage.y(_turtle_stage.y() + dy / 2)
+                }
+                bounds = b
+            }
+            _turtle_autoZoom()
+        }
+        resizeFun()
+        _turtle_initialized = true
+    }
+    _turtle_reset()
+}
+
+function _turtle_reset() {
+    _turtle_x = 0
+    _turtle_y = 0
+    _turtle_rot = -90
+    _turtle_drawing.destroyChildren()
+    _turtle_nPoints = 0
+    _turtle_stage.scaleX(1)
+    _turtle_stage.scaleY(1)
+    _turtle_stage.x(_turtle_stage.width() / 2)
+    _turtle_stage.y(_turtle_stage.height() / 2)
+    _turtle_makeCursor()
+    _turtle_updateCursor()
+    _turtle_cursor.show()
+}
+
+function _turtle_makeCursor() {
+    const size = 10 / _turtle_stage.scaleX() //TODO: size from CSS/variable
+    const cursor = new Konva.Line({
+        points: [0, 0, -size, -size, size, 0, -size, size], //TODO: parametrize size of turtle
+        fill: "green", //TODO: get from CSS/variable
+        closed: true,
+    })
+    _turtle_cursor.destroyChildren()
+    _turtle_cursor.add(cursor)
+}
+
+function _turtle_updateCursor() {
+    const cursor = _turtle_cursor.children[0]
+    cursor.x(_turtle_x)
+    cursor.y(_turtle_y)
+    cursor.rotation(_turtle_rot)
+    _turtle_autoZoom()
+}
+
+function _turtle_autoZoom(noRecursive = false) {
+    const rect = _turtle_drawing.getClientRect()
+    if (rect.width === 0 || rect.height === 0) return
+    const cursor = _turtle_cursor.children[0].getClientRect()
+    const stageWidth = _turtle_stage.width(),
+        stageHeight = _turtle_stage.height()
+    if (stageWidth === 0 || stageHeight === 0) return
+    const left = Math.min(rect.x, cursor.x),
+        right = Math.max(rect.x + rect.width, cursor.x + cursor.width),
+        top = Math.min(rect.y, cursor.y),
+        bottom = Math.max(rect.y + rect.height, cursor.y + cursor.height)
+    if (left < 0 || right > stageWidth || top < 0 || bottom > stageHeight) { //need to zoom out
+        const dx = (stageWidth / 2 - (left + right) / 2),
+            dy = (stageHeight / 2 - (top + bottom) / 2)
+        _turtle_stage.position({
+            x: _turtle_stage.x() + dx,
+            y: _turtle_stage.y() + dy
+        })
+        const z = Math.min(1, _turtle_stage.scaleX() * Math.min(0.9 * stageWidth / (right - left), 0.9 * stageHeight / (bottom - top)))
+        _turtle_stage.scaleX(z)
+        _turtle_stage.scaleY(z)
+        _turtle_makeCursor()
+        _turtle_updateCursor()
+    } else if (!noRecursive) {
+        if (Math.max((right - left) / stageWidth, (bottom - top) / stageHeight) < 0.8) { //can zoom out, so we reset the zoom and let it autozoom out
+            _turtle_stage.scaleX(1)
+            _turtle_stage.scaleY(1)
+            _turtle_autoZoom(true)
+        }
+    }
+}
+
+function clearTurtle() {
+    if (!_turtle_initialized) return
+    _turtle_reset()
+}
+
+function hideTurtleCursor() {
+    _turtle_cursor.hide()
+}
+
+function showTurtleCursor() {
+    _turtle_cursor.show()
+}
+
+let TURTLE_MAXPOINTS = 10000 //0 to disable   //TODO: add to settings
+let _turtle_nPoints = 0
+
+function _turtle_limitPoints() {
+    if (TURTLE_MAXPOINTS <= 0 || _turtle_nPoints <= TURTLE_MAXPOINTS) return
+    let pointsToRemove = _turtle_nPoints - TURTLE_MAXPOINTS
+    _turtle_nPoints -= pointsToRemove
+    while (pointsToRemove > 0) {
+        const oldestLine = _turtle_drawing.children[0],
+            points = oldestLine.points()
+        if (pointsToRemove >= points.length / 2) {
+            pointsToRemove -= points.length / 2
+            oldestLine.destroy()
+        } else {
+            oldestLine.points(points.slice(pointsToRemove * 2));
+            pointsToRemove = 0
+        }
+    }
+}
+
+function Move(expression = null, draw = true) {
+    this.expression = expression
+    this.draw = draw
+}
+Move.prototype = {
+    constructor: Move,
+    tick: function() {
+        interpreter.currentInstruction = this
+        if (typeof ui_turtle_show !== "undefined") ui_turtle_show()
+        if (this.expression === null || this.draw === null) throw "Incomplete instruction"
+        const dist = evaluateExpression(this.expression)
+        if (typeof dist !== "number") throw "Not a number"
+        if (!_turtle_initialized) _turtle_init()
+        const rad = 2 * Math.PI * _turtle_rot / 360
+        const dx = Math.cos(rad) * dist,
+            dy = Math.sin(rad) * dist
+        if (this.draw === true) {
+            const lastLine = _turtle_drawing.children[_turtle_drawing.children.length - 1]
+            let lastLinePoints = null
+            if (typeof lastLine !== "undefined") {
+                lastLinePoints = lastLine.points()
+                if (lastLinePoints[lastLinePoints.length - 2] !== _turtle_x || lastLinePoints[lastLinePoints.length - 1] !== _turtle_y) {
+                    lastLinePoints = null
+                }
+            }
+            if (lastLinePoints !== null) {
+                lastLine.points(lastLinePoints.concat(_turtle_x + dx, _turtle_y + dy))
+            } else {
+                const l = new Konva.Line({
+                    points: [_turtle_x, _turtle_y, _turtle_x + dx, _turtle_y + dy],
+                    stroke: "black", //TODO: get from CSS/variable
+                    strokeWidth: 1,
+                    strokeScaleEnabled: false,
+                    perfectDrawEnabled: false,
+                })
+                _turtle_drawing.add(l)
+            }
+            _turtle_nPoints++
+            _turtle_limitPoints()
+        }
+        _turtle_x += dx
+        _turtle_y += dy
+        _turtle_updateCursor()
+        return true
+    },
+    toSimpleObject: function() {
+        return {
+            type: "Move",
+            expression: this.expression,
+            draw: this.draw,
+        }
+    },
+}
+Move.fromSimpleObject = function(o) {
+    if (o.type !== "Move") throw "Not a Move"
+    return new Move(o.expression, o.draw)
+}
+registerInstructionType(Move, "Graphics")
+
+function Turn(expression = null, direction = "cw") {
+    this.expression = expression
+    this.direction = direction
+}
+Turn.prototype = {
+    constructor: Turn,
+    tick: function() {
+        interpreter.currentInstruction = this
+        if (typeof ui_turtle_show !== "undefined") ui_turtle_show()
+        if (this.expression === null) throw "Incomplete instruction"
+        const rot = evaluateExpression(this.expression)
+        if (typeof rot !== "number") throw "Not a number"
+        if (!_turtle_initialized) _turtle_init()
+        switch (this.direction) {
+            case 'cw': {
+                _turtle_rot += rot
+            };
+            break
+            case 'ccw': {
+                _turtle_rot -= rot
+            };
+            break
+            default: {
+                throw "Invalid direction: " + this.direction
+            }
+        }
+        _turtle_updateCursor()
+        return true
+    },
+    toSimpleObject: function() {
+        return {
+            type: "Turn",
+            expression: this.expression,
+            direction: this.direction,
+        }
+    },
+}
+Turn.fromSimpleObject = function(o) {
+    if (o.type !== "Turn") throw "Not a Turn"
+    return new Turn(o.expression, o.direction)
+}
+registerInstructionType(Turn, "Graphics")
+
+function Home() {}
+Home.prototype = {
+    constructor: Home,
+    tick: function() {
+        interpreter.currentInstruction = this
+        if (typeof ui_turtle_show !== "undefined") ui_turtle_show()
+        if (!_turtle_initialized) _turtle_init()
+        _turtle_x = 0
+        _turtle_y = 0
+        _turtle_rot = -90
+        _turtle_updateCursor()
+        return true
+    },
+    toSimpleObject: function() {
+        return {
+            type: "Home",
+        }
+    },
+}
+Home.fromSimpleObject = function(o) {
+    if (o.type !== "Home") throw "Not a Home"
+    return new Home()
+}
+registerInstructionType(Home, "Graphics")
+
 /*
  * Main interpreter loop implementation (interpreter variable).
  * The interpreter is executed on every frame using requestAnimationFrame; all it does is call the tick method repeatedly on the program object, which then proceeds recursively until exactly one instruction is executed
