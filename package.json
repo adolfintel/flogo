@@ -7,6 +7,7 @@
     "start": "electron .",
     "build-win-x64": "electron-builder --win --x64 --dir",
     "build-win-arm": "electron-builder --win --arm64 --dir",
+    "build-linux": "electron-builder --linux --dir",
     "build-linux-x64": "electron-builder --linux --x64 --dir",
     "build-linux-x64-appimage": "electron-builder --linux AppImage --x64",
     "build-linux-arm": "electron-builder --linux --arm64 --dir",
@@ -33,7 +34,8 @@
     "files": [
       "!_SETUP/",
       "!out/",
-      "!icons/"
+      "!icons/",
+      "!flatpak-node"
     ],
     "directories": {
       "output": "out"

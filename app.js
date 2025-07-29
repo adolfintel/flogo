@@ -143,7 +143,7 @@ function prepare_insertTall() {
         label = new Konva.Text({
             x: 0,
             y: y,
-            text: "Interaction",
+            text: category,
             fontSize: INSERT_FONT_SIZE,
             fontFamily: INSERT_FONT,
             fill: LINE_COLOR,
