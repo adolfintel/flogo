@@ -233,9 +233,14 @@
         </div>
     </div>
     <div id="consoleExpander" onclick="toggleConsoleArea()" ontouchstart="toggleConsoleArea()" class="expander"><span id="consoleExpander_icon" class="icon material-icons-sharp">chat_bubble</span><span class="text">Console</span></div>
-    <div id="turtleArea">
-        <!--TODO: make area draggable and resizeable-->
-        <div id="ui_turtle_canvas"></div>
+    <div id="turtleArea" class="window">
+        <div class="window_bar">
+            <div class="window_title">Turtle graphics</div>
+            <div class="window_buttons">
+                <button onclick="ui_turtle_hide()"><span class="icon material-icons-sharp">close</span></button>
+            </div>
+        </div>
+        <div id="ui_turtle_canvas" class="window_contents"></div>
     </div>
     <div id="popupBackdrop" onclick="closePopup()"></div>
     <div id="insertWide" class="popup"></div>

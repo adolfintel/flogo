@@ -414,6 +414,57 @@ div.sideHeader .icon {
     font-size: 1.25rem;
 }
 
+div.window {
+    display: none;
+    position: fixed;
+    z-index: 199;
+    background: var(--ui-color-background2);
+    border: var(--ui-measure-border-thick) solid var(--ui-color-accent1);
+    outline: var(--ui-measure-border-thin) solid var(--ui-color-border1);
+    border-radius: var(--ui-measure-border-radius);
+    overflow: hidden;
+}
+
+div.window.visible {
+    display: block;
+}
+
+div.window>div.window_bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2.5rem;
+    background: var(--ui-color-accent1);
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    overflow: hidden;
+    padding: 0 var(--ui-measure-spacer-small);
+    border-bottom: var(--ui-measure-border-thin) solid var(--ui-color-border1);
+}
+
+div.window>div.window_bar * {
+    color: var(--ui-color-text-accent);
+}
+
+div.window>div.window_bar>div.window_title {
+    flex-grow: 1;
+}
+
+div.window>div.window_bar>div.window_buttons {
+    margin-left: auto;
+}
+
+div.window>div.window_contents {
+    position: absolute;
+    top: 2.5rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 /* FLOWCHART AREA */
 #flowchartArea {
     position: fixed;
@@ -1223,29 +1274,13 @@ div.settings_tab.selected {
 
 /* TURTLE GRAPHICS */
 #turtleArea {
-    position: fixed;
-    z-index: 199;
-    bottom: 0;
-    left: 0;
     min-width: 25rem;
     min-height: 25rem;
-    width: 75vw;
-    height: 75vh;
-    border: 1px solid green;
+    width: 45vw;
+    height: 45vh;
+    top: 5rem;
+    left: 5rem;
     background: white;
-    display: none;
-}
-
-#turtleArea.visible {
-    display: block;
-}
-
-#ui_turtle_canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
 }
 
 /* TOAST NOTIFICATIONS */
