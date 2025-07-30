@@ -1282,6 +1282,7 @@ div.settings_tab.selected {
     height: 45vh;
     top: 5rem;
     left: 5rem;
+    background: var(--turtle-color-background);
 }
 
 /* TOAST NOTIFICATIONS */
