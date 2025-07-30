@@ -2236,6 +2236,11 @@ function loadTheme(name, callback, saveToStorage = true) {
         LARGE_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-large-threshold", 80, document.body))
         SMALL_LAYOUT_THRESHOLD = Number(_getCSSVal("--layout-small-threshold", 55, document.body))
         applyBrowserThemeColorFromCSS()
+        setTurtleColors(
+            _getCSSVal("--turtle-color-cursor", "#00a000", document.body),
+            _getCSSVal("--turtle-color-background", "#ffffff", document.body),
+            _getCSSVal("--turtle-color-foreground", "#000000", document.body)
+        )
         if (saveToStorage) {
             storage.theme = name
         }

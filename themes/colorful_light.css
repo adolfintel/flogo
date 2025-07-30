@@ -30,12 +30,12 @@
     --flowchart-For-color2: #000000;
     --flowchart-Breakpoint-color1: #f08020;
     --flowchart-Breakpoint-color2: #000000;
-    --flowchart-Turtle-Move-color1:#cc518e;
-    --flowchart-Turtle-Move-color2:#000000;
-    --flowchart-Turtle-Turn-color1:#cc52b8;
-    --flowchart-Turtle-Turn-color2:#000000;
-    --flowchart-Turtle-Home-color1:#cc52b8;
-    --flowchart-Turtle-Home-color2:#000000;
+    --flowchart-Turtle-Move-color1: #cc518e;
+    --flowchart-Turtle-Move-color2: #000000;
+    --flowchart-Turtle-Turn-color1: #cc52b8;
+    --flowchart-Turtle-Turn-color2: #000000;
+    --flowchart-Turtle-Home-color1: #cc52b8;
+    --flowchart-Turtle-Home-color2: #000000;
     --flowchart-Comment-color1: transparent;
     --flowchart-Comment-color2: #000000;
     --flowchart-Comment-color3: #000000;
@@ -51,6 +51,9 @@
     --flowchart-selected-color1: #aa00ff;
     --flowchart-selected-color2: #0020b0;
     --flowchart-scrollbar-color: #00000060;
+    --turtle-color-cursor: #00c000;
+    --turtle-color-background: #ffffff;
+    --turtle-color-foreground: #000000;
     --toast-background: #000000c0;
     --toast-color: #ffffff;
 }

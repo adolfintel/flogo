@@ -30,15 +30,15 @@
     --flowchart-Breakpoint-color1: #801010;
     --flowchart-Breakpoint-color2: #ff2020;
     --flowchart-Comment-dashLength: 12;
-    --flowchart-Turtle-Move-color1:#1e3c78;
-    --flowchart-Turtle-Move-color2:#346ed2;
-    --flowchart-Turtle-Move-color3:#73abff;
-    --flowchart-Turtle-Turn-color1:#491e78;
-    --flowchart-Turtle-Turn-color2:#8334d2;
-    --flowchart-Turtle-Turn-color3:#b973ff;
-    --flowchart-Turtle-Home-color1:#491e78;
-    --flowchart-Turtle-Home-color2:#8334d2;
-    --flowchart-Turtle-Home-color3:#b973ff;
+    --flowchart-Turtle-Move-color1: #1e3c78;
+    --flowchart-Turtle-Move-color2: #346ed2;
+    --flowchart-Turtle-Move-color3: #73abff;
+    --flowchart-Turtle-Turn-color1: #491e78;
+    --flowchart-Turtle-Turn-color2: #8334d2;
+    --flowchart-Turtle-Turn-color3: #b973ff;
+    --flowchart-Turtle-Home-color1: #491e78;
+    --flowchart-Turtle-Home-color2: #8334d2;
+    --flowchart-Turtle-Home-color3: #b973ff;
     --flowchart-Error-color2: #be4a24;
     --flowchart-Round-color1: #804080;
     --flowchart-Round-color2: #e0a0e0;
@@ -59,6 +59,9 @@
     --flowchart-Line-selected-color: #ffc040;
     --flowchart-Padding-base: 8;
     --flowchart-Padding-spaceBetweenInstructions: 22;
+    --turtle-color-cursor: #ffff40;
+    --turtle-color-background: #222e46;
+    --turtle-color-foreground: #ffffff;
 }
 
 #variablesArea *[contenteditable] {

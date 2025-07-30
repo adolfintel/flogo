@@ -2,6 +2,9 @@
     --browser-theme-color: #202020;
     --ui-color-background1: #202020;
     --ui-color-form-background: #383838;
+    --turtle-color-cursor: #00a000;
+    --turtle-color-background: #20202040;
+    --turtle-color-foreground: #ffffff;
 }
 
 #editor {
@@ -91,4 +94,30 @@ div.popup.visible {
 
 div.toast {
     backdrop-filter: blur(1rem);
+}
+
+div.window {
+    background: transparent;
+    backdrop-filter: blur(1rem);
+    border: var(--ui-measure-border-thick) solid #ffffff20;
+    background: #20202040;
+    transition: transform 0.25s, opacity 0.25s, display 0.25s allow-discrete;
+    transform: scale(0.98);
+    opacity: 0;
+    box-shadow: 0 0.25rem 2rem #00000060;
+}
+
+div.window.visible {
+    transform: scale(1);
+    opacity: 1;
+
+    @starting-style {
+        /*Note: this only works properly in chromium-based browsers*/
+        transform: scale(1.02);
+        opacity: 0;
+    }
+}
+
+div.window>div.window_bar {
+    background: #ffffff20;
 }

@@ -1054,6 +1054,7 @@ registerInstructionType(Output, "Interaction")
  * - clearTurtle(): deletes the current drawing. You may want to call it before running the program, but it's not mandatory
  * - hideTurtleCursor(): hides the turtle, leaving only the drawing visible
  * - showTurtleCursor(): shows a previously hidden turtle
+ * - setTurtleColors(cursor, background, foreground): sets the colors used for turtle graphics
  *
  * There's also a setting that you might want to change:
  * - TURTLE_MAXPOINTS: controls the maximum "complexity" of the drawing. By default it's set to 10000, but you can also set it to 0 to disable the limit, or any other positive number
@@ -1063,13 +1064,20 @@ registerInstructionType(Output, "Interaction")
 let _turtle_initialized = false
 let _turtle_stage = null,
     _turtle_drawing = null,
-    _turtle_cursor = null
+    _turtle_cursor = null,
+    _turtle_background = null
 let _turtle_x, _turtle_y, _turtle_rot
+let _turtle_cursorColor = "#00a000",
+    _turtle_backgroundColor = "#ffffff",
+    _turtle_foregroundColor = "#000000"
 
 function _turtle_init() {
     if (!_turtle_initialized) {
         _turtle_stage = new Konva.Stage({
             container: "ui_turtle_canvas",
+        })
+        _turtle_background = new Konva.Layer({
+            listening: false
         })
         _turtle_drawing = new Konva.Layer({
             listening: false
@@ -1077,6 +1085,7 @@ function _turtle_init() {
         _turtle_cursor = new Konva.Layer({
             listening: false
         })
+        _turtle_stage.add(_turtle_background)
         _turtle_stage.add(_turtle_drawing)
         _turtle_stage.add(_turtle_cursor)
         _turtle_makeCursor()
@@ -1099,6 +1108,7 @@ function _turtle_init() {
                 bounds = b
             }
             _turtle_autoZoom()
+            _turtle_updateBackground()
         }
         resizeFun()
         _turtle_initialized = true
@@ -1122,10 +1132,10 @@ function _turtle_reset() {
 }
 
 function _turtle_makeCursor() {
-    const size = 10 / _turtle_stage.scaleX() //TODO: size from CSS/variable
+    const size = 10 / _turtle_stage.scaleX()
     const cursor = new Konva.Line({
-        points: [0, 0, -size, -size, size, 0, -size, size], //TODO: parametrize size of turtle
-        fill: "green", //TODO: get from CSS/variable
+        points: [0, 0, -size, -size, size, 0, -size, size],
+        fill: _turtle_cursorColor,
         closed: true,
     })
     _turtle_cursor.destroyChildren()
@@ -1163,12 +1173,32 @@ function _turtle_autoZoom(noRecursive = false) {
         _turtle_stage.scaleY(z)
         _turtle_makeCursor()
         _turtle_updateCursor()
+        _turtle_updateBackground()
     } else if (!noRecursive) {
         if (Math.max((right - left) / stageWidth, (bottom - top) / stageHeight) < 0.8) { //can zoom out, so we reset the zoom and let it autozoom out
             _turtle_stage.scaleX(1)
             _turtle_stage.scaleY(1)
             _turtle_autoZoom(true)
         }
+    }
+}
+
+function _turtle_updateBackground() {
+    const b = _turtle_background.children[0]
+    if (typeof b !== "undefined") {
+        b.absolutePosition({
+            x: 0,
+            y: 0
+        })
+        b.size({
+            width: _turtle_stage.width() / _turtle_stage.scaleX(),
+            height: _turtle_stage.height() / _turtle_stage.scaleY()
+        })
+    } else {
+        _turtle_background.add(new Konva.Rect({
+            fill: _turtle_backgroundColor
+        }))
+        _turtle_updateBackground()
     }
 }
 
@@ -1205,6 +1235,20 @@ function _turtle_limitPoints() {
     }
 }
 
+function setTurtleColors(cursor, background, foreground) {
+    _turtle_backgroundColor = background
+    _turtle_foregroundColor = foreground
+    _turtle_cursorColor = cursor
+    if (_turtle_initialized) {
+        const c = _turtle_cursor.children[0]
+        if (typeof cursor !== "undefined") {
+            c.fill(cursor)
+        }
+        _turtle_drawing.children.forEach(line => line.stroke(foreground))
+        _turtle_background.children[0].fill(background)
+    }
+}
+
 function Move(expression = null, draw = true) {
     this.expression = expression
     this.draw = draw
@@ -1235,7 +1279,7 @@ Move.prototype = {
             } else {
                 const l = new Konva.Line({
                     points: [_turtle_x, _turtle_y, _turtle_x + dx, _turtle_y + dy],
-                    stroke: "black", //TODO: get from CSS/variable
+                    stroke: _turtle_foregroundColor,
                     strokeWidth: 1,
                     strokeScaleEnabled: false,
                     perfectDrawEnabled: false,

@@ -121,6 +121,9 @@
     --insert-Tall-Padding-belowLabel: 10;
     --insert-Tall-Padding-belowRow: 20;
     --insert-Tall-Padding-spaceBetweenInstructions: 20;
+    --turtle-color-cursor: #009000;
+    --turtle-color-background: #404040;
+    --turtle-color-foreground: #f0f0f0;
     --crash-Padding-spaceFromInstruction: 10;
     --layout-large-threshold: 80;
     --layout-small-threshold: 55;
@@ -442,7 +445,6 @@ div.window>div.window_bar {
     text-transform: uppercase;
     overflow: hidden;
     padding: 0 var(--ui-measure-spacer-small);
-    border-bottom: var(--ui-measure-border-thin) solid var(--ui-color-border1);
 }
 
 div.window>div.window_bar * {
@@ -1280,7 +1282,6 @@ div.settings_tab.selected {
     height: 45vh;
     top: 5rem;
     left: 5rem;
-    background: white;
 }
 
 /* TOAST NOTIFICATIONS */
