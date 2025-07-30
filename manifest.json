@@ -5,13 +5,13 @@
     "description": "Create and run programs using flow charts",
     "icons": [
         {
-            "src": "images/pwaicon_mono.png",
+            "src": "icons/pwaicon_mono.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "monochrome maskable"
         },
         {
-            "src": "images/pwaicon.png",
+            "src": "icons/pwaicon.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable any"
