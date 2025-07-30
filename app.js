@@ -1523,10 +1523,9 @@ function registerWindowEvents(w, canResize = false) {
                                 oldT = w.style.top
                             w.style.height = (currentBounds.height - y + offY) + "px"
                             w.style.top = dy + "px"
-                            const newBounds = w.getBoundingClientRect()
-                            if (Math.round(newBounds.bottom) > Math.round(currentBounds.bottom)) {
-                                w.style.height = oldH
-                                w.style.top = oldT
+                            if (Math.round(w.getBoundingClientRect().bottom) > Math.round(currentBounds.bottom)) {
+                                w.style.height = "0px"
+                                w.style.top = (currentBounds.bottom - w.getBoundingClientRect().height) + "px"
                             }
                         }
                     } else if (resize.indexOf("s") !== -1) {
@@ -1537,10 +1536,9 @@ function registerWindowEvents(w, canResize = false) {
                             oldL = w.style.left
                         w.style.width = (currentBounds.width - x + offX) + "px"
                         w.style.left = (currentBounds.x + x - offX) + "px"
-                        const newBounds = w.getBoundingClientRect()
-                        if (Math.round(newBounds.right) > Math.round(currentBounds.right)) {
-                            w.style.width = oldW
-                            w.style.left = oldL
+                        if (Math.round(w.getBoundingClientRect().right) > Math.round(currentBounds.right)) {
+                            w.style.width = "0px"
+                            w.style.left = (currentBounds.right - w.getBoundingClientRect().width) + "px"
                         }
                     } else if (resize.indexOf("e") !== -1) {
                         w.style.width = (x + wBounds.width - offX) + "px"
