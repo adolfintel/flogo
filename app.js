@@ -1424,11 +1424,6 @@ function settings_setTheme() {
     loadTheme(document.getElementById("style_theme").value)
 }
 
-function settings_bkColor_changed() {
-    const val = document.getElementById("settings_bkColor").checked
-    storage.bkColor = val
-}
-
 function settings_fps_changed() {
     const val = document.getElementById("settings_fps").checked
     storage.showFps = val
@@ -1457,12 +1452,17 @@ function settings_unlimitedTurtle_changed() {
     }
 }
 
-function settings_downloadSVG() {
-    downloadSVG(undefined, document.getElementById("settings_bkColor").checked)
-}
-
-function settings_downloadPNG() {
-    downloadPNG(undefined, document.getElementById("settings_bkColor").checked)
+function settings_export() {
+    switch (document.getElementById("export_format").value) {
+        case "svg": {
+            downloadSVG(undefined, document.getElementById("export_background").checked)
+        };
+        break
+        case "png": {
+            downloadPNG(undefined, document.getElementById("export_background").checked)
+        };
+        break
+    }
 }
 
 function showLicense() {
@@ -2033,9 +2033,6 @@ function initApp() {
     document.getElementById("popupBackdrop").addEventListener("contextmenu", e => e.preventDefault())
     document.getElementById("fps").style.display = storage.showFps === "true" ? "block" : "none"
     updateFps()
-    if (typeof storage.bkColor !== "undefined") {
-        document.getElementById("settings_bkColor").checked = storage.bkColor === "true"
-    }
     if (typeof storage.allowZoomOnFlowchart !== "undefined") {
         _allowZoomOnFlowchart = storage.allowZoomOnFlowchart === "true"
     } else {

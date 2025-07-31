@@ -444,6 +444,7 @@
         <div id="settings_tabSelector">
             <div for="program_metadata" onclick="settings_selectTab('program_metadata')">Program</div>
             <div for="settings_style" onclick="settings_selectTab('settings_style')">Style</div>
+            <div for="settings_export" onclick="settings_selectTab('settings_export')">Export</div>
             <div for="settings_advanced" onclick="settings_selectTab('settings_advanced')">Advanced</div>
             <div for="settings_about" onclick="settings_selectTab('settings_about')">About</div>
         </div>
@@ -479,20 +480,31 @@
                     </optgroup>
                 </select>
             </div>
-
             <div id="style_buttons">
+                <button onclick="closePopup(true)">Close</button>
+            </div>
+        </div>
+        <div id="settings_export" class="settings_tab">
+            <div>
+                <div>
+                    <label for="export_format">Export as</label>
+                    <select id="export_format">
+                        <option value="svg">SVG</option>
+                        <option value="png" selected>PNG</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="checkbox" id="export_background" checked><label for="export_background">Keep background color</label>
+                </div>
+            </div>
+            <div id="export_buttons">
+                <button class="important" onclick="settings_export()">Export</button>
                 <button onclick="closePopup(true)">Close</button>
             </div>
         </div>
         <div id="settings_advanced" class="settings_tab">
             <div class="autoVert">
                 <div>
-                    Export image
-                    <button onclick="settings_downloadSVG()">SVG</button>
-                    <button onclick="settings_downloadPNG()">PNG</button>
-                </div>
-                <div>
-                    <input type="checkbox" id="settings_bkColor" onchange="settings_bkColor_changed()" checked><label for="settings_bkColor">Keep background color when exporting to SVG/PNG</label><br>
                     <input type="checkbox" id="settings_fps" onchange="settings_fps_changed()"><label for="settings_fps">FPS counter</label><br>
                     <input type="checkbox" id="settings_allowZoomOnFlowchart" onchange="settings_allowZoomOnFlowchart_changed()"><label for="settings_allowZoomOnFlowchart">Allow zooming of flowchart using Ctrl+Wheel</label><br>
                     <input type="checkbox" id="settings_altTurboTSlice" onchange="settings_altTurboTSlice_changed()"><label for="settings_altTurboTSlice">Longer timeslice in turbo mode (for low-end PCs)</label><br>

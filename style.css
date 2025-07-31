@@ -1148,7 +1148,8 @@ div.settings_tab.selected {
 #metadata_buttons,
 #style_buttons,
 #about_buttons,
-#advanced_buttons {
+#advanced_buttons,
+#export_buttons {
     margin-top: var(--ui-measure-spacer-large);
     text-align: center;
 }
