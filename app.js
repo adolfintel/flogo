@@ -1381,6 +1381,7 @@ function openSettings() {
     document.getElementById("settings_fps").checked = storage.showFps === "true"
     document.getElementById("settings_allowZoomOnFlowchart").checked = _allowZoomOnFlowchart
     document.getElementById("settings_altTurboTSlice").checked = _altTurboTSlice
+    document.getElementById("settings_unlimitedTurtle").checked = TURTLE_MAXPOINTS === 0
     const badge = document.getElementById("versionTypeBadge")
     if (isElectron()) {
         badge.innerText = "Electron " + process.versions.electron
@@ -1444,6 +1445,16 @@ function settings_altTurboTSlice_changed() {
     const val = document.getElementById("settings_altTurboTSlice").checked
     storage.altTurboTSlice = val
     _altTurboTSlice = val
+}
+
+function settings_unlimitedTurtle_changed() {
+    const val = document.getElementById("settings_unlimitedTurtle").checked
+    storage.unlimitedTurtle = val
+    if (val) {
+        TURTLE_MAXPOINTS = 0
+    } else {
+        TURTLE_MAXPOINTS = 10000
+    }
 }
 
 function settings_downloadSVG() {
@@ -2032,6 +2043,9 @@ function initApp() {
     }
     if (typeof storage.altTurboTSlice !== "undefined") {
         _altTurboTSlice = storage.altTurboTSlice === "true"
+    }
+    if (typeof storage.unlimitedTurtle !== "undefined") {
+        if (storage.unlimitedTurtle === "true") TURTLE_MAXPOINTS = 0
     }
     edit_addFocusEvents()
     initFlowchart("flowchartArea")
