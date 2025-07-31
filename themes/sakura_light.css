@@ -141,7 +141,8 @@
     color: var(--ui-color-accent2);
 }
 
-#editor2>div:hover {
+#editor2>div:hover,
+#turtleMenu>div:hover {
     color: var(--ui-color-text);
 }
 

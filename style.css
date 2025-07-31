@@ -1286,6 +1286,31 @@ div.settings_tab.selected {
     background: var(--turtle-color-background);
 }
 
+#turtle_openMenu {
+    border: none;
+}
+
+#turtleMenu {
+    padding: var(--ui-measure-spacer-medium);
+}
+
+#turtleMenu .icon {
+    font-size: 1.5rem;
+    margin-right: var(--ui-measure-spacer-small);
+}
+
+#turtleMenu>div {
+    padding: var(--ui-measure-spacer-small);
+    border-radius: var(--ui-measure-border-radius);
+    display: flex;
+    align-items: center;
+}
+
+#turtleMenu>div:hover {
+    background: var(--ui-color-accent1);
+    color: var(--ui-color-text-accent);
+}
+
 /* TOAST NOTIFICATIONS */
 div.toast {
     z-index: 9999;

@@ -1496,6 +1496,37 @@ function ui_turtle_hide() {
     document.getElementById("turtleArea").classList.remove("visible")
 }
 
+function turtle_openMenu() {
+    const bBounds = document.getElementById("turtle_openMenu").getBoundingClientRect()
+    const menu = document.getElementById("turtleMenu")
+    showPopup(menu)
+    const bounds = menu.getBoundingClientRect()
+    menu.style.top = bBounds.y + "px"
+    menu.style.left = (bBounds.left + bBounds.width - bounds.width) + "px"
+    if (_turtle_cursor.visible()) {
+        document.getElementById("turtleMenu_hideCursor").style.display = ""
+        document.getElementById("turtleMenu_showCursor").style.display = "none"
+    } else {
+        document.getElementById("turtleMenu_hideCursor").style.display = "none"
+        document.getElementById("turtleMenu_showCursor").style.display = ""
+    }
+}
+
+function turtle_savePNG() {
+    downloadTurtleImage()
+    closePopup()
+}
+
+function turtle_hideCursor() {
+    hideTurtleCursor()
+    closePopup()
+}
+
+function turtle_showCursor() {
+    showTurtleCursor()
+    closePopup()
+}
+
 //-------- WINDOWING STUFF (only used by turtle at the moment) -------
 function registerWindowEvents(w, canResize = false) {
     if (w.flogo_windowEventsInitialized) return

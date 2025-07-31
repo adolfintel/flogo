@@ -1055,6 +1055,7 @@ registerInstructionType(Output, "Interaction")
  * - hideTurtleCursor(): hides the turtle, leaving only the drawing visible
  * - showTurtleCursor(): shows a previously hidden turtle
  * - setTurtleColors(cursor, background, foreground): sets the colors used for turtle graphics
+ * - downloadTurtleImage(name): saves the current drawing to a file
  *
  * There's also a setting that you might want to change:
  * - TURTLE_MAXPOINTS: controls the maximum "complexity" of the drawing. By default it's set to 10000, but you can also set it to 0 to disable the limit, or any other positive number
@@ -1213,6 +1214,18 @@ function hideTurtleCursor() {
 
 function showTurtleCursor() {
     _turtle_cursor.show()
+}
+
+function downloadTurtleImage(name = "Turtle drawing", superSampling = 2) {
+    if (!name.endsWith(".png")) name += ".png"
+    const a = document.createElement('a')
+    a.href = _turtle_stage.toDataURL({
+        pixelRatio: superSampling
+    })
+    a.download = name
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
 }
 
 let TURTLE_MAXPOINTS = 10000 //0 to disable   //TODO: add to settings
