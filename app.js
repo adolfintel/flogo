@@ -1648,6 +1648,14 @@ function registerWindowEvents(w, canResize = false) {
             document.ontouchend = document.onmouseup = null
         }
     }
+    bar.querySelectorAll("button").forEach(e => {
+        e.ontouchstart = e.onmousedown = e => {
+            e.stopImmediatePropagation()
+        }
+    })
+    bar.oncontextmenu = e => {
+        e.preventDefault()
+    }
     w.flogo_windowEventsInitialized = true
 }
 

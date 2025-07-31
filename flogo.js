@@ -1112,6 +1112,9 @@ function _turtle_init() {
             _turtle_updateBackground()
         }
         resizeFun()
+        document.getElementById("ui_turtle_canvas").oncontextmenu = e => {
+            e.preventDefault()
+        }
         _turtle_initialized = true
     }
     _turtle_reset()
