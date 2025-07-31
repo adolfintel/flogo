@@ -10,8 +10,8 @@ let insertTall_stage = null
 
 let INSERT_FONT,
     INSERT_FONT_SIZE,
-    INSERT_WIDE_COLUMN_WIDTH,
     WIDE_INSERT_SPACE_BELOW_LABEL,
+    WIDE_INSERT_SPACE_BETWEEN_COLUMNS,
     WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS,
     TALL_INSERT_SPACE_BELOW_LABEL,
     TALL_INSERT_SPACE_BELOW_ROW,
@@ -43,61 +43,65 @@ function prepare_insertWide() {
     })
     const blockSelector = new Konva.Layer()
     s.add(blockSelector)
+    let x = 0,
+        endY = 0
+    const addColumn = (label, elements) => {
+        let w = 0,
+            y = 0
+        label.y(0)
+        w = label.width()
+        y += label.height() + WIDE_INSERT_SPACE_BELOW_LABEL
+        elements.forEach(e => {
+            e.flogo_bounds = e.getClientRect()
+            w = Math.max(w, e.flogo_bounds.width)
+        })
+        elements.forEach(e => {
+            e.position({
+                x: x + w / 2 - e.flogo_bounds.width / 2,
+                y: y
+            })
+            y += (e.flogo_height ?? e.flogo_bounds.height) + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+            blockSelector.add(e)
+        })
+        label.x(x + w / 2 - label.width() / 2)
+        blockSelector.add(label)
+        x += w + WIDE_INSERT_SPACE_BETWEEN_COLUMNS
+        y -= WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+        if (y > endY) endY = y
+    }
     let label = new Konva.Text({
-        x: 0,
-        y: 0,
-        width: INSERT_WIDE_COLUMN_WIDTH,
         text: "Clipboard",
         fontSize: INSERT_FONT_SIZE,
         fontFamily: INSERT_FONT,
         fill: LINE_COLOR,
-        align: "center",
     })
-    blockSelector.add(label)
     const paste = new Konva.Text({
-        x: 0,
-        y: label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL,
-        width: INSERT_WIDE_COLUMN_WIDTH,
         text: "paste",
         fontFamily: "Material Icons Sharp",
         fontSize: INSERT_FONT_SIZE * 2,
         fill: LINE_COLOR,
-        align: "center",
     })
     paste.on("click tap", () => {
         if (clipboard === null) return
         closePopup()
         pasteClipboard(insert_targetIstruction, insert_targetPos)
     })
-    blockSelector.add(paste)
-    s.flogo_xAfterClipboard = INSERT_WIDE_COLUMN_WIDTH
-    let x = INSERT_WIDE_COLUMN_WIDTH
-    let endY = paste.y() + paste.height()
+    addColumn(label, [paste])
+    s.flogo_xAfterClipboard = x
     for (const category in instructionCategories) {
         label = new Konva.Text({
-            x: x,
-            y: 0,
-            width: INSERT_WIDE_COLUMN_WIDTH,
             text: category,
             fontSize: INSERT_FONT_SIZE,
             fontFamily: INSERT_FONT,
             fill: LINE_COLOR,
-            align: "center",
         })
-        blockSelector.add(label)
-        let y = label.y() + label.height() + WIDE_INSERT_SPACE_BELOW_LABEL
+        const col = []
         instructionCategories[category].forEach(instruction => {
-            const block = insert_createBlockDrawable(instruction.name)
-            block.x(x + INSERT_WIDE_COLUMN_WIDTH / 2 - block.flogo_width / 2)
-            block.y(y)
-            blockSelector.add(block)
-            y += block.flogo_height + WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+            col.push(insert_createBlockDrawable(instruction.name))
         })
-        y -= WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS
-        if (y > endY) endY = y
-        x += INSERT_WIDE_COLUMN_WIDTH
+        addColumn(label, col)
     }
-    s.flogo_width = x
+    s.flogo_width = x - WIDE_INSERT_SPACE_BETWEEN_COLUMNS
     s.flogo_height = endY
     s.flogo_pasteBtn = paste
     insertWide_stage = s
@@ -112,61 +116,67 @@ function prepare_insertTall() {
     })
     const blockSelector = new Konva.Layer()
     s.add(blockSelector)
+    let y = 0,
+        endX = 0
+    const addRow = (label, elements) => {
+        let h = 0,
+            x = 0
+        label.position({
+            x: 0,
+            y: y
+        })
+        blockSelector.add(label)
+        y += label.height() + TALL_INSERT_SPACE_BELOW_LABEL
+        elements.forEach(e => {
+            e.flogo_bounds = e.getClientRect()
+            h = Math.max(h, (e.flogo_height ?? e.flogo_bounds.height))
+        })
+        elements.forEach(e => {
+            e.position({
+                x: x,
+                y: y + h / 2 - (e.flogo_height ?? e.flogo_bounds.height) / 2
+            })
+            x += e.flogo_bounds.width + TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+            blockSelector.add(e)
+        })
+        y += h + TALL_INSERT_SPACE_BELOW_ROW
+        x -= TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+        if (x > endX) endX = x
+    }
     let label = new Konva.Text({
-        x: 0,
-        y: 0,
         text: "Clipboard",
         fontSize: INSERT_FONT_SIZE,
         fontFamily: INSERT_FONT,
         fill: LINE_COLOR,
     })
-    blockSelector.add(label)
     let paste = new Konva.Text({
-        x: 0,
-        y: label.height() + TALL_INSERT_SPACE_BELOW_LABEL,
         text: "paste",
         fontFamily: "Material Icons Sharp",
         fontSize: INSERT_FONT_SIZE * 2,
         fill: LINE_COLOR,
-        align: "center",
     })
     paste.on("click tap", () => {
         if (clipboard === null) return
         closePopup()
         pasteClipboard(insert_targetIstruction, insert_targetPos)
     })
-    blockSelector.add(paste)
-    s.flogo_yAfterClipboard = paste.y() + paste.height() + TALL_INSERT_SPACE_BELOW_ROW
-    let y = s.flogo_yAfterClipboard
-    let endX = 0
+    addRow(label, [paste])
+    s.flogo_yAfterClipboard = y
     for (const category in instructionCategories) {
         label = new Konva.Text({
-            x: 0,
-            y: y,
             text: category,
             fontSize: INSERT_FONT_SIZE,
             fontFamily: INSERT_FONT,
             fill: LINE_COLOR,
         })
-        blockSelector.add(label)
-        y += label.height() + TALL_INSERT_SPACE_BELOW_LABEL
-        let x = 0
-        let h = 0
+        const row = []
         instructionCategories[category].forEach(instruction => {
-            const block = insert_createBlockDrawable(instruction.name)
-            block.x(x)
-            block.y(y)
-            blockSelector.add(block)
-            if (block.flogo_height > h) h = block.flogo_height
-            x += block.flogo_width + TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS
+            row.push(insert_createBlockDrawable(instruction.name))
         })
-        x -= TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS
-        if (x > endX) endX = x
-        y += h + TALL_INSERT_SPACE_BELOW_ROW
+        addRow(label, row)
     }
-    y -= TALL_INSERT_SPACE_BELOW_ROW
     s.flogo_width = endX
-    s.flogo_height = y
+    s.flogo_height = y - TALL_INSERT_SPACE_BELOW_ROW
     s.flogo_pasteBtn = paste
     insertTall_stage = s
 }
@@ -174,7 +184,7 @@ function prepare_insertTall() {
 function insert_preparePopups() {
     INSERT_FONT = _getCSSVal("font-family", "", document.body)
     INSERT_FONT_SIZE = Number(_getCSSVal("--insert-Font-size", 14, document.body))
-    INSERT_WIDE_COLUMN_WIDTH = Number(_getCSSVal("--insert-Wide-columnWidth", 7, document.body)) * BLOCK_FONT_SIZE
+    WIDE_INSERT_SPACE_BETWEEN_COLUMNS = Number(_getCSSVal("--insert-Wide-Padding-betweenColumns", 18, document.body))
     WIDE_INSERT_SPACE_BELOW_LABEL = Number(_getCSSVal("--insert-Wide-Padding-belowLabel", 20, document.body))
     WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS = Number(_getCSSVal("--insert-Wide-Padding-spaceBetweenInstructions", 20, document.body))
     TALL_INSERT_SPACE_BELOW_LABEL = Number(_getCSSVal("--insert-Tall-Padding-belowLabel", 10, document.body))

@@ -115,7 +115,7 @@
     --flowchart-scrollbar-padding: 4;
     --flowchart-scrollbar-color: #ffffff60;
     --insert-Font-size: 14;
-    --insert-Wide-columnWidth: 8;
+    --insert-Wide-Padding-betweenColumns: 18;
     --insert-Wide-Padding-belowLabel: 20;
     --insert-Wide-Padding-spaceBetweenInstructions: 20;
     --insert-Tall-Padding-belowLabel: 10;
@@ -598,6 +598,7 @@ div.window>div.window_contents {
 #insertWide,
 #insertTall {
     box-sizing: content-box;
+    padding: 0 var(--ui-measure-spacer-small);
 }
 
 /* CRASH POPUP */
