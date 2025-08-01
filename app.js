@@ -1326,8 +1326,20 @@ function updateBarHeight() {
 }
 
 function expandBar() {
-    document.getElementById("bar").classList.add("expanded")
+    const bar = document.getElementById("bar")
+    bar.classList.add("expanded")
     updateBarHeight()
+    const e = event => {
+        const x = _extractCoordFromEvent(event, "clientX"),
+            y = _extractCoordFromEvent(event, "clientY")
+        const bounds = bar.getBoundingClientRect()
+        if (x >= bounds.x && x <= bounds.right && y >= bounds.y && y <= bounds.bottom) return
+        collapseBar()
+        document.removeEventListener('click', e)
+        document.removeEventListener('tap', e)
+    }
+    document.addEventListener('click', e)
+    document.addEventListener('tap', e)
 }
 
 function collapseBar() {
