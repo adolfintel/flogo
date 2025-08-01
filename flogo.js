@@ -1219,16 +1219,68 @@ function showTurtleCursor() {
     _turtle_cursor.show()
 }
 
-function downloadTurtleImage(name = "Turtle drawing", superSampling = 2) {
-    if (!name.endsWith(".png")) name += ".png"
-    const a = document.createElement('a')
-    a.href = _turtle_stage.toDataURL({
-        pixelRatio: superSampling
+function downloadTurtleImage(name = "Turtle drawing", background = true, superSampling = 2) {
+    const oldContext = _turtle_drawing.canvas.context._context
+    const oldSPos = _turtle_stage.position()
+    const oldSScale = _turtle_stage.scale()
+    const oldDPixelRatio = _turtle_drawing.getCanvas().getPixelRatio()
+    _turtle_stage.position({
+        x: 0,
+        y: 0
     })
+    _turtle_stage.scale({
+        x: 1,
+        y: 1
+    })
+    let bounds = _turtle_drawing.getClientRect()
+    const w = bounds.width,
+        h = bounds.height
+    let z = superSampling
+    if (w > 2000 || h > 2000) {
+        z *= 2000 / Math.max(w, h)
+    }
+    _turtle_stage.scale({
+        x: z,
+        y: z
+    })
+    bounds = _turtle_drawing.getClientRect()
+    _turtle_stage.position({
+        x: -bounds.x + 8 * superSampling,
+        y: -bounds.y + 8 * superSampling
+    })
+    const tempCanvas = document.createElement("canvas")
+    _turtle_drawing.canvas.context._context = tempCanvas.getContext("2d")
+    tempCanvas.width = w * z + 16 * superSampling
+    tempCanvas.height = h * z + 16 * superSampling
+    let rect = null
+    if (background) {
+        if (_turtle_backgroundColor !== null) {
+            rect = new Konva.Rect({
+                x: (bounds.x - 8 * superSampling) / z,
+                y: (bounds.y - 8 * superSampling) / z,
+                width: w + superSampling * 16 / z,
+                height: h + superSampling * 16 / z,
+                fill: _turtle_backgroundColor,
+            })
+            _turtle_drawing.add(rect)
+            rect.moveToBottom()
+        }
+    }
+    _turtle_stage.draw()
+    const out = tempCanvas.toDataURL("image/png")
+    if (rect !== null) {
+        rect.destroy()
+    }
+    _turtle_drawing.canvas.context._context = oldContext
+    _turtle_drawing.getCanvas().setPixelRatio(oldDPixelRatio)
+    _turtle_stage.position(oldSPos)
+    _turtle_stage.scale(oldSScale)
+    _turtle_stage.draw()
+    if (!name.endsWith(".png")) name += ".png"
+    const a = document.createElement("a")
+    a.href = out
     a.download = name
-    document.body.appendChild(a)
     a.click()
-    document.body.removeChild(a)
 }
 
 let TURTLE_MAXPOINTS = 10000 //0 to disable   //TODO: add to settings
