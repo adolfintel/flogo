@@ -37,7 +37,7 @@ if (isElectron()) {
 } else {
     storage = window.localStorage
     //Redirect HTTP to HTTPS
-    if (location.protocol == "http:") {
+    if (location.protocol === "http:") {
         location.href = "https" + location.href.substring(4)
     }
     //Register PWA service worker
