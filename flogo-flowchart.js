@@ -2293,7 +2293,6 @@ function downloadPNG(name, background = true, superSampling = 2) {
     const cw = (stage.flogo_realWidth + 2 * MINVIS) * superSampling
     const ch = (stage.flogo_realHeight + 2 * MINVIS) * superSampling
     if (cw > 16000 || ch > 16000) {
-        console.log("PNG output too large, reducing quality")
         superSampling *= 16000 / Math.max(cw, ch)
     }
     tempCanvas.width = (stage.flogo_realWidth + 2 * MINVIS) * superSampling
@@ -2310,14 +2309,12 @@ function downloadPNG(name, background = true, superSampling = 2) {
         const bkColor = _getCSSVal("--ui-color-background1", null, document.body)
         if (bkColor !== null) {
             rect = new Konva.Rect({
+                x: stage.x() - cw / 2,
+                y: stage.y() - ch / 2,
+                width: cw,
+                height: ch,
                 fill: bkColor
             })
-            rect.position({
-                x: stage.x() - cw / 2,
-                y: stage.y() - ch / 2
-            })
-            rect.width(cw)
-            rect.height(ch)
             blockLayer.add(rect)
             rect.moveToBottom()
         }
