@@ -1065,8 +1065,7 @@ registerInstructionType(Output, "Interaction")
 let _turtle_initialized = false
 let _turtle_stage = null,
     _turtle_drawing = null,
-    _turtle_cursor = null,
-    _turtle_background = null
+    _turtle_cursor = null
 let _turtle_x, _turtle_y, _turtle_rot
 let _turtle_cursorColor = "#00a000",
     _turtle_backgroundColor = "#ffffff",
@@ -1077,16 +1076,12 @@ function _turtle_init() {
         _turtle_stage = new Konva.Stage({
             container: "ui_turtle_canvas",
         })
-        _turtle_background = new Konva.Layer({
-            listening: false
-        })
         _turtle_drawing = new Konva.Layer({
             listening: false
         })
         _turtle_cursor = new Konva.Layer({
             listening: false
         })
-        _turtle_stage.add(_turtle_background)
         _turtle_stage.add(_turtle_drawing)
         _turtle_stage.add(_turtle_cursor)
         _turtle_makeCursor()
@@ -1109,7 +1104,6 @@ function _turtle_init() {
                 bounds = b
             }
             _turtle_autoZoom()
-            _turtle_updateBackground()
         }
         resizeFun()
         document.getElementById("ui_turtle_canvas").oncontextmenu = e => {
@@ -1177,32 +1171,12 @@ function _turtle_autoZoom(noRecursive = false) {
         _turtle_stage.scaleY(z)
         _turtle_makeCursor()
         _turtle_updateCursor()
-        _turtle_updateBackground()
     } else if (!noRecursive) {
         if (Math.max((right - left) / stageWidth, (bottom - top) / stageHeight) < 0.8) { //can zoom out, so we reset the zoom and let it autozoom out
             _turtle_stage.scaleX(1)
             _turtle_stage.scaleY(1)
             _turtle_autoZoom(true)
         }
-    }
-}
-
-function _turtle_updateBackground() {
-    const b = _turtle_background.children[0]
-    if (typeof b !== "undefined") {
-        b.absolutePosition({
-            x: 0,
-            y: 0
-        })
-        b.size({
-            width: _turtle_stage.width() / _turtle_stage.scaleX(),
-            height: _turtle_stage.height() / _turtle_stage.scaleY()
-        })
-    } else {
-        _turtle_background.add(new Konva.Rect({
-            fill: _turtle_backgroundColor
-        }))
-        _turtle_updateBackground()
     }
 }
 
@@ -1313,7 +1287,6 @@ function setTurtleColors(cursor, background, foreground) {
             c.fill(cursor)
         }
         _turtle_drawing.children.forEach(line => line.stroke(foreground))
-        _turtle_background.children[0].fill(background)
     }
 }
 
