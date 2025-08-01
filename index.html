@@ -542,7 +542,7 @@
             <h1>Documentation</h1>
             <ul>
                 <li><a onclick="man_scrollTo('variables')">Variables and types</a></li>
-                <li><a onclick="man_scrollTo('instructions')">Instructions</a></li>
+                <li><a onclick="man_scrollTo('instructions')">Basic instructions</a></li>
                 <li>
                     <a onclick="man_scrollTo('expressions')">Expressions</a>
                     <ul>
@@ -553,6 +553,7 @@
                         <li><a onclick="man_scrollTo('constants')">Built-in constants</a></li>
                     </ul>
                 </li>
+                <li><a onclick="man_scrollTo('turtle')">Graphics</a></li>
             </ul>
             <a name="variables"></a>
             <h2>Variables and types</h2>
@@ -592,7 +593,7 @@
                 Can store a value that's either <code>true</code> or <code>false</code>.
             </p>
             <a name="instructions"></a>
-            <h2>Instructions</h2>
+            <h2>Basic instructions</h2>
             <h4>Input</h4>
             <p>
                 Reads a value from the user and stores it in a variable
@@ -941,6 +942,31 @@
                     </tr>
                 </tbody>
             </table>
+            <a name="turtle"></a>
+            <h2>Graphics</h2>
+            <p>
+                The basic concept behind Turtle Graphics is that you're controlling a cursor (called "turtle"). When the program is started, the turtle is at the center of the drawing area (its "home") and it's pointing up, then you can use instructions to move it, can draw a line while moving, turn it left or right and it can also instantly move back to its home.
+            </p>
+            <h4>Move/Draw</h4>
+            <p>
+                A Move/Draw instruction moves the turtle by the specified distance in the direction that it's currently pointing at. It can draw a line behind it while moving.
+            </p>
+            <ul>
+                <li><b>Expression</b>: how much you want to move. It can be a simple number or a mathematical expression using your variables</li>
+                <li><b>Draw</b>: if enabled, it draws a line while moving, otherwise the turtle will just move without drawing anything</li>
+            </ul>
+            <h4>Turn</h4>
+            <p>
+                A Move/Draw instruction changes the angle that the turtle is currently pointing at by a specified amount of degrees.
+            </p>
+            <ul>
+                <li><b>Expression</b>: how many degrees much you want the turtle to turn by. It can be a simple number or a mathematical expression using your variables</li>
+                <li><b>Direction</b>: whether to turn the turtle left or right</li>
+            </ul>
+            <h4>Home</h4>
+            <p>
+                Instantly moves the turtle back to the starting position (its "home"), pointing upwards. It does not draw a line while moving.
+            </p>
         </div>
         <button id="man_close" onclick="closePopup(true)"><span class="icon material-icons-sharp">close</span></button>
     </div>
