@@ -1420,6 +1420,9 @@ function openSettings() {
             badge.style.color = "#ffffff"
         }
     }
+    if (!isElectron() && location.protocol !== "https:") {
+        document.getElementById("export_format_svg").disabled = true
+    }
     showPopup("settings")
 }
 
