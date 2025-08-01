@@ -113,6 +113,18 @@
             }
         }
 
+        @media (prefers-color-scheme: light) {
+
+            #loadOverlay,
+            #loadingSpinner::after {
+                background: white;
+            }
+
+            #loadingSpinner {
+                background: conic-gradient(black, white);
+            }
+        }
+
         #errorScreen {
             position: fixed;
             top: 0;
