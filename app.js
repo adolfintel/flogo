@@ -1562,7 +1562,7 @@ function registerWindowEvents(w, canResize = false) {
             const offX = _extractCoordFromEvent(e, "clientX") - wBounds.x,
                 offY = _extractCoordFromEvent(e, "clientY") - wBounds.y
             let resize = ""
-            if (offY < 16) {
+            if (offY < 8) {
                 resize += "n"
             } else if (offY > wBounds.height - 16) {
                 resize += "s"
@@ -1627,7 +1627,7 @@ function registerWindowEvents(w, canResize = false) {
                 const offX = _extractCoordFromEvent(e, "clientX") - wBounds.x,
                     offY = _extractCoordFromEvent(e, "clientY") - wBounds.y
                 let resize = ""
-                if (offY < 16) {
+                if (offY < 8) {
                     resize += "n"
                 } else if (offY > wBounds.height - 16) {
                     resize += "s"
@@ -1657,7 +1657,7 @@ function registerWindowEvents(w, canResize = false) {
         const offX = _extractCoordFromEvent(e, "clientX") - wBounds.x,
             offY = _extractCoordFromEvent(e, "clientY") - wBounds.y
         if (canResize) {
-            if (offY < 16 || offX < 16 || offX > wBounds.width - 16) return
+            if (offY < 8 || offX < 16 || offX > wBounds.width - 16) return
         }
         e.stopImmediatePropagation()
         document.ontouchmove = document.onmousemove = e => {

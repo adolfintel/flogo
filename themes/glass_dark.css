@@ -98,7 +98,7 @@ div.toast {
 
 div.window {
     backdrop-filter: blur(1rem);
-    border: var(--ui-measure-border-thick) solid #ffffff20;
+    border-color: #ffffff20;
     background: #20202040;
     transition: transform 0.25s, opacity 0.25s, display 0.25s allow-discrete;
     transform: scale(0.98);

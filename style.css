@@ -423,6 +423,7 @@ div.window {
     z-index: 199;
     background: var(--ui-color-background2);
     border: var(--ui-measure-border-thick) solid var(--ui-color-accent1);
+    border-top: none;
     outline: var(--ui-measure-border-thin) solid var(--ui-color-border1);
     border-radius: var(--ui-measure-border-radius);
     overflow: hidden;
