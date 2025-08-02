@@ -12,6 +12,7 @@ __Flogo__ is a free and open source programming language for beginners, designed
 * All standard loop types: Do-While, While and For (basic-style)
 * Lazy evaluation of boolean expressions
 * Lots of built-in functions (see documentation for a complete list)
+* Turtle graphics
 * Execution speed control and step-by-step mode to better follow the flow of the program; a turbo mode is also available to run larger programs at maximum speed
 * Easy to use UI with Undo/Redo, Cut/Copy/Paste and keyboard shortcuts
 * Chat-like Input/Output UI, similar to Flowgorithm
@@ -23,8 +24,8 @@ __Flogo__ is a free and open source programming language for beginners, designed
 * Runs on all modern browsers, can be installed as a PWA and run completely offline
 
 ## Screenshots
-![Screenshot](.github/screenshot1.png)
 ![Screenshot](.github/screenshot2.png)
+![Screenshot](.github/screenshot1.png)
 ![Screenshot](.github/screenshot3.png)
 ![Screenshot](.github/screenshot4.png)
 ![Mobile screenshot](.github/screenshot5.png)
@@ -56,8 +57,12 @@ __Mini games__
 * [Rock, paper, scissors](https://downloads.fdossena.com/geth.php?r=flogo-demo-14)
 * [Quasar (similar to blackjack)](https://downloads.fdossena.com/geth.php?r=flogo-demo-15)
 
+__Turtle Graphics__
+* [Hexagon](https://downloads.fdossena.com/geth.php?r=flogo-demo-17)
+* [Regular polygon](https://downloads.fdossena.com/geth.php?r=flogo-demo-18)
+* [Brick wall](https://downloads.fdossena.com/geth.php?r=flogo-demo-19)
+
 ## Future features
-* Turtle graphics (Planned for v1.2 series)
 * Arrays (Planned for v1.3 series)
 * Functions (Planned for v1.4 series)
 
