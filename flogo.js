@@ -1090,6 +1090,7 @@ function _turtle_init() {
             requestAnimationFrame(resizeFun)
             if (window.devicePixelRatio !== _turtle_drawing.getCanvas().getPixelRatio()) {
                 _turtle_drawing.getCanvas().setPixelRatio(window.devicePixelRatio)
+                _turtle_cursor.getCanvas().setPixelRatio(window.devicePixelRatio)
             }
             const b = _turtle_stage.container().getBoundingClientRect()
             if (bounds === null || b.width !== bounds.width || b.height !== bounds.height) {
