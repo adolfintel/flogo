@@ -1124,15 +1124,38 @@ div.variable:not(.editing) .edit {
     background: var(--ui-color-background1);
 }
 
+#settings_tabs {
+    display: grid;
+}
+
 div.settings_tab {
     background: var(--ui-color-background1);
     padding: var(--ui-measure-spacer-medium);
-    display: none;
+    visibility: hidden;
     overflow-x: auto;
+    grid-row: 1;
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 div.settings_tab.selected {
-    display: block;
+    visibility: visible;
+}
+
+div.settings_tab_buttons {
+    margin-top: var(--ui-measure-spacer-large);
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    gap: var(--ui-measure-spacer-small);
+}
+
+p.settings_desc {
+    font-size: 0.9rem;
+    font-weight: bold;
 }
 
 #settings_about {
@@ -1145,15 +1168,6 @@ div.settings_tab.selected {
     padding: 0 0.2rem;
     font-size: 0.85rem;
     font-weight: bold;
-}
-
-#metadata_buttons,
-#style_buttons,
-#about_buttons,
-#advanced_buttons,
-#export_buttons {
-    margin-top: var(--ui-measure-spacer-large);
-    text-align: center;
 }
 
 #about_logo {
