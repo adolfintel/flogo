@@ -1229,7 +1229,7 @@ function setProgramExecutionMode() {
     }
 }
 
-function newProgram() {
+function newProgram(triggeredFromKeyboardShortcut = false) {
     closePopup(true)
     const realNewProgram = () => {
         const state = interpreter.getState()
@@ -1253,11 +1253,11 @@ function newProgram() {
     if (undoHistoryPtr <= 1) {
         realNewProgram()
     } else {
-        yesnoPrompt("Erase program?", "All unsaved changes will be lost", document.getElementById("newProgram"), realNewProgram)
+        yesnoPrompt("Erase program?", "All unsaved changes will be lost", triggeredFromKeyboardShortcut === true ? null : document.getElementById("newProgram"), realNewProgram)
     }
 }
 
-function loadProgram() {
+function loadProgram(triggeredFromKeyboardShortcut = false) {
     closePopup(true)
     const realLoadProgram = () => {
         const state = interpreter.getState()
@@ -1294,11 +1294,11 @@ function loadProgram() {
     if (undoHistoryPtr <= 1) {
         realLoadProgram()
     } else {
-        yesnoPrompt("Load another program?", "All unsaved changes will be lost", document.getElementById("loadProgram"), realLoadProgram)
+        yesnoPrompt("Load another program?", "All unsaved changes will be lost", triggeredFromKeyboardShortcut === true ? null : document.getElementById("loadProgram"), realLoadProgram)
     }
 }
 
-function saveProgram() {
+function saveProgram(triggeredFromKeyboardShortcut = false) {
     closePopup(true)
     const state = interpreter.getState()
     if (state === STATE_RUNNING || state === STATE_PAUSED) {
@@ -1937,6 +1937,39 @@ function initKeyboardShortcuts() {
                             v.flogo_buttons.cancel.click()
                         }
                     }
+                }
+            };
+            break
+            case 's': {
+                if (e.target !== document.body) return
+                const intState = interpreter.getState()
+                if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+                if (document.querySelectorAll("div.popup.visible").length !== 0) return
+                if (ctrlKey && !e.shiftKey) {
+                    e.preventDefault()
+                    saveProgram(true)
+                }
+            };
+            break
+            case 'l': {
+                if (e.target !== document.body) return
+                const intState = interpreter.getState()
+                if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+                if (document.querySelectorAll("div.popup.visible").length !== 0) return
+                if (ctrlKey && !e.shiftKey) {
+                    e.preventDefault()
+                    loadProgram(true)
+                }
+            };
+            break
+            case 'n': {
+                if (e.target !== document.body) return
+                const intState = interpreter.getState()
+                if (intState === STATE_RUNNING || intState === STATE_PAUSED) return
+                if (document.querySelectorAll("div.popup.visible").length !== 0) return
+                if (ctrlKey && !e.shiftKey) {
+                    e.preventDefault()
+                    newProgram(true)
                 }
             };
             break
