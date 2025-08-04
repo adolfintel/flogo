@@ -2110,15 +2110,17 @@ function toast(text, duration = 2000) {
 
 //-------- FPS COUNTER --------
 
-let oldTimestamp = 0
+let oldTimestamp = 0,
+    smoothedFps = 0
 
 function updateFps(t) {
     requestAnimationFrame(updateFps)
     const counter = document.getElementById("fps")
     if (counter.style.display === "none") return
     const fps = 1000 / (t - oldTimestamp)
-    if (fps === Infinity) return
-    counter.innerText = fps.toFixed(2)
+    if (fps === Infinity || isNaN(fps)) return
+    smoothedFps = smoothedFps * 0.9 + fps * 0.1
+    counter.innerText = smoothedFps.toFixed(2)
     oldTimestamp = t
 }
 
