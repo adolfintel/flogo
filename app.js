@@ -896,7 +896,7 @@ function variablesEditor_createVariable(name) {
 function variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList() {
     const newVariables = {}
     const vars = document.querySelectorAll("#variableList > div.variable")
-    vars.forEach((v) => {
+    vars.forEach(v => {
         newVariables[v.flogo_variable] = variables[v.flogo_variable]
     })
     variables = newVariables
@@ -1048,7 +1048,7 @@ function variablesEditor_updateVariableValue(v) {
 function variablesEditor_enable() {
     document.getElementById("variablesArea").classList.remove("noedit")
     const vars = document.querySelectorAll("#variableList > div.variable")
-    vars.forEach((v) => {
+    vars.forEach(v => {
         v.draggable = true
     })
 }
@@ -1056,7 +1056,7 @@ function variablesEditor_enable() {
 function variablesEditor_disable() {
     document.getElementById("variablesArea").classList.add("noedit")
     const vars = document.querySelectorAll("#variableList > div.variable")
-    vars.forEach((v) => {
+    vars.forEach(v => {
         v.draggable = false
     })
 }
@@ -1117,7 +1117,7 @@ function variablesEditor_moveVariableAtDropIndicator(v) {
 function updateVariableValues() {
     requestAnimationFrame(updateVariableValues)
     const vars = document.querySelectorAll("#variableList > div.variable")
-    vars.forEach((v) => {
+    vars.forEach(v => {
         if (v.flogo_variable !== null) variablesEditor_updateVariableValue(v)
     })
 }
@@ -1135,7 +1135,7 @@ function recreateVariableList() {
 
 function variablesEditor_cancelAllEdits() {
     const vars = document.querySelectorAll("#variableList > div.variable.editing")
-    vars.forEach((v) => {
+    vars.forEach(v => {
         variablesEditor_cancelEditVariable(v)
     })
 }
@@ -1268,7 +1268,7 @@ function loadProgram(triggeredFromKeyboardShortcut = false) {
         l.onchange = () => {
             document.getElementById("loadOverlay").style.display = "block"
             updateWindowTitle()
-            loadFromFile(l.files[0], (e) => {
+            loadFromFile(l.files[0], e => {
                 cancelSelection()
                 recreateVariableList()
                 resetConsole()
@@ -1427,10 +1427,10 @@ function openSettings() {
 }
 
 function settings_selectTab(id) {
-    document.querySelectorAll("div.settings_tab").forEach((e) => e.classList.remove("selected"))
-    document.querySelectorAll("#settings_tabSelector > div").forEach((e) => e.classList.remove("selected"))
+    document.querySelectorAll("div.settings_tab").forEach(e => e.classList.remove("selected"))
+    document.querySelectorAll("#settings_tabSelector > div").forEach(e => e.classList.remove("selected"))
     document.getElementById(id).classList.add("selected")
-    document.querySelectorAll("#settings_tabSelector > div[for=" + id + "]").forEach((e) => e.classList.add("selected"))
+    document.querySelectorAll("#settings_tabSelector > div[for=" + id + "]").forEach(e => e.classList.add("selected"))
 }
 
 function settings_updateMetadata() {
@@ -1771,7 +1771,7 @@ function toggleConsoleArea() {
 }
 
 function closePopup(all = false) {
-    document.querySelectorAll("div.popup.visible").forEach((e) => {
+    document.querySelectorAll("div.popup.visible").forEach(e => {
         if (all === true || !e.classList.contains("noAutoClose")) {
             e.classList.remove("visible")
             if (typeof e.flogo_closeCallback !== "undefined") e.flogo_closeCallback()
@@ -2205,15 +2205,15 @@ function initApp() {
     window.addEventListener("resize", closePopup)
     window.addEventListener("resize", updateFlowchartOcclusion)
     if (!isElectron()) {
-        window.onbeforeunload = (e) => {
+        window.onbeforeunload = e => {
             if (document.getElementById("errorScreen").style.display === "block") return
             if (undoHistoryPtr <= 1) return
             e.preventDefault()
             e.returnValue = ""
         }
     }
-    document.body.addEventListener("dragover", (e) => e.preventDefault())
-    document.body.addEventListener("drop", (e) => {
+    document.body.addEventListener("dragover", e => e.preventDefault())
+    document.body.addEventListener("drop", e => {
         e.preventDefault()
         if (e.dataTransfer.items) {
             if (document.getElementById("errorScreen").style.display === "block") return
@@ -2228,7 +2228,7 @@ function initApp() {
             const loadDraggedProgram = () => {
                 document.getElementById("loadOverlay").style.display = "block"
                 updateWindowTitle()
-                loadFromFile(f, (e2) => {
+                loadFromFile(f, e2 => {
                     cancelSelection()
                     recreateVariableList()
                     resetConsole()
@@ -2265,7 +2265,7 @@ function initApp() {
             fs.readFile(path, (err, data) => {
                 loadFromFile(new Blob([data], {
                     type: "application/octet-stream"
-                }), (e2) => {
+                }), e2 => {
                     cancelSelection()
                     recreateVariableList()
                     resetConsole()

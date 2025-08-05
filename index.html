@@ -15,7 +15,7 @@
     <script type="text/javascript" src="platformSpecific.js"></script>
     <script type="text/javascript">
         let crashHandlerMode = 0 //0=reload on error, 1=show crash screen
-        window.onerror = function(e, url, line) {
+        window.onerror = (e, url, line) => {
             console.log("Unhandled exception caught: " + e + " in " + url + "@" + line + ", handling error")
             const rok = document.getElementById("error_recoveryOk"),
                 rf = document.getElementById("error_recoveryFailed"),

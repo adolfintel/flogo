@@ -26,7 +26,7 @@ ipcMain.on('electron-store-delete', (event, key) => {
     event.returnValue = 'success'
 })
 
-const createWindow = (openThis) => {
+const createWindow = openThis => {
     let size = {
         width: 1280,
         height: 720

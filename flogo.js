@@ -169,7 +169,7 @@ jsep.addBinaryOp("^", 11, true)
 //EXPRESSION EVALUATION AND BUILT-IN FUNCTIONS IMPLEMEMENTAION
 function evaluateExpression(text) {
     const tree = jsep(text)
-    const expr_rec = (n) => {
+    const expr_rec = n => {
         switch (n.type) {
             case jsep.LITERAL: {
                 if (n.value !== null) {
@@ -596,7 +596,7 @@ InstructionSequence.prototype = {
     },
     toSimpleObject: function() {
         const b = []
-        this.body.forEach((i) => b.push(i.toSimpleObject()))
+        this.body.forEach(i => b.push(i.toSimpleObject()))
         return {
             type: "InstructionSequence",
             body: b,
@@ -606,7 +606,7 @@ InstructionSequence.prototype = {
 InstructionSequence.fromSimpleObject = function(o) {
     if (o.type !== "InstructionSequence") throw "Not an InstructionSequence"
     const r = new InstructionSequence()
-    o.body.forEach((i) => r.body.push(instructionTypes[i.type].fromSimpleObject(i)))
+    o.body.forEach(i => r.body.push(instructionTypes[i.type].fromSimpleObject(i)))
     return r
 }
 registerInstructionType(InstructionSequence, null)
@@ -951,7 +951,7 @@ Input.prototype = {
             this.state = null
             if (typeof ui_input !== "undefined") {
                 interpreter.preventTurbo = true
-                ui_input(this.variable, variables[this.variable].type, (val) => {
+                ui_input(this.variable, variables[this.variable].type, val => {
                     interpreter.preventTurbo = false
                     this.state = val
                 })
@@ -1258,7 +1258,7 @@ function downloadTurtleImage(name = "Turtle drawing", background = true, superSa
     a.click()
 }
 
-let TURTLE_MAXPOINTS = 10000 //0 to disable   //TODO: add to settings
+let TURTLE_MAXPOINTS = 10000 //0 to disable
 let _turtle_nPoints = 0
 
 function _turtle_limitPoints() {
@@ -1473,17 +1473,17 @@ const interpreter = {
     currentInstruction: null, //Pointer to the currently running instruction. This is not actually used anywhere in the core, but the UI can use it to highlight it. All instructions will keep this updated
     preventTurbo: false,
     _lastInstrT: 0,
-    getState() {
+    getState: () => {
         return interpreter._state
     },
-    run() {
+    run: () => {
         if (interpreter._state === STATE_RUNNING) throw "Program is already running"
         if (interpreter._state === STATE_CRASHED || interpreter._state === STATE_STOPPED) {
             resetVariables()
-            const reset_rec = (instruction) => {
+            const reset_rec = instruction => {
                 delete instruction.state
                 if (instruction.constructor.name === "InstructionSequence") {
-                    instruction.body.forEach((i) => reset_rec(i))
+                    instruction.body.forEach(i => reset_rec(i))
                 } else {
                     if (typeof instruction.body !== "undefined") {
                         reset_rec(instruction.body)
@@ -1501,12 +1501,12 @@ const interpreter = {
         interpreter._state = STATE_RUNNING
         interpreter.preventTurbo = false
     },
-    stop() {
+    stop: () => {
         if (interpreter._state === STATE_CRASHED || interpreter._state === STATE_STOPPED) throw "Cannot stop a stopped/crashed program"
         interpreter._state = STATE_STOPPED
         interpreter.currentInstruction = null
     },
-    pause() {
+    pause: () => {
         if (interpreter._state === STATE_CRASHED || interpreter._state === STATE_STOPPED) throw "Cannot pause a stopped/crashed program"
         interpreter._state = STATE_PAUSED
         if (typeof ui_onProgramPaused !== "undefined") ui_onProgramPaused()

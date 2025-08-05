@@ -440,7 +440,7 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
         maxW = 0
     } else {
         maxW = maxX - minX
-        contents.forEach((b) => b.x(b.x() - minX))
+        contents.forEach(b => b.x(b.x() - minX))
     }
     group.flogo_width = maxW
     group.flogo_height = y
@@ -457,7 +457,7 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        a.on("click tap", (e) => _dispatchInsert(this, 0, e, a))
+        a.on("click tap", e => _dispatchInsert(this, 0, e, a))
         _makeArrowHighlightable(a)
         group.add(a)
     }
@@ -476,7 +476,7 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        a.on("click tap", (e) => _dispatchInsert(this, i + 1, e, a))
+        a.on("click tap", e => _dispatchInsert(this, i + 1, e, a))
         _makeArrowHighlightable(a)
         group.add(a)
     }
@@ -486,7 +486,7 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
         this.drawable = group
         return group
     } else {
-        const makeRound = (string) => {
+        const makeRound = string => {
             const text = new Konva.Text({
                 x: 0,
                 y: 0,
@@ -655,7 +655,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        tArrowIn.on("click tap", (e) => _dispatchInsert(this.trueBranch, 0, e, tArrowIn))
+        tArrowIn.on("click tap", e => _dispatchInsert(this.trueBranch, 0, e, tArrowIn))
         _makeArrowHighlightable(tArrowIn)
         group.add(tArrowIn)
         const tArrowOut = new Konva.Arrow({
@@ -669,7 +669,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        tArrowOut.on("click tap", (e) => _dispatchInsert(this.trueBranch, this.trueBranch.body.length, e, tArrowOut))
+        tArrowOut.on("click tap", e => _dispatchInsert(this.trueBranch, this.trueBranch.body.length, e, tArrowOut))
         _makeArrowHighlightable(tArrowOut)
         group.add(tArrowOut)
     } else {
@@ -684,7 +684,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        tArrowLoop.on("click tap", (e) => _dispatchInsert(this.trueBranch, 0, e, tArrowLoop))
+        tArrowLoop.on("click tap", e => _dispatchInsert(this.trueBranch, 0, e, tArrowLoop))
         _makeArrowHighlightable(tArrowLoop)
         group.add(tArrowLoop)
     }
@@ -700,7 +700,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        fArrowIn.on("click tap", (e) => _dispatchInsert(this.falseBranch, 0, e, fArrowIn))
+        fArrowIn.on("click tap", e => _dispatchInsert(this.falseBranch, 0, e, fArrowIn))
         _makeArrowHighlightable(fArrowIn)
         group.add(fArrowIn)
         const fArrowOut = new Konva.Arrow({
@@ -714,7 +714,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        fArrowOut.on("click tap", (e) => _dispatchInsert(this.falseBranch, this.falseBranch.body.length, e, fArrowOut))
+        fArrowOut.on("click tap", e => _dispatchInsert(this.falseBranch, this.falseBranch.body.length, e, fArrowOut))
         _makeArrowHighlightable(fArrowOut)
         group.add(fArrowOut)
     } else {
@@ -738,7 +738,7 @@ If.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        fArrowLoop.on("click tap", (e) => _dispatchInsert(this.falseBranch, 0, e, fArrowLoop))
+        fArrowLoop.on("click tap", e => _dispatchInsert(this.falseBranch, 0, e, fArrowLoop))
         _makeArrowHighlightable(fArrowLoop)
         group.add(fArrowLoop)
     }
@@ -848,7 +848,7 @@ DoWhile.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowIn.on("click tap", (e) => _dispatchInsert(this.body, 0, e, arrowIn))
+        arrowIn.on("click tap", e => _dispatchInsert(this.body, 0, e, arrowIn))
         _makeArrowHighlightable(arrowIn)
         group.add(arrowIn)
         const arrowToCond = new Konva.Arrow({
@@ -862,7 +862,7 @@ DoWhile.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowToCond.on("click tap", (e) => _dispatchInsert(this.body, this.body.body.length, e, arrowToCond))
+        arrowToCond.on("click tap", e => _dispatchInsert(this.body, this.body.body.length, e, arrowToCond))
         _makeArrowHighlightable(arrowToCond)
         group.add(arrowToCond)
     } else {
@@ -887,7 +887,7 @@ DoWhile.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        loopArrow.on("click tap", (e) => _dispatchInsert(this.body, 0, e, loopArrow))
+        loopArrow.on("click tap", e => _dispatchInsert(this.body, 0, e, loopArrow))
         _makeArrowHighlightable(loopArrow)
         group.add(loopArrow)
     }
@@ -1022,7 +1022,7 @@ While.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowIn.on("click tap", (e) => _dispatchInsert(this.body, 0, e, arrowIn))
+        arrowIn.on("click tap", e => _dispatchInsert(this.body, 0, e, arrowIn))
         _makeArrowHighlightable(arrowIn)
         group.add(arrowIn)
         const arrowToTop = new Konva.Arrow({
@@ -1045,7 +1045,7 @@ While.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowToTop.on("click tap", (e) => _dispatchInsert(this.body, this.body.body.length, e, arrowToTop))
+        arrowToTop.on("click tap", e => _dispatchInsert(this.body, this.body.body.length, e, arrowToTop))
         _makeArrowHighlightable(arrowToTop)
         group.add(arrowToTop)
     } else {
@@ -1071,7 +1071,7 @@ While.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        loopArrow.on("click tap", (e) => _dispatchInsert(this.body, 0, e, loopArrow))
+        loopArrow.on("click tap", e => _dispatchInsert(this.body, 0, e, loopArrow))
         _makeArrowHighlightable(loopArrow)
         group.add(loopArrow)
     }
@@ -1176,7 +1176,6 @@ For.prototype.createDrawable = function() {
     group.add(condition)
     condition.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //condition.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.add(b)
@@ -1200,7 +1199,7 @@ For.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowIn.on("click tap", (e) => _dispatchInsert(this.body, 0, e, arrowIn))
+        arrowIn.on("click tap", e => _dispatchInsert(this.body, 0, e, arrowIn))
         _makeArrowHighlightable(arrowIn)
         group.add(arrowIn)
         const arrowToTop = new Konva.Arrow({
@@ -1223,7 +1222,7 @@ For.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        arrowToTop.on("click tap", (e) => _dispatchInsert(this.body, this.body.body.length, e, arrowToTop))
+        arrowToTop.on("click tap", e => _dispatchInsert(this.body, this.body.body.length, e, arrowToTop))
         _makeArrowHighlightable(arrowToTop)
         group.add(arrowToTop)
     } else {
@@ -1249,7 +1248,7 @@ For.prototype.createDrawable = function() {
             strokeWidth: LINE_THICKNESS,
             hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
         })
-        loopArrow.on("click tap", (e) => _dispatchInsert(this.body, 0, e, loopArrow))
+        loopArrow.on("click tap", e => _dispatchInsert(this.body, 0, e, loopArrow))
         _makeArrowHighlightable(loopArrow)
         group.add(loopArrow)
     }
@@ -1827,7 +1826,7 @@ function initFlowchart(id) {
         }
     }
     boundsFun()
-    stage.on("wheel", (e) => {
+    stage.on("wheel", e => {
         const ctrlKey = isMac ? (e.evt.ctrlKey || e.evt.metaKey) : e.evt.ctrlKey
         if (ctrlKey) {
             if (!_allowZoomOnFlowchart) return
@@ -1852,12 +1851,12 @@ function initFlowchart(id) {
             })
         }
     })
-    stage.on("click", (e) => {
+    stage.on("click", e => {
         if (e.target === stage) {
             cancelSelection()
         }
     })
-    stage.on("contextmenu", (e) => {
+    stage.on("contextmenu", e => {
         e.evt.preventDefault()
     })
     //pinch zoom (adapted from konva documentation)
@@ -1872,7 +1871,7 @@ function initFlowchart(id) {
     let lastCenter = null
     let lastDist = 0
     let dragStopped = false
-    stage.on("touchmove", (e) => {
+    stage.on("touchmove", e => {
         e.evt.preventDefault()
         if (e.evt.touches.length !== 2) return
         if (_longPressTimeout !== null) {
@@ -2028,7 +2027,7 @@ function initFlowchart(id) {
     }
     let yDragOff = 0,
         xDragOff = 0
-    vbar.on("dragmove", (e) => {
+    vbar.on("dragmove", e => {
         const y = _extractCoordFromEvent(e.evt, "clientY", 0) - yDragOff - blockLayer.getCanvas()._canvas.getBoundingClientRect().top - FLOWCHART_OCCLUDED_ON_TOP
         const yTop = SCROLLBAR_PADDING + SCROLLBAR_THICKNESS,
             yBottom = stage.height() - (SCROLLBAR_PADDING + SCROLLBAR_THICKNESS) - vbar.height() * stage.scaleY()
@@ -2038,10 +2037,10 @@ function initFlowchart(id) {
         yPos *= h
         stage.y(-yPos + MINVIS + FLOWCHART_OCCLUDED_ON_TOP)
     })
-    vbar.on("dragstart", (e) => {
+    vbar.on("dragstart", e => {
         yDragOff = _extractCoordFromEvent(e.evt, "clientY", 0) - (vbar.y() * stage.scaleY() + stage.y()) - blockLayer.getCanvas()._canvas.getBoundingClientRect().top
     })
-    hbar.on("dragmove", (e) => {
+    hbar.on("dragmove", e => {
         const x = _extractCoordFromEvent(e.evt, "clientX", 0) - xDragOff - blockLayer.getCanvas()._canvas.getBoundingClientRect().left
         const xLeft = SCROLLBAR_PADDING + SCROLLBAR_THICKNESS,
             xRight = stage.width() - (SCROLLBAR_PADDING + SCROLLBAR_THICKNESS) - hbar.width() * stage.scaleX()
@@ -2051,10 +2050,10 @@ function initFlowchart(id) {
         xPos *= w
         stage.x(-xPos + MINVIS * 4)
     })
-    hbar.on("dragstart", (e) => {
+    hbar.on("dragstart", e => {
         xDragOff = _extractCoordFromEvent(e.evt, "clientX", 0) - (hbar.x() * stage.scaleX() + stage.x()) - blockLayer.getCanvas()._canvas.getBoundingClientRect().left
     })
-    stage.on("dragstart dragmove dragend", (e) => {
+    stage.on("dragstart dragmove dragend", e => {
         if (e.target === vbar || e.target === hbar) {
             e.evt.preventDefault()
         }
@@ -2273,13 +2272,13 @@ function downloadSVG(name, background = true) {
             embeddableFontURL = embeddableFontURL.slice(1, embeddableFontURL.length - 1)
         }
         _fontToBase64(embeddableFontURL)
-            .then((data) => {
+            .then(data => {
                 const svgStyle = `<style>@font-face{font-family:${FLOWCHART_FONT};src:url('${data}') format('woff2');}</style>`
                 const pos = out.indexOf(">") + 1
                 out = out.slice(0, pos) + svgStyle + out.slice(pos)
                 doDownload()
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log("Not embedding font in SVG: " + err)
                 doDownload()
             })
