@@ -1932,10 +1932,25 @@ function initFlowchart(id) {
             _longPressTimeout = null
         }
     })
-    let prevHighlightInstr = null
+    let prevHighlightInstr = null,
+        prevIntState = STATE_STOPPED
     const highlightFun = () => {
         requestAnimationFrame(highlightFun)
-        const i = interpreter.currentInstruction
+        const i = interpreter.currentInstruction,
+            intState = interpreter.getState()
+        if (intState === STATE_RUNNING && (prevIntState === STATE_STOPPED || prevIntState === STATE_CRASHED)) {
+            //when the program is started, make sure that all arrows are reset their original color, in case the user has the mouse over an arrow and pressed the run button with the keyboard
+            const resetArrows_rec = i => {
+                if (typeof i.children !== "undefined") {
+                    i.children.forEach(i => resetArrows_rec(i))
+                } else {
+                    if (i.constructor.prototype.className === "Arrow") {
+                        i.stroke(LINE_COLOR)
+                    }
+                }
+            }
+            resetArrows_rec(blockLayer)
+        }
         if (prevHighlightInstr !== i) {
             if (prevHighlightInstr !== null && prevHighlightInstr.drawable.flogo_highlightable !== null) {
                 prevHighlightInstr.drawable.flogo_highlightable.fill(prevHighlightInstr.drawable.flogo_highlightable.flogo_originalFill)
@@ -1945,7 +1960,7 @@ function initFlowchart(id) {
                 })
             }
             if (i !== null && i.drawable.flogo_highlightable !== null) {
-                if (interpreter.getState() === STATE_CRASHED) {
+                if (intState === STATE_CRASHED) {
                     if (ERROR_COLOR1 !== "keep") i.drawable.flogo_highlightable.fill(ERROR_COLOR1)
                     if (ERROR_COLOR2 !== "keep") i.drawable.flogo_highlightable.stroke(ERROR_COLOR2)
                     if (ERROR_COLOR3 !== "keep") i.drawable.flogo_highlightable.flogo_text.forEach(e => {
@@ -1962,6 +1977,7 @@ function initFlowchart(id) {
             ensureInstructionVisibleInFlowchart(i)
         }
         prevHighlightInstr = i
+        prevIntState = intState
     }
     highlightFun()
     let oldScrollbarState = null
