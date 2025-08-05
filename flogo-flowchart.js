@@ -176,7 +176,6 @@ Assign.prototype.createDrawable = function() {
     group.add(text)
     group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
@@ -226,7 +225,6 @@ Input.prototype.createDrawable = function() {
     group.add(text)
     group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
@@ -284,7 +282,6 @@ Output.prototype.createDrawable = function() {
     group.add(text)
     group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
@@ -347,7 +344,6 @@ Comment.prototype.createDrawable = function() {
     group.add(text)
     group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
@@ -396,7 +392,6 @@ Breakpoint.prototype.createDrawable = function() {
     group.add(s2)
     group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
@@ -411,15 +406,14 @@ Breakpoint.prototype.createDrawable = function() {
 InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, skipLastArrow = false) {
     const contents = []
     let maxW = 0
-    let idx = 0 //TODO: replace with for
-    this.body.forEach((i) => {
-        let b = i.createDrawable()
+    for (let idx = 0; idx < this.body.length; idx++) {
+        const i = this.body[idx]
+        const b = i.createDrawable()
         b.flogo_parentInstruction = this
         b.flogo_parentPos = idx
-        idx++
         if (b.flogo_width > maxW) maxW = b.flogo_width
         contents.push(b)
-    })
+    }
     const group = new Konva.Group({
         x: 0,
         y: 0,
@@ -433,8 +427,10 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
     for (let i = 0; i < contents.length; i++) {
         const b = contents[i]
         group.add(b)
-        b.x(maxW / 2 - b.flogo_connX)
-        b.y(y)
+        b.position({
+            x: maxW / 2 - b.flogo_connX,
+            y: y
+        })
         if (b.x() < minX) minX = b.x()
         if (b.flogo_width + b.x() > maxX) maxX = b.flogo_width + b.x()
         y += b.flogo_height + SPACE_BETWEEN_INSTRUCTIONS
@@ -602,8 +598,10 @@ If.prototype.createDrawable = function() {
     rect.flogo_originalStroke = rect.stroke()
     rect.flogo_text = [text]
     rect.flogo_originalTextColor = text.fill()
-    text.x(rw / 2 - tw / 2)
-    text.y(rh / 2 - th / 2)
+    text.position({
+        x: rw / 2 - tw / 2,
+        y: rh / 2 - th / 2
+    })
     const condition = new Konva.Group({
         x: 0,
         y: 0,
@@ -624,13 +622,14 @@ If.prototype.createDrawable = function() {
     group.add(condition)
     condition.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //condition.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.add(f)
     group.add(t)
-    f.x(0)
-    f.y(condition.flogo_height + PADDING_BASE)
+    f.position({
+        x: 0,
+        y: condition.flogo_height + PADDING_BASE
+    })
     if (f.flogo_width - f.flogo_connX + PADDING_BASE - condition.flogo_width / 2 >= minFPad) {
         condition.x(f.flogo_width - condition.flogo_width / 2 + PADDING_BASE)
     } else {
@@ -822,7 +821,6 @@ DoWhile.prototype.createDrawable = function() {
     group.add(condition)
     condition.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //condition.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.add(b)
@@ -1001,7 +999,6 @@ While.prototype.createDrawable = function() {
     group.add(condition)
     condition.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //condition.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     condition.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.add(b)
@@ -1354,7 +1351,6 @@ Move.prototype.createDrawable = function() {
     group.add(text)
     group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
@@ -1370,14 +1366,6 @@ Turn.prototype.createDrawable = function() {
     let string = "Turn"
     const complete = this.expression !== null && this.directories !== null
     if (complete) {
-        /*switch(this.direction){
-            case "cw":{
-                string+=" right";
-            };break
-            case "ccw":{
-                string+=" left";
-            };break
-        }*/
         string += " " + this.expression
     }
     if (BLOCK_TEXT_WRAP_MODE === "new") {
@@ -1399,22 +1387,23 @@ Turn.prototype.createDrawable = function() {
     }
     const tw = text.width(),
         th = text.height()
+    const padding_1_5 = PADDING_BASE * 1.5
     let points
     if (complete) {
         switch (this.direction) {
             case "cw": {
-                points = [0, PADDING_BASE, tw, PADDING_BASE, tw, 0, tw + PADDING_BASE * 1.5, PADDING_BASE / 2 + th / 2, tw, th + PADDING_BASE, tw, th, 0, th]
+                points = [0, PADDING_BASE, tw, PADDING_BASE, tw, 0, tw + padding_1_5, (PADDING_BASE + th) / 2, tw, th + PADDING_BASE, tw, th, 0, th]
             };
             break
             case "ccw": {
-                points = [PADDING_BASE * 1.5, PADDING_BASE, tw + PADDING_BASE * 1.5, PADDING_BASE, tw + PADDING_BASE * 1.5, th, PADDING_BASE * 1.5, th, PADDING_BASE * 1.5, th + PADDING_BASE, 0, PADDING_BASE / 2 + th / 2, PADDING_BASE * 1.5, 0]
-                text.x(PADDING_BASE * 1.5)
+                points = [padding_1_5, PADDING_BASE, tw + padding_1_5, PADDING_BASE, tw + padding_1_5, th, padding_1_5, th, padding_1_5, th + PADDING_BASE, 0, (PADDING_BASE + th) / 2, padding_1_5, 0]
+                text.x(padding_1_5)
             };
             break
         }
     } else {
-        points = [PADDING_BASE * 1.5, PADDING_BASE, tw + PADDING_BASE * 1.5, PADDING_BASE, tw + PADDING_BASE * 1.5, 0, tw + 2 * PADDING_BASE * 1.5, PADDING_BASE / 2 + th / 2, tw + PADDING_BASE * 1.5, th + PADDING_BASE, tw + PADDING_BASE * 1.5, th, PADDING_BASE * 1.5, th, PADDING_BASE * 1.5, th + PADDING_BASE, 0, PADDING_BASE / 2 + th / 2, PADDING_BASE * 1.5, 0]
-        text.x(PADDING_BASE * 1.5)
+        points = [padding_1_5, PADDING_BASE, tw + padding_1_5, PADDING_BASE, tw + padding_1_5, 0, tw + 2 * padding_1_5, (PADDING_BASE + th) / 2, tw + padding_1_5, th + PADDING_BASE, tw + padding_1_5, th, padding_1_5, th, padding_1_5, th + PADDING_BASE, 0, (PADDING_BASE + th) / 2, padding_1_5, 0]
+        text.x(padding_1_5)
     }
     const rect = new Konva.Line({
         x: 0,
@@ -1437,7 +1426,6 @@ Turn.prototype.createDrawable = function() {
     group.add(text)
     group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
@@ -1489,7 +1477,6 @@ Home.prototype.createDrawable = function() {
     group.add(text)
     group.on("dblclick", e => _block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("click", e => _block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
-    //group.on("tap", e => _block_tap(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchstart", e => _block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchend", e => _block_touchend(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.flogo_width = rect.width()
@@ -1786,8 +1773,10 @@ function initFlowchart(id) {
         }
         const b = stage.container().getBoundingClientRect()
         if (bounds === null || b.width !== bounds.width || b.height !== bounds.height) {
-            stage.width(b.width)
-            stage.height(b.height)
+            stage.size({
+                width: b.width,
+                height: b.height
+            })
             if (bounds !== null) {
                 let dx = b.width - bounds.width
                 stage.x(stage.x() + dx / 2)
@@ -1857,8 +1846,10 @@ function initFlowchart(id) {
                 y: ptr.y - mouseTo.y * zoom,
             })
         } else {
-            stage.x(stage.x() - e.evt.deltaX / 2)
-            stage.y(stage.y() - e.evt.deltaY / 2)
+            stage.position({
+                x: stage.x() - e.evt.deltaX / 2,
+                y: stage.y() - e.evt.deltaY / 2
+            })
         }
     })
     stage.on("click", (e) => {
@@ -1918,7 +1909,7 @@ function initFlowchart(id) {
             }
             const pointTo = {
                 x: (newCenter.x - stage.x()) / stage.scaleX(),
-                y: (newCenter.y - stage.y()) / stage.scaleX(),
+                y: (newCenter.y - stage.y()) / stage.scaleY(),
             }
             let scale = stage.scaleX() * (dist / lastDist)
             setFlowchartZoom(scale)
@@ -1978,10 +1969,8 @@ function initFlowchart(id) {
         requestAnimationFrame(updateScrollbars)
         const newScrollbarState = JSON.stringify([
             //TODO: there's probably a better way to detect changes in these
-            stage.x(),
-            stage.y(),
-            stage.width(),
-            stage.height(),
+            stage.position(),
+            stage.size(),
             stage.flogo_realWidth,
             stage.flogo_realHeight,
             window.devicePixelRatio,
@@ -2217,8 +2206,7 @@ async function _fontToBase64(url) {
 }
 
 function downloadSVG(name, background = true) {
-    const oldX = stage.x(),
-        oldY = stage.y(),
+    const oldPos = stage.position(),
         oldZ = stage.scale()
     const oldContext = blockLayer.canvas.context._context
     const tempCtx = (blockLayer.canvas.context._context = new Context({
@@ -2226,8 +2214,10 @@ function downloadSVG(name, background = true) {
         height: stage.flogo_realHeight + 2 * PADDING_BASE,
         ctx: oldContext,
     }))
-    stage.x(PADDING_BASE)
-    stage.y(PADDING_BASE)
+    stage.position({
+        x: PADDING_BASE,
+        y: PADDING_BASE
+    })
     stage.scale({
         x: 1,
         y: 1,
@@ -2241,8 +2231,7 @@ function downloadSVG(name, background = true) {
         out = out.replace(/<rect[a-zA-Z0-9\s="#.()]*\/>/, "")
     }
     blockLayer.canvas.context._context = oldContext
-    stage.x(oldX)
-    stage.y(oldY)
+    stage.position(oldPos)
     stage.scale(oldZ)
     stage.draw()
     if (typeof name === "undefined") {
@@ -2285,8 +2274,7 @@ function downloadSVG(name, background = true) {
 }
 
 function downloadPNG(name, background = true, superSampling = 2) {
-    const oldX = stage.x(),
-        oldY = stage.y(),
+    const oldPos = stage.position(),
         oldZ = stage.scale()
     const oldContext = blockLayer.canvas.context._context
     const tempCanvas = document.createElement("canvas")
@@ -2298,8 +2286,10 @@ function downloadPNG(name, background = true, superSampling = 2) {
     tempCanvas.width = (stage.flogo_realWidth + 2 * MINVIS) * superSampling
     tempCanvas.height = (stage.flogo_realHeight + 2 * MINVIS) * superSampling
     blockLayer.canvas.context._context = tempCanvas.getContext("2d")
-    stage.x(MINVIS * superSampling)
-    stage.y(MINVIS * superSampling)
+    stage.position({
+        x: MINVIS * superSampling,
+        y: MINVIS * superSampling
+    })
     stage.scale({
         x: superSampling,
         y: superSampling,
@@ -2325,8 +2315,7 @@ function downloadPNG(name, background = true, superSampling = 2) {
         rect.destroy()
     }
     blockLayer.canvas.context._context = oldContext
-    stage.x(oldX)
-    stage.y(oldY)
+    stage.position(oldPos)
     stage.scale(oldZ)
     stage.draw()
     if (typeof name === "undefined") {
