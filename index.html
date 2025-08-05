@@ -562,7 +562,6 @@
     </div>
     <div id="toasts"></div>
     <div id="man" class="popup noAutoClose">
-        <!--TODO: add some examples-->
         <div id="man_contents">
             <img src="images/logo_large.webp" id="man_logo">
             <h1>Documentation</h1>
@@ -585,16 +584,15 @@
             <h2>Variables and types</h2>
             <h3>Variables</h3>
             <p>
-                Variables can be used to store data needed for your program to work.<br>
-                Each variable has a name, a type and optionally an initial value.
+                Variables can be used to store data that your program needs to work.<br>
+                Each variable has:
             </p>
-            <p>
-                Variable names can only contain letters and numbers and the underscore symbol "_". Valid names must start with a letter. Spaces, symbols and accented letters are not allowed. Also, variables can't have the same name as one of the <a onclick="man_scrollTo('constants')">built-in constants</a>.
-            </p>
-            <p>
-                Variable names are case-sensitive.
-            </p>
-            <h3>Data types</h3>
+            <ul>
+                <li><b>Name</b>: a short name that lets you use the variable in expressions. Names can only contain letters and numbers and the underscore symbol "_" and must start with a letter. Spaces, symbols and accented letters are not allowed. Also, variables can't have the same name as one of the <a onclick="man_scrollTo('constants')">built-in constants</a>. Names are case-sensitive, meaning that the variable <code>n</code> is not the same as the variable <code>N</code>.</li>
+                <li><b>Type</b>: what kind of value can be stored in the variable: Integer, Real, String or Boolean</li>
+                <li><b>Initial value</b>: if you want, you can give a value to the variable automatically when the program starts. This is useful for things like counters that have to start at 0, or for constants such as a speed limit</li>
+            </ul>
+            <h3>Types</h3>
             <h4>Integer</h4>
             <p>
                 Can be used to store integer numbers, positive or negative.<br>
@@ -608,11 +606,12 @@
                 Can be used to store real numbers, positive or negative.
             </p>
             <p>
-                Real numbers don't have a valid range, but they lose accuracy the larger they become.
+                Real numbers don't have a valid range, but they lose accuracy as they become larger.<br>
+                It is generally a bad idea to store an integer number in a real variable.
             </p>
             <h4>String</h4>
             <p>
-                Can be used to store text.
+                Can be used to store text. There is no maximum length, but huge strings may slow down the program or crash the browser.
             </p>
             <h4>Boolean</h4>
             <p>
@@ -622,30 +621,34 @@
             <h2>Basic instructions</h2>
             <h4>Input</h4>
             <p>
-                Reads a value from the user and stores it in a variable
+                Reads a value from the user and stores it in a variable.
             </p>
             <h4>Output</h4>
             <p>
-                Evaluates an expression and shows the result to the user
+                Evaluates an expression and shows the result to the user.
             </p>
-            <p>
-                The text of several Output instructions can be concatenated by disabling the New Line option for all outputs except the last one.
-            </p>
+            <ul>
+                <li><b>Expression</b>: what you want to output. You can output text directly by putting it in "double quotes", you can output variables by typing their name, or you can do a mix of text and variables using the <code>+</code> symbol. Example: <code>"The total is "+total+"€"</code></li>
+                <li><b>New line</b>: by default, each output instruction creates a new bubble in the chat. If you turn this off, the next output will be added to the bubble created by this one</li>
+            </ul>
             <h4>Assign</h4>
             <p>
-                Evaluates an expression and stores the result in a variable
+                Evaluates an expression and stores the result in a variable.
             </p>
+            <ul>
+                <li><b>Variable</b>: the variable where you want to put the result of the expression</li>
+                <li><b>Expression</b>: the expression to evaluate. You can use numbers, variables, mathematical operators, functions, etc.</li>
+            </ul>
             <p>
-                Note: some automatic type casting can happen. For instance, if the expression returns an integer number and you're trying to store it in a real variable, or if the expressions returns a number and you're trying to store it in a string variable.<br>
-                Errors happen only if the types are incompatible, such as an expression evaluating as a string but you're trying to store the result in a real variable.
+                Be careful! Some automatic type conversions can happen if variables are not of the same type. For instance, if the expression gives a real value but your variable is an integer, it will lose the decimal digits; if the expression gives an integer number and your variable is a string, it will be converted to text. Your program only crashes if the types are completely incompatible, for instance if your expression gives a string but you're trying to store it in a real variable.
             </p>
             <h4>If</h4>
             <p>
-                Evaluates an expression executes the True or False branch depending on the result.<br>
-                In addition to mathematical operators and functions, the condition can also contain comparisons and logical operators.
+                Evaluates an expression and executes the True or False branch depending on the result.<br>
+                The expression can contain numbers, variables, mathematical operators, etc. but it can also contain comparison and logical operators. For instance, the expression <code>a&gt;=0&amp;&amp;a&lt;=10</code> tells you if the variable <code>a</code> is between <code>0</code> and <code>10</code>.
             </p>
             <p>
-                Note that the expression must evaluate to a boolean value, no automatic type casting is done.
+                It's important to remember that the expression must give a true/false value, any other type will crash your program.
             </p>
             <h4>Do-While</h4>
             <p>
@@ -653,7 +656,7 @@
                 The condition is checked at the end of each loop, so the contents of the loop will always be executed at least once; this makes it useful for things like input validation.
             </p>
             <p>
-                Note that like in the If instruction, the condition must evaluate to a boolean value, no automatic type casting is done.
+                Like in the If instruction, the condition must give a true/false value.
             </p>
             <h4>While</h4>
             <p>
@@ -661,7 +664,7 @@
                 The condition is checked at the beginning of each loop, so it's possible for the loop to not be executed at all if the condition is immediately false.
             </p>
             <p>
-                Note that like in the If instruction, the condition must evaluate to a boolean value, no automatic type casting is done.
+                Like in the If instruction, the condition must give a true/false value.
             </p>
             <h4>For</h4>
             <p>
@@ -672,20 +675,20 @@
                     <b>Variable</b>: name of the variable to be handled automatically by the loop
                 </li>
                 <li>
-                    <b>From</b>: an expression that's evaluated at the beginning of the loop to calculate the initial value for the variable
+                    <b>From</b>: the initial value for the variable. It can be a number or an expression
                 </li>
                 <li>
-                    <b>To</b>: an expression that's evaluated at the end of each loop to calculate the final value for the variable
+                    <b>To</b>: the final value for the variable. This tells the for loop when to stop. It can be a number or an expression
                 </li>
                 <li>
-                    <b>Direction</b>: the direction of the loop, either increasing or decreasing. If the loop is increasing, then To must be greater than From; if it's decreasing, To must be lower than From
+                    <b>Direction</b>: the direction of the loop, either increasing or decreasing. If the loop is increasing, then <b>To</b> must be greater than <b>From</b>; if it's decreasing, <b>To</b> must be lower than <b>From</b>
                 </li>
                 <li>
-                    <b>Step</b>: an expression that's evaluated at the end of each loop to calculate how much to increase/decrease the variable
+                    <b>Step</b>: how much to increase/decrease the variable at the end of each loop. It can be a number or an expression
                 </li>
             </ul>
             <p>
-                Note: the from-to range is inclusive.
+                Note: the from-to range is inclusive!
             </p>
             <h4>Comment</h4>
             <p>
@@ -701,8 +704,8 @@
                 Expressions can be used to write mathematical expressions, conditions and conditions.
             </p>
             <p>
-                Expressions can contain a mixture of variables, values, operators and functions.<br>
-                Variable names and numeric values can be written directly (e.g. <code>a+1</code>), strings must use quotes or double quotes (e.g. <code>'The price is: '+price</code>), functions use parenthesis and commas to delimit their parameters (e.g. <code>toFixed(price,2)</code>).
+                Expressions can contain a mix of variables, values, operators and functions.<br>
+                Variable names and numeric values can be written directly (for instance, <code>a+1</code>), strings must use quotes or double quotes (for instance, <code>'The price is: '+price</code>), functions use parenthesis and commas to delimit their parameters (for instance, <code>toFixed(price,2)</code>).
             </p>
             <p>
                 Expressions are evaluated in this order:
@@ -714,7 +717,7 @@
             </ul>
             </p>
             <p>
-                The following tables list all the operators included in Flogo in order of precedence. Round parenthesis can be used to alter the order of evaluation of the expression (e.g. <code>n/(a+1)</code>); parenthesis can also be nested.
+                The following tables list all the operators included in Flogo in order of precedence. Round parenthesis can be used to alter the order of evaluation of the expression (for instance, <code>n/(a+1)</code>); parenthesis can also be nested.
             </p>
             <a name="operators1"></a>
             <h3>Mathematical operators</h3>
@@ -758,6 +761,9 @@
             </table>
             <a name="operators2"></a>
             <h3>Comparison operators</h3>
+            <p>
+                Comparison operators can be used in conditions to compare a value to another. For instance, <code>a==0</code> is true if the variable <code>a</code> has a value of <code>0</code>.
+            </p>
             <table>
                 <thead>
                     <tr>
@@ -794,6 +800,9 @@
             </table>
             <a name="operators3"></a>
             <h3>Logical operators</h3>
+            <p>
+                Logical operators allow you to "chain together" multiple conditions. For instance, <code>a&lt;0||a&gt;10</code> is true if the variable <code>a</code> is not between <code>0</code> and <code>10</code>.
+            </p>
             <table>
                 <thead>
                     <tr>
@@ -818,6 +827,9 @@
             </table>
             <a name="functions"></a>
             <h3>Built-in functions</h3>
+            <p>
+                Flogo has a lot of buit-in functions that make writing expressions easier. For instance, <code>round(a)</code> will give you the value of the variable <code>a</code> rounded mathematically.
+            </p>
             <h4>Mathematics</h4>
             <table>
                 <thead>
