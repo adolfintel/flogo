@@ -58,10 +58,13 @@ function declareVariable(name, type, value = null) {
                     }
                     break
                     case "string": {
-                        if (typeof value === "string") {
+                        if (typeof value !== "string") {
+                            value = "" + value
+                        }
+                        if (value.length <= 1048576) {
                             target.value = value
                         } else {
-                            target.value = "" + value
+                            throw "String too long"
                         }
                     }
                     break
