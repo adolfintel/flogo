@@ -1,8 +1,49 @@
-[![Flogo logo](images/logo_large.webp)](https://flogo.fdossena.com)
+<p align="center">
+    <a href="https://flogo.fdossena.com" target="_blank">
+        <img alt="Flogo logo" width="500" src="images/logo_large.webp">
+    </a>
+</p>
 
 __Flogo__ is a free and open source programming language for beginners, designed for learning programming basics within a friendly environment using flow charts.
 
-[Try Flogo](https://flogo.fdossena.com)
+<p align="center">
+    <a href="#downloads">Try Flogo</a>
+</p>
+
+<hr>
+<p align="center">
+    <a href="#screenshots">Screenshots</a> &bull; <a href="#features">Features</a> &bull; <a href="#downloads">Downloads</a> &bull; <a href="#example-programs">Example programs</a> &bull; <a href="#donate">Donate</a> &bull; <a href="#contributing">Contributing</a> &bull; <a href="#license">License</a>
+</p>
+<hr>
+
+## Screenshots
+| Writing a program                    |
+|--------------------------------------|
+|![](.github/screenshot2.png)          |
+
+| Turtle Graphics                      |
+|--------------------------------------|
+|![](.github/screenshot1.png)          |
+
+| Adding an instruction                |
+|--------------------------------------|
+|![](.github/screenshot3.png)          |
+
+| Running a program                    |
+|--------------------------------------|
+|![](.github/screenshot4.png)          |
+
+| Mobile UI - Editing an instruction   |
+|--------------------------------------|
+|![](.github/screenshot5.png)          |
+
+| Mobile UI - Turtle Graphics          |
+|--------------------------------------|
+|![](.github/screenshot6.png)          |
+
+| Mobile UI - Debugging a crash        |
+|--------------------------------------|
+|![](.github/screenshot7.png)          |
 
 ## Features
 * Several types of variables: Integer, Real, String, Boolean; variables can also be declared with an initial value
@@ -23,14 +64,9 @@ __Flogo__ is a free and open source programming language for beginners, designed
 * Built-in documentation
 * Runs on all modern browsers, can be installed as a PWA and run completely offline
 
-## Screenshots
-![Screenshot](.github/screenshot2.png)
-![Screenshot](.github/screenshot1.png)
-![Screenshot](.github/screenshot3.png)
-![Screenshot](.github/screenshot4.png)
-![Mobile screenshot](.github/screenshot5.png)
-![Mobile screenshot](.github/screenshot6.png)
-![Mobile screenshot](.github/screenshot7.png)
+## Future features
+* Arrays (Planned for v1.3, in 2026)
+* Functions (Planned for v1.4, in 2026)
 
 ## Example programs
 __Basics__
@@ -62,25 +98,39 @@ __Turtle Graphics__
 * [Regular polygon](https://downloads.fdossena.com/geth.php?r=flogo-demo-18)
 * [Brick wall](https://downloads.fdossena.com/geth.php?r=flogo-demo-19)
 
-## Future features
-* Arrays (Planned for v1.3 series)
-* Functions (Planned for v1.4 series)
-
 ## Downloads
+These are the official download links for Flogo, always updated to the latest version.
+
+Don't forget to download some <a href="#example-programs">Example programs</a> to test it!
+
+#### <img src=".github/webapp.png" height="32"> Webapp
 [Run Flogo](https://flogo.fdossena.com), it runs directly in your browser and be installed as a PWA on any device.
 
-[Windows (x64)](https://downloads.fdossena.com/geth.php?r=flogo-win)  
+#### <img src=".github/windows.png" height="32"> Windows 10/11
+[Windows (x64)](https://downloads.fdossena.com/geth.php?r=flogo-win) 👈 This is probably the one you want  
 [Windows (ARM)](https://downloads.fdossena.com/geth.php?r=flogo-win-arm)  
 
-[Linux (AUR package)](https://aur.archlinux.org/packages/flogo)  
-[Linux (AppImage for all distros, x64)](https://downloads.fdossena.com/geth.php?r=flogo-linux-appimage)  
+#### <img src=".github/linux.png" height="32"> Linux
+[Linux (AppImage for all distros, x64)](https://downloads.fdossena.com/geth.php?r=flogo-linux-appimage) 👈 This is probably the one you want  
 [Linux (AppImage for all distros, ARM)](https://downloads.fdossena.com/geth.php?r=flogo-linux-arm-appimage)  
+[Linux (AUR package for Arch-based distros)](https://aur.archlinux.org/packages/flogo)  
 
-[macOS (dmg for Apple Silicon)](https://downloads.fdossena.com/geth.php?r=flogo-mac-arm)  
+#### <img src=".github/mac.png" height="32"> MacOS
+[macOS (dmg for Apple Silicon)](https://downloads.fdossena.com/geth.php?r=flogo-mac-arm) 👈 This is probably the one you want  
 [macOS (dmg for Intel)](https://downloads.fdossena.com/geth.php?r=flogo-mac-intel)  
 
-## How to build
+## Donate
+If you enjoy Flogo, you can support it by leaving a donation using one of the following methods.
+
+<a href="https://paypal.me/sineisochronic" target="_blank"><img src=".github/paypal.png" alt="Donate with PayPal" height="48"></a>
+<a href="https://liberapay.com/fdossena/donate" target="_blank"><img src="https://liberapay.com/assets/widgets/donate.svg" alt="Donate with Liberapay" height="48"></a>
+
+If you want to donate using other methods, [get in touch](mailto:info@fdossena.com) and we can discuss it.
+
+## Contributing
 If you're a developer, see `BUILDING.md` for instructions on how to build the app.
+
+Pull requests are welcome.
 
 ## License
 Copyright (C) 2025 Federico Dossena
@@ -97,5 +147,5 @@ __Credits:__
 * [SVGCanvas](https://zenozeng.github.io/svgcanvas/): SVG export library for JS canvas (MIT License)
 * [Material Design Icons](https://marella.github.io/material-design-icons): Icons used throughout the application (Apache-2.0 License)
 * Fonts distributed under the [SIL Open Font License](https://openfontlicense.org/): Noto Sans, Roboto Mono, Monoton, Caveat, Cinzel
-* Some CC0 graphics from [SVG Repo](https://www.svgrepo.com/)
-* The Electron-based versions of the app contain a modified icon from [KDE Breeze Icons](https://github.com/KDE/breeze-icons) (LGPL 2.1)
+* Some themes use graphics from [SVG Repo](https://www.svgrepo.com/) (CC0)
+* The Flogo program file icon is modified from [KDE Breeze Icons](https://github.com/KDE/breeze-icons) (LGPL 2.1)
