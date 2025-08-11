@@ -79,4 +79,4 @@ yarn run build-mac-architecture-dmg
 
 The output files will be placed in the `out` folder.
 
-Note that a **paid** Apple developer key is required to sign and distribute the app.
+Note that a **paid** Apple developer key is required to sign, notarize and distribute the app. Once you have the account, see [here](https://www.npmjs.com/package/electron-builder-notarize) for how to configure it. Without a developer account, you can build and test the app, but other users won't be able to install it without disabling GateKeeper.
