@@ -364,6 +364,10 @@ input[type="checkbox"] {
     height: 1rem;
 }
 
+input[type="checkbox"]+label {
+    vertical-align: top;
+}
+
 select {
     background: var(--ui-color-form-background);
     color: var(--ui-color-form-text);
