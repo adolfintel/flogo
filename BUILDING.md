@@ -80,3 +80,10 @@ yarn run build-mac-architecture-dmg
 The output files will be placed in the `out` folder.
 
 Note that a **paid** Apple developer key is required to sign, notarize and distribute the app. Once you have the account, see [here](https://www.npmjs.com/package/electron-builder-notarize) for how to configure it. Without a developer account, you can build and test the app, but other users won't be able to install it without disabling GateKeeper.
+
+To build, sign, and notarize the app, here's what you need to do:
+1. Generate a specific app password by going to https://account.apple.com/account/manage, clicking on Sign-In and Security section and then select App-Specific Passwords
+2. Run this command:
+```bash
+export APPLE_ID="yourappleuser@email.com" APP_ID="TheAppNameYouWroteWhenGeneratingAppPassword" APPLE_APP_SPECIFIC_PASSWORD="the-generated-app-password" APPLE_ID_PASSWORD="the-generated-app-password" APPLE_TEAM_ID="YOUR10CHARDEVELOPERTEAMID" && yarn run build-mac-architecture-dmg
+```
