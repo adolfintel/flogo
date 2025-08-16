@@ -624,7 +624,7 @@ function ui_input(variable, type, callback) {
         d.className = "message input"
         d.innerText = text
         document.getElementById("log").prepend(d)
-        console_removeExcessMessages()
+        if (LOG_MAX_MESSAGES > 0) console_removeExcessMessages()
         callback(text)
     }
 }
@@ -651,7 +651,7 @@ function ui_output(text, newLine) {
         d.flogo_appendable = !newLine
         log.prepend(d)
     }
-    console_removeExcessMessages()
+    if (LOG_MAX_MESSAGES > 0) console_removeExcessMessages()
     if (!document.getElementById("consoleArea").classList.contains("expanded")) {
         toggleConsoleArea()
     }
@@ -675,7 +675,7 @@ function resetConsole() {
     document.getElementById("input_send").disabled = true
 }
 
-const LOG_MAX_MESSAGES = 1000
+let LOG_MAX_MESSAGES = 1000
 
 function console_removeExcessMessages() {
     const log = document.getElementById("log")
@@ -1403,6 +1403,7 @@ function openSettings() {
     document.getElementById("settings_fps").checked = storage.showFps === "true"
     document.getElementById("settings_allowZoomOnFlowchart").checked = _allowZoomOnFlowchart
     document.getElementById("settings_altTurboTSlice").checked = _altTurboTSlice
+    document.getElementById("settings_unlimitedConsole").checked = LOG_MAX_MESSAGES === 0
     document.getElementById("settings_unlimitedTurtle").checked = TURTLE_MAXPOINTS === 0
     const badge = document.getElementById("versionTypeBadge")
     if (isElectron()) {
@@ -1465,6 +1466,16 @@ function settings_altTurboTSlice_changed() {
     const val = document.getElementById("settings_altTurboTSlice").checked
     storage.altTurboTSlice = val
     _altTurboTSlice = val
+}
+
+function settings_unlimitedConsole_changed() {
+    const val = document.getElementById("settings_unlimitedConsole").checked
+    storage.unlimitedConsole = val
+    if (val) {
+        LOG_MAX_MESSAGES = 0
+    } else {
+        LOG_MAX_MESSAGES = 1000
+    }
 }
 
 function settings_unlimitedTurtle_changed() {
@@ -2139,6 +2150,9 @@ function initApp() {
     }
     if (typeof storage.altTurboTSlice !== "undefined") {
         _altTurboTSlice = storage.altTurboTSlice === "true"
+    }
+    if (typeof storage.unlimitedConsole !== "undefined") {
+        if (storage.unlimitedConsole === "true") LOG_MAX_MESSAGES = 0
     }
     if (typeof storage.unlimitedTurtle !== "undefined") {
         if (storage.unlimitedTurtle === "true") TURTLE_MAXPOINTS = 0
