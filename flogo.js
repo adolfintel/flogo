@@ -10,7 +10,7 @@
  * Strings are just JS strings
  * Booleans can only contain true/false
  * All variables can be set to null to indicate that they have not been initialized
- * Arrays are not implemented (for now)
+ * One-dimensional arrays of all types
  *
  * All variables are stored into a dictionary called variables; each variable is actually a Proxy to a hidden internal object that contains its type, value and initial value; the proxy is used to enforce typing. Code that needs to access a Flogo variable can just write variables["name"].value, a type attribute is also available. The variables dictionary can be read directly but should not be modified directly, use the provided functions instead.
  *
@@ -104,6 +104,191 @@ function declareVariable(name, type, value = null) {
     variables[name] = proxy
 }
 
+function declareVariable(name, type, value = null) {
+    if (!_isValidVariableName(name)) {
+        throw "Invalid name"
+    }
+    if (typeof variables[name] !== "undefined") throw "Variable already exists"
+    if (type !== "integer" && type !== "real" && type !== "string" && type !== "boolean") throw "Invalid type"
+    const variableGetterAndSetter = {
+        set(target, prop, value) {
+            if (prop !== "value") throw "Variables can only change value"
+            if (value !== null) {
+                switch (target["type"]) {
+                    case "integer": {
+                        if (typeof value !== "number") throw "Not a number"
+                        if (isNaN(value)) throw "Not a valid number"
+                        if (value < Number.MIN_SAFE_INTEGER || value > Number.MAX_SAFE_INTEGER) throw "Value too big"
+                        if (Number.isInteger(value)) {
+                            target.value = value
+                        } else {
+                            target.value = Math.trunc(value)
+                        }
+                    }
+                    break
+                    case "real": {
+                        if (typeof value !== "number") throw "Not a number"
+                        if (isNaN(value)) throw "Not a valid number"
+                        target.value = value
+                    }
+                    break
+                    case "string": {
+                        if (typeof value !== "string") {
+                            value = "" + value
+                        }
+                        if (value.length <= 1048576) {
+                            target.value = value
+                        } else {
+                            throw "String too long"
+                        }
+                    }
+                    break
+                    case "boolean": {
+                        if (typeof value !== "boolean") throw "Not a boolean"
+                        target.value = value
+                    }
+                }
+            } else {
+                target.value = null
+            }
+            target.modified = true
+        },
+        get(target, prop, receiver) {
+            return target[prop]
+        },
+    }
+    const v = {
+        type: type,
+        value: null,
+        modified: false
+    }
+    const proxy = new Proxy(v, variableGetterAndSetter)
+    proxy.value = value
+    v.initialValue = v.value
+    v.modified = false
+    v.toSimpleObject = () => {
+        return {
+            type: v.type,
+            value: v.initialValue
+        }
+    }
+    v.reset = () => {
+        v.value = v.initialValue
+        v.modified = false
+    }
+    variables[name] = proxy
+}
+
+function declareArray(name, type, size) {
+    if (!_isValidVariableName(name)) {
+        throw "Invalid name"
+    }
+    if (typeof variables[name] !== "undefined") throw "Variable already exists"
+    if (type !== "integer" && type !== "real" && type !== "string" && type !== "boolean") throw "Invalid type"
+    const v = {
+        type: type,
+        value: null,
+        size: 0,
+        modified: false
+    }
+    const variableGetterAndSetter = {
+        set(target, prop, value) {
+            if (prop !== "size") throw "Arrays cannot be changed this way"
+            if (prop === "size") {
+                if (typeof size !== "number" || !Number.isInteger(size)) throw "Array size must be an integer"
+                if (size <= 0) throw "Array size must be >0"
+                target.size = size
+                const arr = []
+                for (let i = 0; i < size; i++) {
+                    arr[i] = null
+                }
+                const arrayGetterAndSetter = {
+                    set(targetArr, prop, value) {
+                        try {
+                            prop = prop.trim()
+                            if (prop === "") throw ""
+                            prop = Number(prop)
+                            if (!Number.isInteger(prop)) throw ""
+                        } catch (e) {
+                            throw "Array index must be an integer"
+                        }
+                        if (prop < 0 || prop >= size) throw "Array index out of bounds: " + prop
+                        if (value !== null) {
+                            switch (target["type"]) {
+                                case "integer": {
+                                    if (typeof value !== "number") throw "Not a number"
+                                    if (isNaN(value)) throw "Not a valid number"
+                                    if (value < Number.MIN_SAFE_INTEGER || value > Number.MAX_SAFE_INTEGER) throw "Value too big"
+                                    if (Number.isInteger(value)) {
+                                        targetArr[prop] = value
+                                    } else {
+                                        targetArr[prop] = Math.trunc(value)
+                                    }
+                                }
+                                break
+                                case "real": {
+                                    if (typeof value !== "number") throw "Not a number"
+                                    if (isNaN(value)) throw "Not a valid number"
+                                    targetArr[prop] = value
+                                }
+                                break
+                                case "string": {
+                                    if (typeof value !== "string") {
+                                        value = "" + value
+                                    }
+                                    if (value.length <= 1048576) {
+                                        targetArr[prop] = value
+                                    } else {
+                                        throw "String too long"
+                                    }
+                                }
+                                break
+                                case "boolean": {
+                                    if (typeof value !== "boolean") throw "Not a boolean"
+                                    targetArr[prop] = value
+                                }
+                            }
+                        } else {
+                            targetArr[prop] = null
+                        }
+                        v.modified = true
+                    },
+                    get(targetArr, prop, receiver) {
+                        try {
+                            prop = prop.trim()
+                            if (prop === "") throw ""
+                            prop = Number(prop)
+                            if (!Number.isInteger(prop)) throw ""
+                        } catch (e) {
+                            throw "Array index must be an integer"
+                        }
+                        if (prop < 0 || prop >= size) throw "Array index out of bounds: " + prop
+                        return targetArr[prop]
+                    },
+                }
+                const arrayProxy = new Proxy(arr, arrayGetterAndSetter)
+                target.value = arrayProxy
+            }
+        },
+        get(target, prop, receiver) {
+            return target[prop]
+        },
+    }
+    const proxy = new Proxy(v, variableGetterAndSetter)
+    proxy.size = size
+    v.toSimpleObject = () => {
+        return {
+            type: v.type,
+            arraySize: v.size
+        }
+    }
+    v.reset = () => {
+        proxy.size = v.size
+        v.modified = false
+    }
+    variables[name] = proxy
+}
+
 function clearVariables() {
     variables = {}
 }
@@ -170,8 +355,13 @@ jsep.addBinaryOp("%", 10)
 jsep.addBinaryOp("^", 11, true)
 
 //EXPRESSION EVALUATION AND BUILT-IN FUNCTIONS IMPLEMEMENTAION
-function evaluateExpression(text) {
-    const tree = jsep(text)
+function evaluateExpression(expression) { //both text and pre-parsed jsep expressions are accepted
+    let tree
+    if (typeof expression === "string") {
+        tree = jsep(expression)
+    } else {
+        tree = expression
+    }
     const expr_rec = n => {
         switch (n.type) {
             case jsep.LITERAL: {
@@ -216,6 +406,7 @@ function evaluateExpression(text) {
             break
             case jsep.IDENTIFIER: {
                 if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
+                if (typeof variables[n.name].size !== "undefined") throw "Variable is an array: " + n.name
                 if (variables[n.name].value === null) throw "Variable not initialized: " + n.name
                 return variables[n.name].value
             }
@@ -344,6 +535,16 @@ function evaluateExpression(text) {
                 }
             }
             break
+            case jsep.MEMBER_EXP: {
+                if (n.object.type !== jsep.IDENTIFIER) throw "Syntax error"
+                if (typeof variables[n.object.name] === "undefined") throw "Array does not exist: " + n.object.name
+                if (typeof variables[n.object.name].size === "undefined") throw "Variable is not an array: " + n.object.name
+                const idx = expr_rec(n.property)
+                const v = variables[n.object.name].value[idx]
+                if (v === null) throw "Variable not initialized: " + n.object.name + "[" + idx + "]"
+                return v
+            }
+            break
             case jsep.CALL_EXP: {
                 switch (n.callee.name) {
                     case "abs": {
@@ -462,9 +663,19 @@ function evaluateExpression(text) {
                     break
                     case "len": {
                         if (n.arguments.length !== 1) throw "len requires 1 argument"
-                        const val = expr_rec(n.arguments[0])
-                        if (typeof val !== "string") throw "len requires a string"
-                        return val.length
+                        if (n.arguments[0].type === jsep.IDENTIFIER) {
+                            if (typeof variables[n.arguments[0].name] === "undefined") throw "Variable does not exist: " + variables[n.arguments[0].name]
+                            if (typeof variables[n.arguments[0].name].size !== "undefined") {
+                                return variables[n.arguments[0].name].size
+                            } else {
+                                if (typeof variables[n.arguments[0].name].type !== "string") throw "len requires a string or an array"
+                                return variables[n.arguments[0].name].length
+                            }
+                        } else {
+                            const val = expr_rec(n.arguments[0])
+                            if (typeof val !== "string") throw "len requires a string or an array"
+                            return val.length
+                        }
                     }
                     break
                     case "charAt": {
@@ -623,8 +834,24 @@ Assign.prototype = {
     tick: function() {
         interpreter.currentInstruction = this
         if (this.variable === null || this.expression === null) throw "Incomplete instruction"
-        if (typeof variables[this.variable] === "undefined") throw "Variable does not exist: " + this.variable
-        variables[this.variable].value = evaluateExpression(this.expression)
+        const n = jsep(this.variable)
+        switch (n.type) {
+            case jsep.IDENTIFIER: {
+                if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
+                if (typeof variables[n.name].size !== "undefined") throw "Variable is an array: " + n.name
+                variables[n.name].value = evaluateExpression(this.expression)
+            }
+            break
+            case jsep.MEMBER_EXP: {
+                if (typeof variables[n.object.name] === "undefined") throw "Variable does not exist: " + n.object.name
+                if (typeof variables[n.object.name].size === "undefined") throw "Variable is not an array: " + n.object.name
+                const idx = evaluateExpression(n.property)
+                variables[n.object.name].value[idx] = evaluateExpression(this.expression)
+            }
+            break
+            default:
+                throw "Syntax error in variable name"
+        }
         return true
     },
     toSimpleObject: function() {
@@ -793,8 +1020,24 @@ For.prototype = {
             const val = evaluateExpression(this.from)
             if (typeof val !== "number") throw "Invalid expression: from"
             if (this.variable === null) throw "Incomplete instruction"
-            if (typeof variables[this.variable] === "undefined") throw "Variable does not exist: " + this.variable
-            variables[this.variable].value = val
+            const n = jsep(this.variable)
+            this.parsedVariableName = n
+            switch (n.type) {
+                case jsep.IDENTIFIER: {
+                    if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
+                    if (typeof variables[n.name].size !== "undefined") throw "Variable is an array: " + n.name
+                    variables[n.name].value = val
+                }
+                break
+                case jsep.MEMBER_EXP: {
+                    if (typeof variables[n.object.name] === "undefined") throw "Variable does not exist: " + n.object.name
+                    const idx = evaluateExpression(n.property)
+                    variables[n.object.name].value[idx] = val
+                }
+                break
+                default:
+                    throw "Invalid variable name"
+            }
             this.state = 0
         }
         if (this.state !== 0) {
@@ -802,13 +1045,38 @@ For.prototype = {
                 if (this.step === null || this.direction === null) throw "Incomplete instruction"
                 const inc = evaluateExpression(this.step)
                 if (typeof inc !== "number") throw "Invalid expression: step"
+                const n = this.parsedVariableName
                 switch (this.direction) {
                     case "up": {
-                        variables[this.variable].value += inc
+                        switch (n.type) {
+                            case jsep.IDENTIFIER: {
+                                variables[n.name].value += inc
+                            }
+                            break
+                            case jsep.MEMBER_EXP: {
+                                const idx = evaluateExpression(n.property)
+                                variables[n.object.name].value[idx] += inc
+                            }
+                            break
+                            default:
+                                throw "Invalid variable name"
+                        }
                     }
                     break
                     case "down": {
-                        variables[this.variable].value -= inc
+                        switch (n.type) {
+                            case jsep.IDENTIFIER: {
+                                variables[n.name].value -= inc
+                            }
+                            break
+                            case jsep.MEMBER_EXP: {
+                                const idx = evaluateExpression(n.property)
+                                variables[n.object.name].value[idx] -= inc
+                            }
+                            break
+                            default:
+                                throw "Invalid variable name"
+                        }
                     }
                     break
                     default: {
@@ -822,16 +1090,39 @@ For.prototype = {
             if (this.to === null || this.direction === null) throw "Incomplete instruction"
             const endVal = evaluateExpression(this.to)
             if (typeof endVal !== "number") throw "Invalid expression: to"
-            if (this.variable === null) throw "Incomplete instruction"
-            if (typeof variables[this.variable] === "undefined") throw "Variable does not exist: " + this.variable
+            const n = this.parsedVariableName
             let repeat
             switch (this.direction) {
                 case "up": {
-                    repeat = variables[this.variable].value <= endVal
+                    switch (n.type) {
+                        case jsep.IDENTIFIER: {
+                            repeat = variables[n.name].value <= endVal
+                        }
+                        break
+                        case jsep.MEMBER_EXP: {
+                            const idx = evaluateExpression(n.property)
+                            repeat = variables[n.object.name].value[idx] <= endVal
+                        }
+                        break
+                        default:
+                            throw "Invalid variable name"
+                    }
                 }
                 break
                 case "down": {
-                    repeat = variables[this.variable].value >= endVal
+                    switch (n.type) {
+                        case jsep.IDENTIFIER: {
+                            repeat = variables[n.name].value >= endVal
+                        }
+                        break
+                        case jsep.MEMBER_EXP: {
+                            const idx = evaluateExpression(n.property)
+                            repeat = variables[n.object.name].value[idx] >= endVal
+                        }
+                        break
+                        default:
+                            throw "Invalid variable name"
+                    }
                 }
                 break
                 default: {
@@ -843,6 +1134,7 @@ For.prototype = {
                 return false
             } else {
                 delete this.state
+                delete this.parsedVariableName
                 return true
             }
         }
@@ -950,11 +1242,28 @@ Input.prototype = {
         interpreter.currentInstruction = this
         if (typeof this.state === "undefined") {
             if (this.variable === null) throw "Incomplete instruction"
-            if (typeof variables[this.variable] === "undefined") throw "Variable does not exist: " + this.variable
+            const n = jsep(this.variable)
+            this.parsedVariableName = n
+            let varType
+            switch (n.type) {
+                case jsep.IDENTIFIER: {
+                    if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
+                    if (typeof variables[n.name].size !== "undefined") throw "Variable is an array: " + n.name
+                    varType = variables[n.name].type
+                }
+                break
+                case jsep.MEMBER_EXP: {
+                    if (typeof variables[n.object.name] === "undefined") throw "Variable does not exist: " + n.object.name
+                    varType = variables[n.object.name].type
+                }
+                break
+                default:
+                    throw "Invalid variable name"
+            }
             this.state = null
             if (typeof ui_input !== "undefined") {
                 interpreter.preventTurbo = true
-                ui_input(this.variable, variables[this.variable].type, val => {
+                ui_input(this.variable, varType, val => {
                     interpreter.preventTurbo = false
                     this.state = val
                 })
@@ -969,27 +1278,64 @@ Input.prototype = {
             if (this.state === null) {
                 return false
             } else {
-                switch (variables[this.variable].type) {
-                    case "integer":
-                    case "real": {
-                        if (isNaN(this.state)) throw "Not a number"
-                        variables[this.variable].value = Number(this.state)
+                const n = this.parsedVariableName
+                switch (n.type) {
+                    case jsep.IDENTIFIER: {
+                        if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
+                        if (typeof variables[n.name].size !== "undefined") throw "Variable is an array: " + n.name
+                        switch (variables[n.name].type) {
+                            case "integer":
+                            case "real": {
+                                if (isNaN(this.state)) throw "Not a number"
+                                variables[n.name].value = Number(this.state)
+                            }
+                            break
+                            case "string": {
+                                variables[n.name].value = this.state
+                            }
+                            break
+                            case "boolean": {
+                                if (this.state !== "true" && this.state !== "false") throw "Not a valid boolean"
+                                variables[n.name].value = this.state === "true"
+                            }
+                            break
+                            default: {
+                                throw "Unknown variable type: " + variables[n.name].type
+                            }
+                        }
                     }
                     break
-                    case "string": {
-                        variables[this.variable].value = this.state
+                    case jsep.MEMBER_EXP: {
+                        if (typeof variables[n.object.name] === "undefined") throw "Variable does not exist: " + n.object.name
+                        if (typeof variables[n.object.name].size === "undefined") throw "Variable is not an array: " + n.object.name
+                        const idx = evaluateExpression(n.property)
+                        switch (variables[n.object.name].type) {
+                            case "integer":
+                            case "real": {
+                                if (isNaN(this.state)) throw "Not a number"
+                                variables[n.object.name].value[idx] = Number(this.state)
+                            }
+                            break
+                            case "string": {
+                                variables[n.object.name].value[idx] = this.state
+                            }
+                            break
+                            case "boolean": {
+                                if (this.state !== "true" && this.state !== "false") throw "Not a valid boolean"
+                                variables[n.object.name].value[idx] = this.state === "true"
+                            }
+                            break
+                            default: {
+                                throw "Unknown variable type: " + variables[n.object.name].type
+                            }
+                        }
                     }
                     break
-                    case "boolean": {
-                        if (this.state !== "true" && this.state !== "false") throw "Not a valid boolean"
-                        variables[this.variable].value = this.state === "true"
-                    }
-                    break
-                    default: {
-                        throw "Unknown variable type: " + variables[this.variable].type
-                    }
+                    default:
+                        throw "Syntax error in variable name"
                 }
                 delete this.state
+                delete this.parsedVariableName
                 return true
             }
         }
@@ -1691,7 +2037,11 @@ function load(json) {
             generateNewMetadata()
         }
         for (const v in json.variables) {
-            declareVariable(v, json.variables[v].type, json.variables[v].value)
+            if (typeof json.variables[v].arraySize !== "undefined") {
+                declareArray(v, json.variables[v].type, json.variables[v].arraySize)
+            } else {
+                declareVariable(v, json.variables[v].type, json.variables[v].value)
+            }
         }
         program = InstructionSequence.fromSimpleObject(json.program)
     } catch (e) {
