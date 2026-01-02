@@ -355,10 +355,20 @@ jsep.addBinaryOp("%", 10)
 jsep.addBinaryOp("^", 11, true)
 
 //EXPRESSION EVALUATION AND BUILT-IN FUNCTIONS IMPLEMEMENTAION
+let _jsepCache={}
+function parseExpression(text){
+    if(typeof _jsepCache[text] !== "undefined"){
+        return _jsepCache[text]
+    }else{
+        const tree=jsep(text)
+        _jsepCache[text]=tree
+        return tree
+    }
+}
 function evaluateExpression(expression) { //both text and pre-parsed jsep expressions are accepted
     let tree
     if (typeof expression === "string") {
-        tree = jsep(expression)
+        tree = parseExpression(expression)
     } else {
         tree = expression
     }
@@ -834,7 +844,7 @@ Assign.prototype = {
     tick: function() {
         interpreter.currentInstruction = this
         if (this.variable === null || this.expression === null) throw "Incomplete instruction"
-        const n = jsep(this.variable)
+        const n = parseExpression(this.variable)
         switch (n.type) {
             case jsep.IDENTIFIER: {
                 if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
@@ -1020,7 +1030,7 @@ For.prototype = {
             const val = evaluateExpression(this.from)
             if (typeof val !== "number") throw "Invalid expression: from"
             if (this.variable === null) throw "Incomplete instruction"
-            const n = jsep(this.variable)
+            const n = parseExpression(this.variable)
             this.parsedVariableName = n
             switch (n.type) {
                 case jsep.IDENTIFIER: {
@@ -1242,7 +1252,7 @@ Input.prototype = {
         interpreter.currentInstruction = this
         if (typeof this.state === "undefined") {
             if (this.variable === null) throw "Incomplete instruction"
-            const n = jsep(this.variable)
+            const n = parseExpression(this.variable)
             this.parsedVariableName = n
             let varType
             switch (n.type) {
@@ -1800,6 +1810,7 @@ let program = new InstructionSequence()
 
 function clearProgram() {
     program.body = []
+    _jsepCache = {}
 }
 
 const STATE_STOPPED = 0,
