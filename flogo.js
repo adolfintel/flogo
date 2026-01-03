@@ -618,6 +618,23 @@ function evaluateExpression(expression) { //both text and pre-parsed jsep expres
                         }
                     }
                     break
+                    case "end": {
+                        if (n.arguments.length !== 1) throw "end requires 1 argument"
+                        if (n.arguments[0].type === jsep.IDENTIFIER) {
+                            if (typeof variables[n.arguments[0].name] === "undefined") throw "Variable does not exist: " + variables[n.arguments[0].name]
+                            if (typeof variables[n.arguments[0].name].size !== "undefined") {
+                                return variables[n.arguments[0].name].size-1
+                            } else {
+                                if (typeof variables[n.arguments[0].name].type !== "string") throw "end requires a string or an array"
+                                return variables[n.arguments[0].name].value.length-1
+                            }
+                        } else {
+                            const val = expr_rec(n.arguments[0])
+                            if (typeof val !== "string") throw "end requires a string or an array"
+                            return val.length-1
+                        }
+                    }
+                    break
                     case "charAt": {
                         if (n.arguments.length !== 2) throw "charAt requires 2 arguments"
                         const string = expr_rec(n.arguments[0])
