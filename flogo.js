@@ -114,6 +114,7 @@ function declareArray(name, type, size) {
         type: type,
         value: null,
         size: 0,
+        isArray: true,
         modified: false
     }
     const variableGetterAndSetter = {
@@ -346,7 +347,7 @@ function evaluateExpression(expression) { //both text and pre-parsed jsep expres
             break
             case jsep.IDENTIFIER: {
                 if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
-                if (typeof variables[n.name].size !== "undefined") throw "Variable is an array: " + n.name
+                if (variables[n.name].isArray) throw "Variable is an array: " + n.name
                 if (variables[n.name].value === null) throw "Variable not initialized: " + n.name
                 return variables[n.name].value
             }
@@ -478,7 +479,7 @@ function evaluateExpression(expression) { //both text and pre-parsed jsep expres
             case jsep.MEMBER_EXP: {
                 if (n.object.type !== jsep.IDENTIFIER) throw "Syntax error"
                 if (typeof variables[n.object.name] === "undefined") throw "Array does not exist: " + n.object.name
-                if (typeof variables[n.object.name].size === "undefined") throw "Variable is not an array: " + n.object.name
+                if (!variables[n.object.name].isArray) throw "Variable is not an array: " + n.object.name
                 const idx = expr_rec(n.property)
                 const v = variables[n.object.name].value[idx]
                 if (v === null) throw "Variable not initialized: " + n.object.name + "[" + idx + "]"
@@ -605,7 +606,7 @@ function evaluateExpression(expression) { //both text and pre-parsed jsep expres
                         if (n.arguments.length !== 1) throw "len requires 1 argument"
                         if (n.arguments[0].type === jsep.IDENTIFIER) {
                             if (typeof variables[n.arguments[0].name] === "undefined") throw "Variable does not exist: " + variables[n.arguments[0].name]
-                            if (typeof variables[n.arguments[0].name].size !== "undefined") {
+                            if (variables[n.arguments[0].name].isArray) {
                                 return variables[n.arguments[0].name].size
                             } else {
                                 if (typeof variables[n.arguments[0].name].type !== "string") throw "len requires a string or an array"
@@ -622,16 +623,16 @@ function evaluateExpression(expression) { //both text and pre-parsed jsep expres
                         if (n.arguments.length !== 1) throw "end requires 1 argument"
                         if (n.arguments[0].type === jsep.IDENTIFIER) {
                             if (typeof variables[n.arguments[0].name] === "undefined") throw "Variable does not exist: " + variables[n.arguments[0].name]
-                            if (typeof variables[n.arguments[0].name].size !== "undefined") {
-                                return variables[n.arguments[0].name].size-1
+                            if (variables[n.arguments[0].name].isArray) {
+                                return variables[n.arguments[0].name].size - 1
                             } else {
                                 if (typeof variables[n.arguments[0].name].type !== "string") throw "end requires a string or an array"
-                                return variables[n.arguments[0].name].value.length-1
+                                return variables[n.arguments[0].name].value.length - 1
                             }
                         } else {
                             const val = expr_rec(n.arguments[0])
                             if (typeof val !== "string") throw "end requires a string or an array"
-                            return val.length-1
+                            return val.length - 1
                         }
                     }
                     break
@@ -795,13 +796,13 @@ Assign.prototype = {
         switch (n.type) {
             case jsep.IDENTIFIER: {
                 if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
-                if (typeof variables[n.name].size !== "undefined") throw "Variable is an array: " + n.name
+                if (variables[n.name].isArray) throw "Variable is an array: " + n.name
                 variables[n.name].value = evaluateExpression(this.expression)
             }
             break
             case jsep.MEMBER_EXP: {
                 if (typeof variables[n.object.name] === "undefined") throw "Variable does not exist: " + n.object.name
-                if (typeof variables[n.object.name].size === "undefined") throw "Variable is not an array: " + n.object.name
+                if (!variables[n.object.name].isArray) throw "Variable is not an array: " + n.object.name
                 const idx = evaluateExpression(n.property)
                 variables[n.object.name].value[idx] = evaluateExpression(this.expression)
             }
@@ -982,7 +983,7 @@ For.prototype = {
             switch (n.type) {
                 case jsep.IDENTIFIER: {
                     if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
-                    if (typeof variables[n.name].size !== "undefined") throw "Variable is an array: " + n.name
+                    if (variables[n.name].isArray) throw "Variable is an array: " + n.name
                     variables[n.name].value = val
                 }
                 break
@@ -1205,7 +1206,7 @@ Input.prototype = {
             switch (n.type) {
                 case jsep.IDENTIFIER: {
                     if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
-                    if (typeof variables[n.name].size !== "undefined") throw "Variable is an array: " + n.name
+                    if (variables[n.name].isArray) throw "Variable is an array: " + n.name
                     varType = variables[n.name].type
                 }
                 break
@@ -1239,7 +1240,7 @@ Input.prototype = {
                 switch (n.type) {
                     case jsep.IDENTIFIER: {
                         if (typeof variables[n.name] === "undefined") throw "Variable does not exist: " + n.name
-                        if (typeof variables[n.name].size !== "undefined") throw "Variable is an array: " + n.name
+                        if (variables[n.name].isArray) throw "Variable is an array: " + n.name
                         switch (variables[n.name].type) {
                             case "integer":
                             case "real": {
@@ -1264,7 +1265,7 @@ Input.prototype = {
                     break
                     case jsep.MEMBER_EXP: {
                         if (typeof variables[n.object.name] === "undefined") throw "Variable does not exist: " + n.object.name
-                        if (typeof variables[n.object.name].size === "undefined") throw "Variable is not an array: " + n.object.name
+                        if (!typeof variables[n.object.name].isArray) throw "Variable is not an array: " + n.object.name
                         const idx = evaluateExpression(n.property)
                         switch (variables[n.object.name].type) {
                             case "integer":
