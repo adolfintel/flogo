@@ -179,6 +179,9 @@ function declareArray(name, type, size) {
                         v.modified = true
                     },
                     get(targetArr, prop, receiver) {
+                        if(typeof prop === "symbol"){
+                            return () => target.type+"["+target.size+"]"
+                        }
                         try {
                             prop = prop.trim()
                             if (prop === "") throw ""
