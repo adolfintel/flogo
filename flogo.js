@@ -609,7 +609,7 @@ function evaluateExpression(expression) { //both text and pre-parsed jsep expres
                                 return variables[n.arguments[0].name].size
                             } else {
                                 if (typeof variables[n.arguments[0].name].type !== "string") throw "len requires a string or an array"
-                                return variables[n.arguments[0].name].length
+                                return variables[n.arguments[0].name].value.length
                             }
                         } else {
                             const val = expr_rec(n.arguments[0])
