@@ -605,7 +605,7 @@ function evaluateExpression(expression) { //both text and pre-parsed jsep expres
                     case "len": {
                         if (n.arguments.length !== 1) throw "len requires 1 argument"
                         if (n.arguments[0].type === jsep.IDENTIFIER) {
-                            if (typeof variables[n.arguments[0].name] === "undefined") throw "Variable does not exist: " + variables[n.arguments[0].name]
+                            if (typeof variables[n.arguments[0].name] === "undefined") throw "Variable does not exist: " + n.arguments[0].name
                             if (variables[n.arguments[0].name].isArray) {
                                 return variables[n.arguments[0].name].size
                             } else {
@@ -622,7 +622,7 @@ function evaluateExpression(expression) { //both text and pre-parsed jsep expres
                     case "end": {
                         if (n.arguments.length !== 1) throw "end requires 1 argument"
                         if (n.arguments[0].type === jsep.IDENTIFIER) {
-                            if (typeof variables[n.arguments[0].name] === "undefined") throw "Variable does not exist: " + variables[n.arguments[0].name]
+                            if (typeof variables[n.arguments[0].name] === "undefined") throw "Variable does not exist: " + n.arguments[0].name
                             if (variables[n.arguments[0].name].isArray) {
                                 return variables[n.arguments[0].name].size - 1
                             } else {
