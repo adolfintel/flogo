@@ -179,8 +179,8 @@ function declareArray(name, type, size) {
                         v.modified = true
                     },
                     get(targetArr, prop, receiver) {
-                        if(typeof prop === "symbol"){
-                            return () => target.type+"["+target.size+"]"
+                        if (typeof prop === "symbol") {
+                            return () => target.type + "[" + target.size + "]"
                         }
                         try {
                             prop = prop.trim()
@@ -283,16 +283,18 @@ jsep.addBinaryOp("%", 10)
 jsep.addBinaryOp("^", 11, true)
 
 //EXPRESSION EVALUATION AND BUILT-IN FUNCTIONS IMPLEMEMENTAION
-let _jsepCache={}
-function parseExpression(text){
-    if(typeof _jsepCache[text] !== "undefined"){
+let _jsepCache = {}
+
+function parseExpression(text) {
+    if (typeof _jsepCache[text] !== "undefined") {
         return _jsepCache[text]
-    }else{
-        const tree=jsep(text)
-        _jsepCache[text]=tree
+    } else {
+        const tree = jsep(text)
+        _jsepCache[text] = tree
         return tree
     }
 }
+
 function evaluateExpression(expression) { //both text and pre-parsed jsep expressions are accepted
     let tree
     if (typeof expression === "string") {
