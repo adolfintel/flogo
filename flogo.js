@@ -121,11 +121,11 @@ function declareArray(name, type, size) {
         set(target, prop, value) {
             if (prop !== "size") throw "Arrays cannot be changed this way"
             if (prop === "size") {
-                if (typeof size !== "number" || !Number.isInteger(size)) throw "Array size must be an integer"
-                if (size <= 0) throw "Array size must be >0"
-                target.size = size
+                if (typeof value !== "number" || !Number.isInteger(value)) throw "Array size must be an integer"
+                if (value <= 0) throw "Array size must be >0"
+                target.size = value
                 const arr = []
-                for (let i = 0; i < size; i++) {
+                for (let i = 0; i < value; i++) {
                     arr[i] = null
                 }
                 const arrayGetterAndSetter = {
@@ -138,7 +138,7 @@ function declareArray(name, type, size) {
                         } catch (e) {
                             throw "Array index must be an integer"
                         }
-                        if (prop < 0 || prop >= size) throw "Array index out of bounds: " + prop
+                        if (prop < 0 || prop >= target.size) throw "Array index out of bounds: " + prop
                         if (value !== null) {
                             switch (target["type"]) {
                                 case "integer": {
@@ -191,7 +191,7 @@ function declareArray(name, type, size) {
                         } catch (e) {
                             throw "Array index must be an integer"
                         }
-                        if (prop < 0 || prop >= size) throw "Array index out of bounds: " + prop
+                        if (prop < 0 || prop >= target.size) throw "Array index out of bounds: " + prop
                         return targetArr[prop]
                     },
                 }
@@ -212,7 +212,7 @@ function declareArray(name, type, size) {
         }
     }
     v.reset = () => {
-        proxy.size = v.size
+        proxy.size = proxy.size
         v.modified = false
     }
     variables[name] = proxy
