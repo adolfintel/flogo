@@ -829,6 +829,7 @@ function variablesEditor_createVariable(name) {
     }
     const initVal = document.createElement("div")
     initVal.contentEditable = true
+    initVal.className = "initVal"
     initVal.style.display = "none"
     initVal.onfocus = () => {
         selectContents(initVal)
@@ -839,12 +840,60 @@ function variablesEditor_createVariable(name) {
             v.flogo_buttons.confirm.click()
         }
     }
+    const arrType = document.createElement("select")
+    arrType.className = "arrType";
+    ["integer", "real", "string", "boolean"].forEach((t) => {
+        let o = document.createElement("option")
+        o.value = t
+        o.innerText = t.slice(0, 1).toUpperCase() + t.slice(1)
+        arrType.appendChild(o)
+    })
+    const arrTypeLabel = document.createElement("label")
+    arrTypeLabel.innerText = "Array type"
+    arrTypeLabel.onclick = () => {
+        arrType.click()
+    }
+    const arrSize = document.createElement("div")
+    arrSize.contentEditable = true
+    arrSize.className = "arrSize"
+    arrSize.onfocus = () => {
+        selectContents(arrSize)
+    }
+    arrSize.onkeydown = e => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault()
+            v.flogo_buttons.confirm.click()
+        }
+    }
+    disableSpellcheck(arrSize)
     disableSpellcheck(initVal)
     valEdit.appendChild(init)
     valEdit.appendChild(initLabel)
     valEdit.appendChild(initVal)
+    valEdit.appendChild(arrTypeLabel)
+    valEdit.appendChild(arrType)
+    valEdit.appendChild(arrSize)
     v.appendChild(valVis)
     v.appendChild(valEdit)
+    typeEdit.onchange = () => {
+        if (typeEdit.value === "array") {
+            arrTypeLabel.style.display = ""
+            arrType.style.display = ""
+            arrSize.style.display = ""
+            init.style.display = "none"
+            initLabel.style.display = "none"
+            initVal.style.display = "none"
+        } else {
+            arrTypeLabel.style.display = "none"
+            arrType.style.display = "none"
+            arrSize.style.display = "none"
+            init.style.display = ""
+            initLabel.style.display = ""
+            initVal.style.display = ""
+            init.onchange()
+        }
+    }
+    typeEdit.onchange()
     v.flogo_name = {
         vis: nameVis,
         edit: nameEdit,
@@ -873,6 +922,8 @@ function variablesEditor_createVariable(name) {
     }
     valEdit.flogo_init = init
     valEdit.flogo_initVal = initVal
+    valEdit.flogo_arrType = arrType
+    valEdit.flogo_arrSize = arrSize
     variablesEditor_updateVariableValue(v)
     if (name === null) {
         variablesEditor_editVariable(v)
@@ -916,7 +967,13 @@ function variablesEditor_deleteVariable(v) {
 function variablesEditor_editVariable(v) {
     v.classList.add("editing")
     v.draggable = false
-    v.flogo_buttons.init.onchange()
+    if (v.flogo_variable !== null && variables[v.flogo_variable].isArray) {
+        v.flogo_val.edit.flogo_arrType.value = variables[v.flogo_variable].type
+        v.flogo_val.edit.flogo_arrSize.innerText = variables[v.flogo_variable].size
+        v.flogo_type.edit.onchange()
+    } else {
+        v.flogo_buttons.init.onchange()
+    }
     requestAnimationFrame(() => {
         //needs to happen on the next frame because we can't focus an element that's not currently visible
         v.flogo_name.edit.focus()
@@ -931,14 +988,21 @@ function variablesEditor_cancelEditVariable(v) {
         document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
     } else {
         v.flogo_name.edit.innerText = v.flogo_variable
-        v.flogo_type.edit.value = variables[v.flogo_variable].type
-        if (variables[v.flogo_variable].initialValue !== null) {
-            v.flogo_val.edit.flogo_init.checked = true
-            v.flogo_val.edit.flogo_initVal.innerText = variables[v.flogo_variable].initialValue
+        if (variables[v.flogo_variable].isArray) {
+            v.flogo_type.edit.value = "array"
+            v.flogo_val.edit.flogo_arrType.value = variables[v.flogo_variable].type
+            v.flogo_val.edit.flogo_arrSize.innerText = variables[v.flogo_variable].size
         } else {
-            v.flogo_val.edit.flogo_init.checked = false
-            v.flogo_val.edit.flogo_initVal.innerText = ""
+            v.flogo_type.edit.value = variables[v.flogo_variable].type
+            if (variables[v.flogo_variable].initialValue !== null) {
+                v.flogo_val.edit.flogo_init.checked = true
+                v.flogo_val.edit.flogo_initVal.innerText = variables[v.flogo_variable].initialValue
+            } else {
+                v.flogo_val.edit.flogo_init.checked = false
+                v.flogo_val.edit.flogo_initVal.innerText = ""
+            }
         }
+
     }
 }
 
@@ -950,69 +1014,124 @@ function variablesEditor_confirmEditVariable(v) {
     }
     v.flogo_name.edit.innerText = name
     const type = v.flogo_type.edit.value
-    let val = null
-    try {
-        if (v.flogo_val.edit.flogo_init.checked) {
-            val = v.flogo_val.edit.flogo_initVal.innerText
-            switch (type) {
-                case "integer":
-                case "real": {
-                    val = val.trim()
-                    v.flogo_val.edit.flogo_initVal.innerText = val
-                    if (val === "") throw ""
-                    val = Number(val)
-                }
-                break
-                case "boolean": {
-                    val = val.trim()
-                    v.flogo_val.edit.flogo_initVal.innerText = val
-                    if (val !== "false" && val !== "true") throw ""
-                    val = val === "true"
-                }
-                break
-            }
-        }
-        let changed = false
-        if (v.flogo_variable === null) {
-            declareVariable(name, type, val)
-            changed = true
-            v.flogo_variable = name
-            v.flogo_name.vis.innerText = name
-            v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
-            variablesEditor_updateVariableValue(v)
-            document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
-        } else {
-            const tempName = "temp_" + Date.now()
-            declareVariable(tempName, type, val)
-            if (name === v.flogo_variable) {
-                if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
-                variables[name] = variables[tempName]
-            } else {
-                //this is inefficient af, but necessary to keep them in the right order when a variable is renamed
+    //TODO: merge the two branches
+    if (type === "array") {
+        let size, arrType
+        try {
+            size = v.flogo_val.edit.flogo_arrSize.innerText.trim()
+            if (size === "") throw ""
+            size = Number(size)
+            if (isNaN(size) || !Number.isInteger(size) || size <= 0) throw ""
+            arrType = v.flogo_val.edit.flogo_arrType.value
+            let changed = false
+            if (v.flogo_variable === null) {
+                declareArray(name, arrType, size)
                 changed = true
-                const newVars = {}
-                for (k in variables) {
-                    if (k !== v.flogo_variable) {
-                        newVars[k] = variables[k]
-                    } else {
-                        newVars[name] = variables[tempName]
+                v.flogo_variable = name
+                v.flogo_name.vis.innerText = name
+                v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
+                variablesEditor_updateVariableValue(v)
+                document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
+            } else {
+                const tempName = "temp_" + Date.now()
+                declareArray(tempName, arrType, size)
+                if (name === v.flogo_variable) {
+                    if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
+                    variables[name] = variables[tempName]
+                } else {
+                    //this is inefficient af, but necessary to keep them in the right order when a variable is renamed
+                    changed = true
+                    const newVars = {}
+                    for (k in variables) {
+                        if (k !== v.flogo_variable) {
+                            newVars[k] = variables[k]
+                        } else {
+                            newVars[name] = variables[tempName]
+                        }
                     }
+                    variables = newVars
                 }
-                variables = newVars
+                delete variables[tempName]
+                v.flogo_variable = name
+                v.flogo_name.vis.innerText = name
+                v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
+                variablesEditor_updateVariableValue(v)
             }
-            delete variables[tempName]
-            v.flogo_variable = name
-            v.flogo_name.vis.innerText = name
-            v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
-            variablesEditor_updateVariableValue(v)
+            v.classList.remove("editing")
+            v.draggable = true
+            delete v.flogo_val.vis.arrayViewer
+            if (v.flogo_val.vis.classList.contains("uninitialized")) v.flogo_val.vis.classList.remove("uninitialized")
+            if (changed) {
+                saveToHistory()
+            }
+        } catch (e) {
+            errorFlash(v.flogo_val.edit.flogo_arrSize)
         }
-        v.classList.remove("editing")
-        v.draggable = true
-        if (changed) {
-            saveToHistory()
+    } else {
+        try {
+            let val = null
+            if (v.flogo_val.edit.flogo_init.checked) {
+                val = v.flogo_val.edit.flogo_initVal.innerText
+                switch (type) {
+                    case "integer":
+                    case "real": {
+                        val = val.trim()
+                        v.flogo_val.edit.flogo_initVal.innerText = val
+                        if (val === "") throw ""
+                        val = Number(val)
+                    }
+                    break
+                    case "boolean": {
+                        val = val.trim()
+                        v.flogo_val.edit.flogo_initVal.innerText = val
+                        if (val !== "false" && val !== "true") throw ""
+                        val = val === "true"
+                    }
+                    break
+                }
+            }
+            let changed = false
+            if (v.flogo_variable === null) {
+                declareVariable(name, type, val)
+                changed = true
+                v.flogo_variable = name
+                v.flogo_name.vis.innerText = name
+                v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
+                variablesEditor_updateVariableValue(v)
+                document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
+            } else {
+                const tempName = "temp_" + Date.now()
+                declareVariable(tempName, type, val)
+                if (name === v.flogo_variable) {
+                    if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
+                    variables[name] = variables[tempName]
+                } else {
+                    //this is inefficient af, but necessary to keep them in the right order when a variable is renamed
+                    changed = true
+                    const newVars = {}
+                    for (k in variables) {
+                        if (k !== v.flogo_variable) {
+                            newVars[k] = variables[k]
+                        } else {
+                            newVars[name] = variables[tempName]
+                        }
+                    }
+                    variables = newVars
+                }
+                delete variables[tempName]
+                v.flogo_variable = name
+                v.flogo_name.vis.innerText = name
+                v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
+                variablesEditor_updateVariableValue(v)
+            }
+            v.classList.remove("editing")
+            v.draggable = true
+            if (changed) {
+                saveToHistory()
+            }
+        } catch (e) {
+            errorFlash(v.flogo_val.edit.flogo_initVal)
         }
-    } catch (e) {
-        errorFlash(v.flogo_val.edit.flogo_initVal)
     }
 }
 
