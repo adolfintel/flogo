@@ -752,9 +752,32 @@ div.variable>.value {
     overflow-y: auto;
 }
 
+div.variable>.value:has(table) {
+    max-height: 10rem;
+}
+
+div.variable>.value table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    font-size: 0.85em;
+}
+
+div.variable>.value table * {
+    border: var(--ui-measure-border-thin) solid var(--ui-color-border1);
+}
+
+div.variable>.value table th {
+    width: 25%;
+}
+
 div.variable>.value.modified {
     background: var(--ui-color-form-highlighted);
     font-weight: bold;
+}
+
+div.variable>.value.modified table {
+    font-weight: normal;
 }
 
 div.variable>.value.edit {
@@ -770,7 +793,8 @@ div.variable>.value.edit>div[contentEditable]:empty::before {
     opacity: 0.5;
 }
 
-div.variable>.value.uninitialized {
+div.variable>.value.uninitialized,
+div.variable>.value table .uninitialized {
     color: var(--ui-color-form-disabled);
 }
 

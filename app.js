@@ -751,7 +751,7 @@ function variablesEditor_createVariable(name) {
     typeVis.className = "type vis"
     const typeEdit = document.createElement("select")
     typeEdit.className = "type edit";
-    ["integer", "real", "string", "boolean"].forEach((t) => {
+    ["integer", "real", "string", "boolean", "array"].forEach((t) => {
         let o = document.createElement("option")
         o.value = t
         o.innerText = t.slice(0, 1).toUpperCase() + t.slice(1)
@@ -879,8 +879,13 @@ function variablesEditor_createVariable(name) {
     } else {
         nameVis.innerText = name
         nameEdit.innerText = name
-        typeVis.innerText = variables[name].type.slice(0, 1).toUpperCase() + variables[name].type.slice(1)
-        typeEdit.value = variables[name].type
+        if (variables[name].isArray) {
+            typeVis.innerText = "Array"
+            typeEdit.value = "array"
+        } else {
+            typeVis.innerText = variables[name].type.slice(0, 1).toUpperCase() + variables[name].type.slice(1)
+            typeEdit.value = variables[name].type
+        }
         if (variables[name].initialValue !== null) {
             init.checked = true
             initVal.style.display = "block"
@@ -1027,16 +1032,59 @@ function variablesEditor_makeAddBtn() {
 
 function variablesEditor_updateVariableValue(v) {
     if (v.flogo_variable === null) return
-    let text
-    if (variables[v.flogo_variable].value !== null) {
-        text = "" + variables[v.flogo_variable].value
-        if (v.flogo_val.vis.classList.contains("uninitialized")) v.flogo_val.vis.classList.remove("uninitialized")
+    if (variables[v.flogo_variable].isArray) {
+        //TODO: limit array view max size
+        if (typeof v.flogo_val.vis.arrayViewer === "undefined" || v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size || v.flogo_val.vis.arrayViewer.flogo_arrType !== variables[v.flogo_variable].type) {
+            const d = document.createElement("details")
+            v.flogo_val.vis.arrayViewer = d
+            const s = document.createElement("summary")
+            const shortText = "" + variables[v.flogo_variable].value
+            s.innerText = shortText.slice(0, 1).toUpperCase() + shortText.slice(1)
+            v.flogo_val.vis.arrayViewer.flogo_arrType = variables[v.flogo_variable].type
+            d.appendChild(s)
+            const t = document.createElement("table")
+            v.flogo_val.vis.arrayViewer.arrContents = []
+            for (let i = 0; i < variables[v.flogo_variable].size; i++) {
+                const tr = document.createElement("tr")
+                const th = document.createElement("th")
+                th.innerText = i
+                tr.appendChild(th)
+                const td = document.createElement("td")
+                v.flogo_val.vis.arrayViewer.arrContents[i] = td
+                tr.appendChild(td)
+                t.appendChild(tr)
+            }
+            d.appendChild(t)
+            v.flogo_val.vis.innerHTML = ""
+            v.flogo_val.vis.appendChild(d)
+        }
+        if (v.flogo_val.vis.arrayViewer.open) {
+            for (let i = 0; i < variables[v.flogo_variable].size; i++) {
+                let text
+                if (variables[v.flogo_variable].value[i] !== null) {
+                    text = "" + variables[v.flogo_variable].value[i]
+                    if (v.flogo_val.vis.arrayViewer.arrContents[i].classList.contains("uninitialized")) v.flogo_val.vis.arrayViewer.arrContents[i].classList.remove("uninitialized")
+                } else {
+                    text = "Not initialized"
+                    if (!v.flogo_val.vis.arrayViewer.arrContents[i].classList.contains("uninitialized")) v.flogo_val.vis.arrayViewer.arrContents[i].classList.add("uninitialized")
+                }
+                if (text !== v.flogo_val.vis.arrayViewer.arrContents[i].innerText) {
+                    v.flogo_val.vis.arrayViewer.arrContents[i].innerText = text
+                }
+            }
+        }
     } else {
-        text = "Not initialized"
-        if (!v.flogo_val.vis.classList.contains("uninitialized")) v.flogo_val.vis.classList.add("uninitialized")
-    }
-    if (text !== v.flogo_val.vis.innerText) {
-        v.flogo_val.vis.innerText = text
+        let text
+        if (variables[v.flogo_variable].value !== null) {
+            text = "" + variables[v.flogo_variable].value
+            if (v.flogo_val.vis.classList.contains("uninitialized")) v.flogo_val.vis.classList.remove("uninitialized")
+        } else {
+            text = "Not initialized"
+            if (!v.flogo_val.vis.classList.contains("uninitialized")) v.flogo_val.vis.classList.add("uninitialized")
+        }
+        if (text !== v.flogo_val.vis.innerText) {
+            v.flogo_val.vis.innerText = text
+        }
     }
     if (variables[v.flogo_variable].modified) {
         if (!v.flogo_val.vis.classList.contains("modified")) v.flogo_val.vis.classList.add("modified")
