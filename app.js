@@ -801,7 +801,7 @@ function variablesEditor_createVariable(name) {
     btns.appendChild(confirmEditBtn)
     nt.appendChild(btns)
     nt.ondragenter = () => {
-        if (dragging !== v && v.previousSibling !== dragging) {
+        if (dragging !== v && v.previousSibling !== dragging && v.flogo_variable !== null) {
             variablesEditor_placeVariableDropIndicatorBefore(v)
         } else {
             variablesEditor_hideVariableDropIndicator()
@@ -915,7 +915,11 @@ function variablesEditor_createVariable(name) {
     }
     valEdit.ondragenter = valVis.ondragenter = () => {
         if (dragging !== v && v.nextSibling !== dragging) {
-            variablesEditor_placeVariableDropIndicatorAfter(v)
+            if (v.flogo_variable !== null) {
+                variablesEditor_placeVariableDropIndicatorAfter(v)
+            } else {
+                variablesEditor_placeVariableDropIndicatorBefore(v)
+            }
         } else {
             variablesEditor_hideVariableDropIndicator()
         }
@@ -953,7 +957,9 @@ function variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList() {
     const newVariables = {}
     const vars = document.querySelectorAll("#variableList > div.variable")
     vars.forEach(v => {
-        newVariables[v.flogo_variable] = variables[v.flogo_variable]
+        if (v.flogo_variable !== null) {
+            newVariables[v.flogo_variable] = variables[v.flogo_variable]
+        }
     })
     variables = newVariables
 }
@@ -1253,6 +1259,7 @@ function variablesEditor_placeVariableDropIndicatorBefore(v) {
     const vb = v.getBoundingClientRect()
     d.classList.add("visible")
     d.style.top = (vb.y - d.getBoundingClientRect().height) + "px"
+    d.flogo_placeAtEnd = v.flogo_variable === null
     d.flogo_placeBefore = v
     d.flogo_placeAfter = null
 }
@@ -1262,6 +1269,7 @@ function variablesEditor_placeVariableDropIndicatorAfter(v) {
     const vb = v.getBoundingClientRect()
     d.classList.add("visible")
     d.style.top = (vb.y + vb.height) + "px"
+    d.flogo_placeAtEnd = v.flogo_variable === null
     d.flogo_placeBefore = null
     d.flogo_placeAfter = v
 }
@@ -1269,6 +1277,7 @@ function variablesEditor_placeVariableDropIndicatorAfter(v) {
 function variablesEditor_hideVariableDropIndicator() {
     const d = document.getElementById("variableDropIndicator")
     d.classList.remove("visible")
+    d.flogo_placeAtEnd = false
     d.flogo_placeBefore = null
     d.flogo_placeAfter = null
 }
@@ -1276,7 +1285,20 @@ function variablesEditor_hideVariableDropIndicator() {
 function variablesEditor_moveVariableAtDropIndicator(v) {
     const d = document.getElementById("variableDropIndicator")
     const list = document.getElementById("variableList")
-    if (d.flogo_placeBefore !== null) {
+    if (d.flogo_placeAtEnd) {
+        let before = null
+        const vars = variableList.querySelectorAll(".variable")
+        for (let i = vars.length - 1; i >= 0; i--) {
+            if (vars[i].flogo_variable !== null) {
+                before = vars[i]
+                break
+            }
+        }
+        if (before !== null) {
+            list.removeChild(v)
+            before.after(v)
+        }
+    } else if (d.flogo_placeBefore !== null) {
         const before = v,
             after = d.flogo_placeBefore
         if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
