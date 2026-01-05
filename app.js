@@ -1149,11 +1149,12 @@ function variablesEditor_makeAddBtn() {
     return b
 }
 
+let ARRAY_VIEW_MAX = 1024
+
 function variablesEditor_updateVariableValue(v) {
     if (v.flogo_variable === null) return
     if (variables[v.flogo_variable].isArray) {
-        //TODO: limit array view max size
-        if (typeof v.flogo_val.vis.arrayViewer === "undefined" || v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size || v.flogo_val.vis.arrayViewer.flogo_arrType !== variables[v.flogo_variable].type) {
+        if (typeof v.flogo_val.vis.arrayViewer === "undefined" || variables[v.flogo_variable].size <= ARRAY_VIEW_MAX && v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size || v.flogo_val.vis.arrayViewer.flogo_arrType !== variables[v.flogo_variable].type) {
             const d = document.createElement("details")
             v.flogo_val.vis.arrayViewer = d
             const s = document.createElement("summary")
@@ -1165,6 +1166,14 @@ function variablesEditor_updateVariableValue(v) {
             v.flogo_val.vis.arrayViewer.arrContents = []
             for (let i = 0; i < variables[v.flogo_variable].size; i++) {
                 const tr = document.createElement("tr")
+                if (i >= ARRAY_VIEW_MAX) {
+                    const td = document.createElement("td")
+                    td.setAttribute("colspan", "2")
+                    td.innerText = "Too long, truncated"
+                    tr.appendChild(td)
+                    t.appendChild(tr)
+                    break
+                }
                 const th = document.createElement("th")
                 th.innerText = i
                 tr.appendChild(th)
@@ -1178,7 +1187,7 @@ function variablesEditor_updateVariableValue(v) {
             v.flogo_val.vis.appendChild(d)
         }
         if (v.flogo_val.vis.arrayViewer.open) {
-            for (let i = 0; i < variables[v.flogo_variable].size; i++) {
+            for (let i = 0; i < v.flogo_val.vis.arrayViewer.arrContents.length; i++) {
                 let text
                 if (variables[v.flogo_variable].value[i] !== null) {
                     text = "" + variables[v.flogo_variable].value[i]
