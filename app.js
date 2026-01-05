@@ -715,7 +715,13 @@ let dragging = null
 function variablesEditor_createVariable(name) {
     const v = document.createElement("div")
     v.className = "variable"
-    v.flogo_variable = name
+    if (name === null) {
+        v.flogo_variable = "temp_" + Date.now()
+        declareVariable(v.flogo_variable, "integer", null)
+        v.flogo_isNewVariable = true
+    } else {
+        v.flogo_variable = name
+    }
     v.draggable = true
     v.ondragstart = e => {
         if (e.target !== v) e.preventDefault()
@@ -801,7 +807,7 @@ function variablesEditor_createVariable(name) {
     btns.appendChild(confirmEditBtn)
     nt.appendChild(btns)
     nt.ondragenter = () => {
-        if (dragging !== v && v.previousSibling !== dragging && v.flogo_variable !== null) {
+        if (dragging !== v && v.previousSibling !== dragging) {
             variablesEditor_placeVariableDropIndicatorBefore(v)
         } else {
             variablesEditor_hideVariableDropIndicator()
@@ -915,11 +921,7 @@ function variablesEditor_createVariable(name) {
     }
     valEdit.ondragenter = valVis.ondragenter = () => {
         if (dragging !== v && v.nextSibling !== dragging) {
-            if (v.flogo_variable !== null) {
-                variablesEditor_placeVariableDropIndicatorAfter(v)
-            } else {
-                variablesEditor_placeVariableDropIndicatorBefore(v)
-            }
+            variablesEditor_placeVariableDropIndicatorAfter(v)
         } else {
             variablesEditor_hideVariableDropIndicator()
         }
@@ -989,9 +991,10 @@ function variablesEditor_editVariable(v) {
 function variablesEditor_cancelEditVariable(v) {
     v.classList.remove("editing")
     v.draggable = true
-    if (v.flogo_variable === null) {
+    if (v.flogo_isNewVariable) {
         document.getElementById("variableList").removeChild(v)
         document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
+        removeVariable(v.flogo_variable)
     } else {
         v.flogo_name.edit.innerText = v.flogo_variable
         if (variables[v.flogo_variable].isArray) {
@@ -1008,7 +1011,6 @@ function variablesEditor_cancelEditVariable(v) {
                 v.flogo_val.edit.flogo_initVal.innerText = ""
             }
         }
-
     }
 }
 
@@ -1030,42 +1032,36 @@ function variablesEditor_confirmEditVariable(v) {
             if (isNaN(size) || !Number.isInteger(size) || size <= 0) throw ""
             arrType = v.flogo_val.edit.flogo_arrType.value
             let changed = false
-            if (v.flogo_variable === null) {
-                declareArray(name, arrType, size)
-                changed = true
-                v.flogo_variable = name
-                v.flogo_name.vis.innerText = name
-                v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
-                variablesEditor_updateVariableValue(v)
+            if (v.flogo_isNewVariable) {
                 document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
-            } else {
-                const tempName = "temp_" + Date.now()
-                declareArray(tempName, arrType, size)
-                if (name === v.flogo_variable) {
-                    if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
-                    variables[name] = variables[tempName]
-                } else {
-                    //this is inefficient af, but necessary to keep them in the right order when a variable is renamed
-                    changed = true
-                    const newVars = {}
-                    for (k in variables) {
-                        if (k !== v.flogo_variable) {
-                            newVars[k] = variables[k]
-                        } else {
-                            newVars[name] = variables[tempName]
-                        }
-                    }
-                    variables = newVars
-                }
-                delete variables[tempName]
-                v.flogo_variable = name
-                v.flogo_name.vis.innerText = name
-                v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
-                variablesEditor_updateVariableValue(v)
             }
+            const tempName = "temp_" + Date.now()
+            declareArray(tempName, arrType, size)
+            if (name === v.flogo_variable) {
+                if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
+                variables[name] = variables[tempName]
+            } else {
+                //this is inefficient af, but necessary to keep them in the right order when a variable is renamed
+                changed = true
+                const newVars = {}
+                for (k in variables) {
+                    if (k !== v.flogo_variable) {
+                        newVars[k] = variables[k]
+                    } else {
+                        newVars[name] = variables[tempName]
+                    }
+                }
+                variables = newVars
+            }
+            delete variables[tempName]
+            v.flogo_variable = name
+            v.flogo_name.vis.innerText = name
+            v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
+            variablesEditor_updateVariableValue(v)
             v.classList.remove("editing")
             v.draggable = true
             delete v.flogo_val.vis.arrayViewer
+            delete v.flogo_isNewVariable
             if (v.flogo_val.vis.classList.contains("uninitialized")) v.flogo_val.vis.classList.remove("uninitialized")
             if (changed) {
                 saveToHistory()
@@ -1097,40 +1093,34 @@ function variablesEditor_confirmEditVariable(v) {
                 }
             }
             let changed = false
-            if (v.flogo_variable === null) {
-                declareVariable(name, type, val)
-                changed = true
-                v.flogo_variable = name
-                v.flogo_name.vis.innerText = name
-                v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
-                variablesEditor_updateVariableValue(v)
+            if (v.flogo_isNewVariable) {
                 document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
-            } else {
-                const tempName = "temp_" + Date.now()
-                declareVariable(tempName, type, val)
-                if (name === v.flogo_variable) {
-                    if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
-                    variables[name] = variables[tempName]
-                } else {
-                    //this is inefficient af, but necessary to keep them in the right order when a variable is renamed
-                    changed = true
-                    const newVars = {}
-                    for (k in variables) {
-                        if (k !== v.flogo_variable) {
-                            newVars[k] = variables[k]
-                        } else {
-                            newVars[name] = variables[tempName]
-                        }
-                    }
-                    variables = newVars
-                }
-                delete variables[tempName]
-                v.flogo_variable = name
-                v.flogo_name.vis.innerText = name
-                v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
-                variablesEditor_updateVariableValue(v)
             }
+            const tempName = "temp_" + Date.now()
+            declareVariable(tempName, type, val)
+            if (name === v.flogo_variable) {
+                if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
+                variables[name] = variables[tempName]
+            } else {
+                //this is inefficient af, but necessary to keep them in the right order when a variable is renamed
+                changed = true
+                const newVars = {}
+                for (k in variables) {
+                    if (k !== v.flogo_variable) {
+                        newVars[k] = variables[k]
+                    } else {
+                        newVars[name] = variables[tempName]
+                    }
+                }
+                variables = newVars
+            }
+            delete variables[tempName]
+            v.flogo_variable = name
+            v.flogo_name.vis.innerText = name
+            v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
+            variablesEditor_updateVariableValue(v)
             v.classList.remove("editing")
+            delete v.flogo_isNewVariable
             v.draggable = true
             if (changed) {
                 saveToHistory()
@@ -1259,7 +1249,6 @@ function variablesEditor_placeVariableDropIndicatorBefore(v) {
     const vb = v.getBoundingClientRect()
     d.classList.add("visible")
     d.style.top = (vb.y - d.getBoundingClientRect().height) + "px"
-    d.flogo_placeAtEnd = v.flogo_variable === null
     d.flogo_placeBefore = v
     d.flogo_placeAfter = null
 }
@@ -1269,7 +1258,6 @@ function variablesEditor_placeVariableDropIndicatorAfter(v) {
     const vb = v.getBoundingClientRect()
     d.classList.add("visible")
     d.style.top = (vb.y + vb.height) + "px"
-    d.flogo_placeAtEnd = v.flogo_variable === null
     d.flogo_placeBefore = null
     d.flogo_placeAfter = v
 }
@@ -1277,7 +1265,6 @@ function variablesEditor_placeVariableDropIndicatorAfter(v) {
 function variablesEditor_hideVariableDropIndicator() {
     const d = document.getElementById("variableDropIndicator")
     d.classList.remove("visible")
-    d.flogo_placeAtEnd = false
     d.flogo_placeBefore = null
     d.flogo_placeAfter = null
 }
@@ -1285,20 +1272,7 @@ function variablesEditor_hideVariableDropIndicator() {
 function variablesEditor_moveVariableAtDropIndicator(v) {
     const d = document.getElementById("variableDropIndicator")
     const list = document.getElementById("variableList")
-    if (d.flogo_placeAtEnd) {
-        let before = null
-        const vars = variableList.querySelectorAll(".variable")
-        for (let i = vars.length - 1; i >= 0; i--) {
-            if (vars[i].flogo_variable !== null) {
-                before = vars[i]
-                break
-            }
-        }
-        if (before !== null) {
-            list.removeChild(v)
-            before.after(v)
-        }
-    } else if (d.flogo_placeBefore !== null) {
+    if (d.flogo_placeBefore !== null) {
         const before = v,
             after = d.flogo_placeBefore
         if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
@@ -1560,9 +1534,19 @@ function clearHistory() {
 }
 
 function saveToHistory() {
+    //we don't want to keep any temp_# variable created by pressing new variable, so we remove them temporarily and restore them later
+    const tempVars = {},
+        realVars = variables
+    document.querySelectorAll("#variableList > div.variable").forEach(v => {
+        if (!v.flogo_isNewVariable) {
+            tempVars[v.flogo_variable] = variables[v.flogo_variable]
+        }
+    })
+    variables = tempVars
     undoHistory.length = undoHistoryPtr
     undoHistory.push(save(false))
     undoHistoryPtr++
+    variables = realVars
 }
 
 function undo() {
