@@ -53,6 +53,7 @@ __Flogo__ is a free and open source programming language for beginners, designed
 * All standard loop types: Do-While, While and For (basic-style)
 * Lazy evaluation of boolean expressions
 * Lots of built-in functions (see documentation for a complete list)
+* Arrays
 * Turtle graphics
 * Execution speed control and step-by-step mode to better follow the flow of the program; a turbo mode is also available to run larger programs at maximum speed
 * Easy to use UI with Undo/Redo, Cut/Copy/Paste and keyboard shortcuts
@@ -65,8 +66,7 @@ __Flogo__ is a free and open source programming language for beginners, designed
 * Runs on all modern browsers, can be installed as a PWA and run completely offline
 
 ## Future features
-* Arrays (Planned for v1.3, in 2026)
-* Functions (Planned for v1.4, in 2026)
+* Functions
 
 ## Example programs
 __Basics__
@@ -89,6 +89,9 @@ __Strings__
 * [Anagram](https://downloads.fdossena.com/geth.php?r=flogo-demo-13)
 * [Date and Time](https://downloads.fdossena.com/geth.php?r=flogo-demo-16)
 
+__Arrays__
+TODO
+
 __Mini games__
 * [Rock, paper, scissors](https://downloads.fdossena.com/geth.php?r=flogo-demo-14)
 * [Quasar (similar to blackjack)](https://downloads.fdossena.com/geth.php?r=flogo-demo-15)
@@ -104,7 +107,7 @@ These are the official download links for Flogo, always updated to the latest ve
 Don't forget to download some <a href="#example-programs">Example programs</a> to test it!
 
 #### <img src=".github/webapp.png" height="32"> Webapp
-[Run Flogo](https://flogo.fdossena.com), it runs directly in your browser and be installed as a PWA on any device.
+[Run Flogo](https://flogo.fdossena.com), it runs directly in your browser and can be installed as a PWA on any device.
 
 #### <img src=".github/windows.png" height="32"> Windows 10/11
 [Windows (x64)](https://downloads.fdossena.com/geth.php?r=flogo-win) 👈 This is probably the one you want  
@@ -133,7 +136,7 @@ If you're a developer, see `BUILDING.md` for instructions on how to build the ap
 Pull requests are welcome.
 
 ## License
-Copyright (C) 2025 Federico Dossena
+Copyright (C) 2025-2026 Federico Dossena
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
