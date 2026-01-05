@@ -1154,7 +1154,12 @@ let ARRAY_VIEW_MAX = 1024
 function variablesEditor_updateVariableValue(v) {
     if (v.flogo_variable === null) return
     if (variables[v.flogo_variable].isArray) {
-        if (typeof v.flogo_val.vis.arrayViewer === "undefined" || variables[v.flogo_variable].size <= ARRAY_VIEW_MAX && v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size || v.flogo_val.vis.arrayViewer.flogo_arrType !== variables[v.flogo_variable].type) {
+        if (typeof v.flogo_val.vis.arrayViewer === "undefined" || //we haven't created the array viewer yet
+            v.flogo_val.vis.arrayViewer.flogo_arrType !== variables[v.flogo_variable].type || //the type of the array has changed
+            ARRAY_VIEW_MAX !== Number.MAX_SAFE_INTEGER && variables[v.flogo_variable].size <= ARRAY_VIEW_MAX && v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size || //the array view limit is set and the array size has changed
+            ARRAY_VIEW_MAX === Number.MAX_SAFE_INTEGER && v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size || //the array view limit is disabled and the array size has changed or must no longer be truncated
+            v.flogo_val.vis.arrayViewer.arrContents.length > ARRAY_VIEW_MAX //the array view exceeds the limit and we need to truncate
+        ) {
             const d = document.createElement("details")
             v.flogo_val.vis.arrayViewer = d
             const s = document.createElement("summary")
@@ -1581,6 +1586,7 @@ function openSettings() {
     document.getElementById("settings_altTurboTSlice").checked = _altTurboTSlice
     document.getElementById("settings_unlimitedConsole").checked = LOG_MAX_MESSAGES === 0
     document.getElementById("settings_unlimitedTurtle").checked = TURTLE_MAXPOINTS === 0
+    document.getElementById("settings_unlimitedArrayView").checked = ARRAY_VIEW_MAX === Number.MAX_SAFE_INTEGER
     const badge = document.getElementById("versionTypeBadge")
     if (isElectron()) {
         badge.innerText = "Electron " + process.versions.electron
@@ -1661,6 +1667,16 @@ function settings_unlimitedTurtle_changed() {
         TURTLE_MAXPOINTS = 0
     } else {
         TURTLE_MAXPOINTS = 10000
+    }
+}
+
+function settings_unlimitedArrayView_changed() {
+    const val = document.getElementById("settings_unlimitedArrayView").checked
+    storage.unlimitedArrayView = val
+    if (val) {
+        ARRAY_VIEW_MAX = Number.MAX_SAFE_INTEGER
+    } else {
+        ARRAY_VIEW_MAX = 1024
     }
 }
 
@@ -2332,6 +2348,9 @@ function initApp() {
     }
     if (typeof storage.unlimitedTurtle !== "undefined") {
         if (storage.unlimitedTurtle === "true") TURTLE_MAXPOINTS = 0
+    }
+    if (typeof storage.unlimitedArrayView !== "undefined") {
+        if (storage.unlimitedArrayView === "true") ARRAY_VIEW_MAX = Number.MAX_SAFE_INTEGER
     }
     edit_addFocusEvents()
     initFlowchart("flowchartArea")
