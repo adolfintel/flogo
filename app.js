@@ -949,7 +949,7 @@ function variablesEditor_createVariable(name) {
             typeVis.innerText = variables[name].type.slice(0, 1).toUpperCase() + variables[name].type.slice(1)
             typeEdit.value = variables[name].type
         }
-        if (variables[name].initialValue !== null) {
+        if (typeof variables[name].initialValue !== "undefined" && variables[name].initialValue !== null){
             init.checked = true
             initVal.style.display = "block"
             initVal.innerText = variables[name].initialValue
