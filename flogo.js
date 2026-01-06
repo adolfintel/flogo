@@ -604,7 +604,7 @@ function evaluateExpression(expression) { //both text and pre-parsed jsep expres
                             if (variables[n.arguments[0].name].isArray) {
                                 return variables[n.arguments[0].name].size
                             } else {
-                                if (typeof variables[n.arguments[0].name].type !== "string") throw "len requires a string or an array"
+                                if (variables[n.arguments[0].name].type !== "string") throw "len requires a string or an array"
                                 return variables[n.arguments[0].name].value.length
                             }
                         } else {
@@ -621,7 +621,7 @@ function evaluateExpression(expression) { //both text and pre-parsed jsep expres
                             if (variables[n.arguments[0].name].isArray) {
                                 return variables[n.arguments[0].name].size - 1
                             } else {
-                                if (typeof variables[n.arguments[0].name].type !== "string") throw "end requires a string or an array"
+                                if (variables[n.arguments[0].name].type !== "string") throw "end requires a string or an array"
                                 return variables[n.arguments[0].name].value.length - 1
                             }
                         } else {
