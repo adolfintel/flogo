@@ -717,7 +717,7 @@ function variablesEditor_createVariable(name) {
     v.className = "variable"
     if (name === null) {
         v.flogo_variable = "temp_" + Date.now()
-        declareVariable(v.flogo_variable, "integer", null)
+        declareVariable(v.flogo_variable, "integer")
         v.flogo_isNewVariable = true
     } else {
         v.flogo_variable = name
@@ -1042,7 +1042,7 @@ function variablesEditor_confirmEditVariable(v) {
                 document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
             }
             const tempName = "temp_" + Date.now()
-            declareArray(tempName, arrType, size)
+            declareVariable(tempName, arrType, size)
             if (name === v.flogo_variable) {
                 if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
                 variables[name] = variables[tempName]
@@ -1103,7 +1103,7 @@ function variablesEditor_confirmEditVariable(v) {
                 document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
             }
             const tempName = "temp_" + Date.now()
-            declareVariable(tempName, type, val)
+            declareVariable(tempName, type, 0, val)
             if (name === v.flogo_variable) {
                 if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
                 variables[name] = variables[tempName]
