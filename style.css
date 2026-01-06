@@ -748,12 +748,6 @@ div.variable>.value {
     padding: var(--ui-measure-spacer-small);
     text-align: center;
     min-height: 1.5rem;
-    max-height: 5rem;
-    overflow-y: auto;
-}
-
-div.variable>.value:has(table) {
-    max-height: 10rem;
 }
 
 div.variable>.value table {
@@ -769,6 +763,16 @@ div.variable>.value table * {
 
 div.variable>.value table th {
     width: 25%;
+}
+
+div.variable>.value details {
+    max-height: 8rem;
+    overflow-y: auto;
+}
+
+div.variable>.value div.simpleViewer {
+    max-height: 5rem;
+    overflow-y: auto;
 }
 
 div.variable>.value.modified {
