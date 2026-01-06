@@ -1153,6 +1153,9 @@ function variablesEditor_makeAddBtn() {
 
 let ARRAY_VIEW_MAX = 1024
 
+const tablePlaceholder = document.createElement("div")
+tablePlaceholder.style.height = "999999rem"
+
 function variablesEditor_updateVariableValue(v) {
     if (v.flogo_variable === null) return
     if (variables[v.flogo_variable].isArray) {
@@ -1174,6 +1177,7 @@ function variablesEditor_updateVariableValue(v) {
             v.flogo_val.vis.arrayViewer.flogo_arrType = variables[v.flogo_variable].type
             d.appendChild(s)
             const t = document.createElement("table")
+            v.flogo_val.vis.arrayViewer.tableElement = t
             v.flogo_val.vis.arrayViewer.arrContents = []
             for (let i = 0; i < variables[v.flogo_variable].size; i++) {
                 const tr = document.createElement("tr")
@@ -1198,18 +1202,30 @@ function variablesEditor_updateVariableValue(v) {
             v.flogo_val.vis.appendChild(d)
         }
         if (v.flogo_val.vis.arrayViewer.open) {
+            let needRefresh = false
             for (let i = 0; i < v.flogo_val.vis.arrayViewer.arrContents.length; i++) {
-                let text
-                if (variables[v.flogo_variable].value[i] !== null) {
-                    text = "" + variables[v.flogo_variable].value[i]
-                    if (v.flogo_val.vis.arrayViewer.arrContents[i].classList.contains("uninitialized")) v.flogo_val.vis.arrayViewer.arrContents[i].classList.remove("uninitialized")
-                } else {
-                    text = "Not initialized"
-                    if (!v.flogo_val.vis.arrayViewer.arrContents[i].classList.contains("uninitialized")) v.flogo_val.vis.arrayViewer.arrContents[i].classList.add("uninitialized")
+                if (typeof v.flogo_val.vis.arrayViewer.arrContents[i].flogo_value === "undefined" || variables[v.flogo_variable].value[i] !== v.flogo_val.vis.arrayViewer.arrContents[i].flogo_value) {
+                    needRefresh = true
+                    break
                 }
-                if (text !== v.flogo_val.vis.arrayViewer.arrContents[i].innerText) {
-                    v.flogo_val.vis.arrayViewer.arrContents[i].innerText = text
+            }
+            if (needRefresh) {
+                v.flogo_val.vis.arrayViewer.replaceChild(tablePlaceholder, v.flogo_val.vis.arrayViewer.tableElement)
+                for (let i = 0; i < v.flogo_val.vis.arrayViewer.arrContents.length; i++) {
+                    let text
+                    v.flogo_val.vis.arrayViewer.arrContents[i].flogo_value = variables[v.flogo_variable].value[i]
+                    if (variables[v.flogo_variable].value[i] !== null) {
+                        text = "" + variables[v.flogo_variable].value[i]
+                        if (v.flogo_val.vis.arrayViewer.arrContents[i].classList.contains("uninitialized")) v.flogo_val.vis.arrayViewer.arrContents[i].classList.remove("uninitialized")
+                    } else {
+                        text = "Not initialized"
+                        if (!v.flogo_val.vis.arrayViewer.arrContents[i].classList.contains("uninitialized")) v.flogo_val.vis.arrayViewer.arrContents[i].classList.add("uninitialized")
+                    }
+                    if (text !== v.flogo_val.vis.arrayViewer.arrContents[i].innerText) {
+                        v.flogo_val.vis.arrayViewer.arrContents[i].innerText = text
+                    }
                 }
+                v.flogo_val.vis.arrayViewer.replaceChild(v.flogo_val.vis.arrayViewer.tableElement, tablePlaceholder)
             }
         }
     } else {

@@ -768,6 +768,7 @@ div.variable>.value table th {
 div.variable>.value details {
     max-height: 8rem;
     overflow-y: auto;
+    contain: layout paint style;
 }
 
 div.variable>.value div.simpleViewer {
