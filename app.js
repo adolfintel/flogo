@@ -813,7 +813,7 @@ function variablesEditor_createVariable(name) {
     btns.appendChild(confirmEditBtn)
     nt.appendChild(btns)
     nt.ondragenter = () => {
-        if (dragging !== v && v.previousSibling !== dragging) {
+        if (dragging !== null && dragging !== v && v.previousSibling !== dragging) {
             variablesEditor_placeVariableDropIndicatorBefore(v)
         } else {
             variablesEditor_hideVariableDropIndicator()
@@ -926,7 +926,7 @@ function variablesEditor_createVariable(name) {
         init: init
     }
     valEdit.ondragenter = valVis.ondragenter = () => {
-        if (dragging !== v && v.nextSibling !== dragging) {
+        if (dragging !== null && dragging !== v && v.nextSibling !== dragging) {
             variablesEditor_placeVariableDropIndicatorAfter(v)
         } else {
             variablesEditor_hideVariableDropIndicator()
