@@ -1063,12 +1063,12 @@ function variablesEditor_confirmEditVariable(v) {
             v.flogo_variable = name
             v.flogo_name.vis.innerText = name
             v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
-            variablesEditor_updateVariableValue(v)
             v.classList.remove("editing")
             v.draggable = true
             delete v.flogo_val.vis.arrayViewer
             delete v.flogo_isNewVariable
             if (v.flogo_val.vis.classList.contains("uninitialized")) v.flogo_val.vis.classList.remove("uninitialized")
+            variablesEditor_updateVariableValue(v)
             if (changed) {
                 saveToHistory()
             }
@@ -1124,10 +1124,10 @@ function variablesEditor_confirmEditVariable(v) {
             v.flogo_variable = name
             v.flogo_name.vis.innerText = name
             v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
-            variablesEditor_updateVariableValue(v)
             v.classList.remove("editing")
             delete v.flogo_isNewVariable
             v.draggable = true
+            variablesEditor_updateVariableValue(v)
             if (changed) {
                 saveToHistory()
             }
