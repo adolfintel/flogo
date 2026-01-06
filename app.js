@@ -949,7 +949,7 @@ function variablesEditor_createVariable(name) {
             typeVis.innerText = variables[name].type.slice(0, 1).toUpperCase() + variables[name].type.slice(1)
             typeEdit.value = variables[name].type
         }
-        if (typeof variables[name].initialValue !== "undefined" && variables[name].initialValue !== null){
+        if (typeof variables[name].initialValue !== "undefined" && variables[name].initialValue !== null) {
             init.checked = true
             initVal.style.display = "block"
             initVal.innerText = variables[name].initialValue
@@ -1162,7 +1162,7 @@ function variablesEditor_updateVariableValue(v) {
             ARRAY_VIEW_MAX === Number.MAX_SAFE_INTEGER && v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size || //the array view limit is disabled and the array size has changed or must no longer be truncated
             v.flogo_val.vis.arrayViewer.arrContents.length > ARRAY_VIEW_MAX //the array view exceeds the limit and we need to truncate
         ) {
-            if(typeof v.flogo_val.vis.simpleViewer !== "undefined"){
+            if (typeof v.flogo_val.vis.simpleViewer !== "undefined") {
                 v.flogo_val.vis.simpleViewer.remove()
                 delete v.flogo_val.vis.simpleViewer
             }
@@ -1213,7 +1213,7 @@ function variablesEditor_updateVariableValue(v) {
             }
         }
     } else {
-        if(typeof v.flogo_val.vis.arrayViewer !== "undefined"){
+        if (typeof v.flogo_val.vis.arrayViewer !== "undefined") {
             v.flogo_val.vis.arrayViewer.remove()
             delete v.flogo_val.vis.arrayViewer
         }
@@ -1225,11 +1225,11 @@ function variablesEditor_updateVariableValue(v) {
             text = "Not initialized"
             if (!v.flogo_val.vis.classList.contains("uninitialized")) v.flogo_val.vis.classList.add("uninitialized")
         }
-        if(typeof v.flogo_val.vis.simpleViewer === "undefined"){
-            const simpleViewer=document.createElement("div")
-            simpleViewer.className="simpleViewer"
+        if (typeof v.flogo_val.vis.simpleViewer === "undefined") {
+            const simpleViewer = document.createElement("div")
+            simpleViewer.className = "simpleViewer"
             v.flogo_val.vis.appendChild(simpleViewer)
-            v.flogo_val.vis.simpleViewer=simpleViewer
+            v.flogo_val.vis.simpleViewer = simpleViewer
         }
         if (text !== v.flogo_val.vis.innerText) {
             v.flogo_val.vis.simpleViewer.innerText = text
