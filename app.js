@@ -826,12 +826,20 @@ function variablesEditor_createVariable(name) {
     valEdit.className = "value edit"
     const init = document.createElement("input")
     init.type = "checkbox"
-    init.onchange = () => {
+    init.onchange = e => {
         if (init.checked) {
-            initVal.style.display = "block"
-            initVal.focus()
+            initVal.style.display = ""
+            if (typeof e !== "undefined") {
+                initVal.focus()
+            }
         } else {
             initVal.style.display = "none"
+        }
+    }
+    init.onkeydown = e => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault()
+            v.flogo_buttons.confirm.click()
         }
     }
     const initLabel = document.createElement("label")
@@ -860,6 +868,12 @@ function variablesEditor_createVariable(name) {
         o.innerText = t.slice(0, 1).toUpperCase() + t.slice(1)
         arrType.appendChild(o)
     })
+    arrType.onkeydown = e => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault()
+            v.flogo_buttons.confirm.click()
+        }
+    }
     const arrTypeLabel = document.createElement("label")
     arrTypeLabel.innerText = "Array type"
     arrTypeLabel.onclick = () => {
@@ -887,25 +901,6 @@ function variablesEditor_createVariable(name) {
     valEdit.appendChild(arrSize)
     v.appendChild(valVis)
     v.appendChild(valEdit)
-    typeEdit.onchange = () => {
-        if (typeEdit.value === "array") {
-            arrTypeLabel.style.display = ""
-            arrType.style.display = ""
-            arrSize.style.display = ""
-            init.style.display = "none"
-            initLabel.style.display = "none"
-            initVal.style.display = "none"
-        } else {
-            arrTypeLabel.style.display = "none"
-            arrType.style.display = "none"
-            arrSize.style.display = "none"
-            init.style.display = ""
-            initLabel.style.display = ""
-            initVal.style.display = ""
-            init.onchange()
-        }
-    }
-    typeEdit.onchange()
     v.flogo_name = {
         vis: nameVis,
         edit: nameEdit,
@@ -925,6 +920,25 @@ function variablesEditor_createVariable(name) {
         del: delBtn,
         init: init
     }
+    typeEdit.onchange = () => {
+        if (typeEdit.value === "array") {
+            arrTypeLabel.style.display = ""
+            arrType.style.display = ""
+            arrSize.style.display = ""
+            init.style.display = "none"
+            initLabel.style.display = "none"
+            initVal.style.display = "none"
+        } else {
+            arrTypeLabel.style.display = "none"
+            arrType.style.display = "none"
+            arrSize.style.display = "none"
+            init.style.display = ""
+            initLabel.style.display = ""
+            initVal.style.display = ""
+            init.onchange()
+        }
+    }
+    typeEdit.onchange()
     valEdit.ondragenter = valVis.ondragenter = () => {
         if (dragging !== null && dragging !== v && v.nextSibling !== dragging) {
             variablesEditor_placeVariableDropIndicatorAfter(v)
@@ -981,10 +995,10 @@ function variablesEditor_deleteVariable(v) {
 function variablesEditor_editVariable(v) {
     v.classList.add("editing")
     v.draggable = false
-    if (v.flogo_variable !== null && variables[v.flogo_variable].isArray) {
+    v.flogo_type.edit.onchange()
+    if (variables[v.flogo_variable].isArray) {
         v.flogo_val.edit.flogo_arrType.value = variables[v.flogo_variable].type
         v.flogo_val.edit.flogo_arrSize.innerText = variables[v.flogo_variable].size
-        v.flogo_type.edit.onchange()
     } else {
         v.flogo_buttons.init.onchange()
     }
@@ -1022,62 +1036,29 @@ function variablesEditor_cancelEditVariable(v) {
 
 function variablesEditor_confirmEditVariable(v) {
     const name = v.flogo_name.edit.innerText.trim()
-    if (!_isValidVariableName(name) || (typeof variables[name] !== "undefined" && (name !== v.flogo_variable || v.flogo_variable === null))) {
+    if (!_isValidVariableName(name) || (typeof variables[name] !== "undefined" && (name !== v.flogo_variable || v.flogo_isNewVariable))) {
         errorFlash(v.flogo_name.edit)
         return
     }
     v.flogo_name.edit.innerText = name
-    const type = v.flogo_type.edit.value
-    //TODO: merge the two branches
+    const type = v.flogo_type.edit.value,
+        tempName = "temp_" + Date.now()
+    let size, arrType, val, changed = false,
+        error = false
     if (type === "array") {
-        let size, arrType
         try {
             size = v.flogo_val.edit.flogo_arrSize.innerText.trim()
             if (size === "") throw ""
             size = Number(size)
             if (isNaN(size) || !Number.isInteger(size) || size <= 0) throw ""
             arrType = v.flogo_val.edit.flogo_arrType.value
-            let changed = false
-            if (v.flogo_isNewVariable) {
-                document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
-            }
-            const tempName = "temp_" + Date.now()
             declareVariable(tempName, arrType, size)
-            if (name === v.flogo_variable) {
-                if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
-                variables[name] = variables[tempName]
-            } else {
-                //this is inefficient af, but necessary to keep them in the right order when a variable is renamed
-                changed = true
-                const newVars = {}
-                for (k in variables) {
-                    if (k !== v.flogo_variable) {
-                        newVars[k] = variables[k]
-                    } else {
-                        newVars[name] = variables[tempName]
-                    }
-                }
-                variables = newVars
-            }
-            delete variables[tempName]
-            v.flogo_variable = name
-            v.flogo_name.vis.innerText = name
-            v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
-            v.classList.remove("editing")
-            v.draggable = true
-            delete v.flogo_val.vis.arrayViewer
-            delete v.flogo_isNewVariable
-            if (v.flogo_val.vis.classList.contains("uninitialized")) v.flogo_val.vis.classList.remove("uninitialized")
-            variablesEditor_updateVariableValue(v)
-            if (changed) {
-                saveToHistory()
-            }
         } catch (e) {
             errorFlash(v.flogo_val.edit.flogo_arrSize)
+            error = true
         }
     } else {
         try {
-            let val = null
             if (v.flogo_val.edit.flogo_init.checked) {
                 val = v.flogo_val.edit.flogo_initVal.innerText
                 switch (type) {
@@ -1099,41 +1080,42 @@ function variablesEditor_confirmEditVariable(v) {
                 }
             }
             let changed = false
-            if (v.flogo_isNewVariable) {
-                document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
-            }
-            const tempName = "temp_" + Date.now()
             declareVariable(tempName, type, 0, val)
-            if (name === v.flogo_variable) {
-                if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
-                variables[name] = variables[tempName]
-            } else {
-                //this is inefficient af, but necessary to keep them in the right order when a variable is renamed
-                changed = true
-                const newVars = {}
-                for (k in variables) {
-                    if (k !== v.flogo_variable) {
-                        newVars[k] = variables[k]
-                    } else {
-                        newVars[name] = variables[tempName]
-                    }
-                }
-                variables = newVars
-            }
-            delete variables[tempName]
-            v.flogo_variable = name
-            v.flogo_name.vis.innerText = name
-            v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
-            v.classList.remove("editing")
-            delete v.flogo_isNewVariable
-            v.draggable = true
-            variablesEditor_updateVariableValue(v)
-            if (changed) {
-                saveToHistory()
-            }
         } catch (e) {
             errorFlash(v.flogo_val.edit.flogo_initVal)
+            error = true
         }
+    }
+    if (error) return
+    if (v.flogo_isNewVariable) {
+        document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
+    }
+    if (name === v.flogo_variable) {
+        if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
+        variables[name] = variables[tempName]
+    } else {
+        //this is inefficient af, but necessary to keep them in the right order when a variable is renamed
+        changed = true
+        const newVars = {}
+        for (k in variables) {
+            if (k !== v.flogo_variable) {
+                newVars[k] = variables[k]
+            } else {
+                newVars[name] = variables[tempName]
+            }
+        }
+        variables = newVars
+    }
+    delete variables[tempName]
+    v.flogo_variable = name
+    v.flogo_name.vis.innerText = name
+    v.flogo_type.vis.innerText = type.slice(0, 1).toUpperCase() + type.slice(1)
+    v.classList.remove("editing")
+    v.draggable = true
+    delete v.flogo_isNewVariable
+    variablesEditor_updateVariableValue(v)
+    if (changed) {
+        saveToHistory()
     }
 }
 
@@ -1161,8 +1143,9 @@ function variablesEditor_updateVariableValue(v) {
     if (variables[v.flogo_variable].isArray) {
         if (typeof v.flogo_val.vis.arrayViewer === "undefined" || //we haven't created the array viewer yet
             v.flogo_val.vis.arrayViewer.flogo_arrType !== variables[v.flogo_variable].type || //the type of the array has changed
-            ARRAY_VIEW_MAX !== Number.MAX_SAFE_INTEGER && variables[v.flogo_variable].size <= ARRAY_VIEW_MAX && v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size || //the array view limit is set and the array size has changed
+            ARRAY_VIEW_MAX !== Number.MAX_SAFE_INTEGER && v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size && v.flogo_val.vis.arrayViewer.arrContents.length < ARRAY_VIEW_MAX || //the array view limit is set and the array size has changed
             ARRAY_VIEW_MAX === Number.MAX_SAFE_INTEGER && v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size || //the array view limit is disabled and the array size has changed or must no longer be truncated
+            v.flogo_val.vis.arrayViewer.arrContents.length > variables[v.flogo_variable].size || //the array view is bigger than the array
             v.flogo_val.vis.arrayViewer.arrContents.length > ARRAY_VIEW_MAX //the array view exceeds the limit and we need to truncate
         ) {
             if (typeof v.flogo_val.vis.simpleViewer !== "undefined") {
@@ -1228,6 +1211,7 @@ function variablesEditor_updateVariableValue(v) {
                 v.flogo_val.vis.arrayViewer.replaceChild(v.flogo_val.vis.arrayViewer.tableElement, tablePlaceholder)
             }
         }
+        if (v.flogo_val.vis.classList.contains("uninitialized")) v.flogo_val.vis.classList.remove("uninitialized")
     } else {
         if (typeof v.flogo_val.vis.arrayViewer !== "undefined") {
             v.flogo_val.vis.arrayViewer.remove()
