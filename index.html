@@ -580,6 +580,7 @@
                         <li><a onclick="man_scrollTo('constants')">Built-in constants</a></li>
                     </ul>
                 </li>
+                <li><a onclick="man_scrollTo('arrays')">Arrays</a></li>
                 <li><a onclick="man_scrollTo('turtle')">Graphics</a></li>
             </ul>
             <a name="variables"></a>
@@ -591,7 +592,7 @@
             </p>
             <ul>
                 <li><b>Name</b>: a short name that lets you use the variable in expressions. Names can only contain letters and numbers and the underscore symbol "_" and must start with a letter. Spaces, symbols and accented letters are not allowed. Also, variables can't have the same name as one of the <a onclick="man_scrollTo('constants')">built-in constants</a>. Names are case-sensitive, meaning that the variable <code>n</code> is not the same as the variable <code>N</code>.</li>
-                <li><b>Type</b>: what kind of value can be stored in the variable: Integer, Real, String or Boolean</li>
+                <li><b>Type</b>: what kind of value can be stored in the variable: Integer, Real, String, Boolean or Array</li>
                 <li><b>Initial value</b>: if you want, you can give a value to the variable automatically when the program starts. This is useful for things like counters that have to start at 0, or for constants such as a speed limit</li>
             </ul>
             <h3>Types</h3>
@@ -618,6 +619,10 @@
             <h4>Boolean</h4>
             <p>
                 Can store a value that's either <code>true</code> or <code>false</code>.
+            </p>
+            <h4>Array</h4>
+            <p>
+                Can store multiple values of the same basic type. See <a onclick="man_scrollTo('arrays')">Arrays</a>.
             </p>
             <a name="instructions"></a>
             <h2>Basic instructions</h2>
@@ -830,7 +835,7 @@
             <a name="functions"></a>
             <h3>Built-in functions</h3>
             <p>
-                Flogo has a lot of buit-in functions that make writing expressions easier. For instance, <code>round(a)</code> will give you the value of the variable <code>a</code> rounded mathematically.
+                Flogo has a lot of built-in functions that make writing expressions easier. For instance, <code>round(a)</code> will give you the value of the variable <code>a</code> rounded mathematically to the nearest integer.
             </p>
             <h4>Mathematics</h4>
             <table>
@@ -917,6 +922,10 @@
                         <td>Length of a string</td>
                     </tr>
                     <tr>
+                        <td>end(s)</td>
+                        <td>Position of the last character of a string (same as <code>len(s)-1</code>, useful in for loops)</td>
+                    </tr>
+                    <tr>
                         <td>charAt(s,i)</td>
                         <td>Returns the character in position i in the string s.<br>The first character in a string has position 0</td>
                     </tr>
@@ -935,6 +944,25 @@
                     <tr>
                         <td>strToInt(s)</td>
                         <td>Converts a string into an integer number</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h4>Arrays</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Function</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>len(s)</td>
+                        <td>Length of an array</td>
+                    </tr>
+                    <tr>
+                        <td>end(s)</td>
+                        <td>Position of the last cell of an array (same as <code>len(s)-1</code>, useful in for loops)</td>
                     </tr>
                 </tbody>
             </table>
@@ -982,6 +1010,28 @@
                     </tr>
                 </tbody>
             </table>
+            <a name="arrays"></a>
+            <h2>Arrays</h2>
+            <p>
+                Arrays are a special type of variable that allows you to store more than one value.
+            </p>
+            <p>
+                The way they work is very simple: to create an array, make a variable and set the type to Array, then choose one of the 4 data types: Integer, Real, String or Boolean, and give it a size, that's how many values the array can store.
+            </p>
+            <p>
+                Arrays can be used like normal variables; for instance, if you declare an array <code>a</code> of type Integer and size 100, that would be like declaring 100 integer variables named from <code>a[0]</code> to <code>a[99]</code>. All these variables (called cells or items of the array) are not initialized when the program starts. The number between the square brackets is called <b>index</b>, and it indicates which cell of the array you're trying to use.
+            </p>
+            If you try to access an index that's outside the bounds of the array, such as <code>a[100]</code>, or if you try to read from an uninitialized cell, your program will crash; remember that indices go from 0 to the size-1, and that you cannot use uninitialized variables in expressions.
+            </p>
+            <p>
+                You can also use an expression as an index when using an array. For instance, let's say that you want to read 10 numbers and store them for later, if you do that by declaring 10 variables, you'd need 10 input instructions; but with arrays you can use loops, so you can just write a loop for i=0 to 9 and input <code>a[i]</code> at each step.<br>This makes arrays extremely powerful and versatile.
+            </p>
+            <p>
+                Arrays cannot be used directly in expressions and assignments, only their individual cells can. For instance, if you have an array <code>a</code> and you try to output <code>a</code> directly will crash your program; if you want to print the contents of the array, you need to use a loop.
+            </p>
+            <p>
+                While your program is running, you can see the contents of your arrays in real time by expanding them in the variables list.
+            </p>
             <a name="turtle"></a>
             <h2>Graphics</h2>
             <p>
