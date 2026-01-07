@@ -1753,7 +1753,7 @@ function man_scrollTo(name) {
     const man = document.getElementById("man_contents")
     const e = man.querySelector("*[name='" + name + "']")
     if (e !== null) {
-        man.scrollTop = e.getBoundingClientRect().y - 10
+        man.scrollTop = e.getBoundingClientRect().y - man.getBoundingClientRect().y
     }
 }
 
