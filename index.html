@@ -1032,6 +1032,10 @@
             <p>
                 While your program is running, you can see the contents of your arrays in real time by expanding them in the variables list.
             </p>
+            <h4>Variable array size</h4>
+            <p>
+                Sometimes you don't know how big your array needs to be when you're writing your program. Arrays in Flogo are static, meaning that they cannot change size while the program is running, but nothing stops you from declaring a large enough array and storing the size separately in an integer variable, that way the size can change at any time without actually resizing the array. We call that variable <b>logical size</b>. Keep in mind that the <code>end</code> and <code>len</code> functions will still give you the full size of the array, not the logical size!
+            </p>
             <a name="turtle"></a>
             <h2>Graphics</h2>
             <p>
