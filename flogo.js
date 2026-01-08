@@ -113,92 +113,89 @@ function declareVariable(name, type, arraySize = 0, value = null) {
         }
         const variableGetterAndSetter = {
             set(target, prop, value) {
-                if (prop !== "size") throw "Arrays cannot be changed this way"
-                if (prop === "size") {
-                    if (typeof value !== "number" || !Number.isInteger(value)) throw "Array size must be an integer"
-                    if (value <= 0) throw "Array size must be >0"
-                    target.size = value
-                    const arr = []
-                    for (let i = 0; i < value; i++) {
-                        arr[i] = null
-                    }
-                    const arrayGetterAndSetter = {
-                        set(targetArr, prop, value) {
-                            try {
-                                prop = prop.trim()
-                                if (prop === "") throw ""
-                                prop = Number(prop)
-                                if (!Number.isInteger(prop)) throw ""
-                            } catch (e) {
-                                throw "Array index must be an integer"
-                            }
-                            if (prop < 0 || prop >= target.size) throw "Array index out of bounds: " + prop
-                            if (value !== null) {
-                                switch (target["type"]) {
-                                    case "integer": {
-                                        if (typeof value !== "number") throw "Not a number"
-                                        if (isNaN(value)) throw "Not a valid number"
-                                        if (value < Number.MIN_SAFE_INTEGER || value > Number.MAX_SAFE_INTEGER) throw "Value too big"
-                                        if (Number.isInteger(value)) {
-                                            targetArr[prop] = value
-                                        } else {
-                                            targetArr[prop] = Math.trunc(value)
-                                        }
-                                    }
-                                    break
-                                    case "real": {
-                                        if (typeof value !== "number") throw "Not a number"
-                                        if (isNaN(value)) throw "Not a valid number"
-                                        targetArr[prop] = value
-                                    }
-                                    break
-                                    case "string": {
-                                        if (typeof value !== "string") {
-                                            value = "" + value
-                                        }
-                                        if (value.length <= 1048576) {
-                                            targetArr[prop] = value
-                                        } else {
-                                            throw "String too long"
-                                        }
-                                    }
-                                    break
-                                    case "boolean": {
-                                        if (typeof value !== "boolean") throw "Not a boolean"
-                                        targetArr[prop] = value
-                                    }
-                                }
-                            } else {
-                                targetArr[prop] = null
-                            }
-                            v.modified = true
-                        },
-                        get(targetArr, prop, receiver) {
-                            if (typeof prop === "symbol") {
-                                return () => target.type + "[" + target.size + "]"
-                            }
-                            try {
-                                prop = prop.trim()
-                                if (prop === "") throw ""
-                                prop = Number(prop)
-                                if (!Number.isInteger(prop)) throw ""
-                            } catch (e) {
-                                throw "Array index must be an integer"
-                            }
-                            if (prop < 0 || prop >= target.size) throw "Array index out of bounds: " + prop
-                            return targetArr[prop]
-                        },
-                    }
-                    const arrayProxy = new Proxy(arr, arrayGetterAndSetter)
-                    target.value = arrayProxy
-                }
+                throw "Arrays cannot be changed this way"
             },
             get(target, prop, receiver) {
                 return target[prop]
             },
         }
+        if (typeof arraySize !== "number" || !Number.isInteger(arraySize)) throw "Array size must be an integer"
+        if (arraySize <= 0) throw "Array size must be >0"
+        v.size = arraySize
+        const arr = []
+        for (let i = 0; i < v.size; i++) {
+            arr[i] = null
+        }
+        const arrayGetterAndSetter = {
+            set(target, prop, value) {
+                try {
+                    prop = prop.trim()
+                    if (prop === "") throw ""
+                    prop = Number(prop)
+                    if (!Number.isInteger(prop)) throw ""
+                } catch (e) {
+                    throw "Array index must be an integer"
+                }
+                if (prop < 0 || prop >= v.size) throw "Array index out of bounds: " + prop
+                if (value !== null) {
+                    switch (v.type) {
+                        case "integer": {
+                            if (typeof value !== "number") throw "Not a number"
+                            if (isNaN(value)) throw "Not a valid number"
+                            if (value < Number.MIN_SAFE_INTEGER || value > Number.MAX_SAFE_INTEGER) throw "Value too big"
+                            if (Number.isInteger(value)) {
+                                target[prop] = value
+                            } else {
+                                target[prop] = Math.trunc(value)
+                            }
+                        }
+                        break
+                        case "real": {
+                            if (typeof value !== "number") throw "Not a number"
+                            if (isNaN(value)) throw "Not a valid number"
+                            target[prop] = value
+                        }
+                        break
+                        case "string": {
+                            if (typeof value !== "string") {
+                                value = "" + value
+                            }
+                            if (value.length <= 1048576) {
+                                target[prop] = value
+                            } else {
+                                throw "String too long"
+                            }
+                        }
+                        break
+                        case "boolean": {
+                            if (typeof value !== "boolean") throw "Not a boolean"
+                            target[prop] = value
+                        }
+                    }
+                } else {
+                    target[prop] = null
+                }
+                v.modified = true
+            },
+            get(target, prop, receiver) {
+                if (typeof prop === "symbol") {
+                    return () => v.type + "[" + v.size + "]"
+                }
+                try {
+                    prop = prop.trim()
+                    if (prop === "") throw ""
+                    prop = Number(prop)
+                    if (!Number.isInteger(prop)) throw ""
+                } catch (e) {
+                    throw "Array index must be an integer"
+                }
+                if (prop < 0 || prop >= v.size) throw "Array index out of bounds: " + prop
+                return target[prop]
+            },
+        }
+        const arrayProxy = new Proxy(arr, arrayGetterAndSetter)
+        v.value = arrayProxy
         const proxy = new Proxy(v, variableGetterAndSetter)
-        proxy.size = arraySize
         v.toSimpleObject = () => {
             return {
                 type: v.type,
@@ -206,7 +203,9 @@ function declareVariable(name, type, arraySize = 0, value = null) {
             }
         }
         v.reset = () => {
-            proxy.size = proxy.size
+            for (let i = 0; i < v.size; i++) {
+                arr[i] = null
+            }
             v.modified = false
         }
         variables[name] = proxy
