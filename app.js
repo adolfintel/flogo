@@ -1013,7 +1013,7 @@ function variablesEditor_cancelEditVariable(v) {
     v.draggable = true
     if (v.flogo_isNewVariable) {
         document.getElementById("variableList").removeChild(v)
-        document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
+        document.getElementById("variableList").appendChild(newVarBtn)
         removeVariable(v.flogo_variable)
     } else {
         v.flogo_name.edit.innerText = v.flogo_variable
@@ -1088,7 +1088,7 @@ function variablesEditor_confirmEditVariable(v) {
     }
     if (error) return
     if (v.flogo_isNewVariable) {
-        document.getElementById("variableList").appendChild(variablesEditor_makeAddBtn())
+        document.getElementById("variableList").appendChild(newVarBtn)
     }
     if (name === v.flogo_variable) {
         if (JSON.stringify(variables[name].toSimpleObject()) !== JSON.stringify(variables[tempName].toSimpleObject())) changed = true
@@ -1119,18 +1119,15 @@ function variablesEditor_confirmEditVariable(v) {
     }
 }
 
-function variablesEditor_makeAddBtn() {
-    const b = document.createElement("button")
-    b.id = "newVariable"
-    b.className = "important"
-    b.innerText = "New"
-    b.prepend(makeIcon("add"))
-    b.onclick = () => {
-        const list = document.getElementById("variableList")
-        list.removeChild(b)
-        list.appendChild(variablesEditor_createVariable(null))
-    }
-    return b
+const newVarBtn = document.createElement("button")
+newVarBtn.id = "newVariable"
+newVarBtn.className = "important"
+newVarBtn.innerText = "New"
+newVarBtn.prepend(makeIcon("add"))
+newVarBtn.onclick = () => {
+    const list = document.getElementById("variableList")
+    list.removeChild(newVarBtn)
+    list.appendChild(variablesEditor_createVariable(null))
 }
 
 let ARRAY_VIEW_MAX = 1024
@@ -1326,7 +1323,7 @@ function recreateVariableList() {
         const div = variablesEditor_createVariable(v)
         list.appendChild(div)
     }
-    list.appendChild(variablesEditor_makeAddBtn())
+    list.appendChild(newVarBtn)
     list.appendChild(variablesEditor_makeVariableDropIndicator())
 }
 
