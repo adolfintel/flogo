@@ -979,9 +979,7 @@ function variablesEditor_reorderProgramVariablesUsingOrderFromVisibleList() {
     const newVariables = {}
     const vars = document.querySelectorAll("#variableList > div.variable")
     vars.forEach(v => {
-        if (v.flogo_variable !== null) {
-            newVariables[v.flogo_variable] = variables[v.flogo_variable]
-        }
+        newVariables[v.flogo_variable] = variables[v.flogo_variable]
     })
     variables = newVariables
 }
@@ -1136,7 +1134,6 @@ const tablePlaceholder = document.createElement("div")
 tablePlaceholder.style.height = "999999rem"
 
 function variablesEditor_updateVariableValue(v) {
-    if (v.flogo_variable === null) return
     if (variables[v.flogo_variable].isArray) {
         if (typeof v.flogo_val.vis.arrayViewer === "undefined" || //we haven't created the array viewer yet
             v.flogo_val.vis.arrayViewer.flogo_arrType !== variables[v.flogo_variable].type || //the type of the array has changed
@@ -1292,13 +1289,13 @@ function variablesEditor_moveVariableAtDropIndicator(v) {
     if (d.flogo_placeBefore !== null) {
         const before = v,
             after = d.flogo_placeBefore
-        if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
+        if (before == after || before === null || after === null) return
         list.removeChild(before)
         list.insertBefore(before, after)
     } else if (d.flogo_placeAfter !== null) {
         const before = d.flogo_placeAfter,
             after = v
-        if (before == after || before === null || after === null || after.flogo_variable === null || before.flogo_variable === null) return
+        if (before == after || before === null || after === null) return
         list.removeChild(after)
         before.after(after)
     } else {
@@ -1312,7 +1309,7 @@ function updateVariableValues() {
     requestAnimationFrame(updateVariableValues)
     const vars = document.querySelectorAll("#variableList > div.variable")
     vars.forEach(v => {
-        if (v.flogo_variable !== null) variablesEditor_updateVariableValue(v)
+        variablesEditor_updateVariableValue(v)
     })
 }
 
