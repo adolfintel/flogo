@@ -1608,7 +1608,6 @@ function openSettings() {
     document.getElementById("metadata_author").value = metadata.author
     document.getElementById("style_theme").value = getCurrentTheme()
     document.getElementById("settings_fps").checked = storage.showFps === "true"
-    document.getElementById("settings_allowZoomOnFlowchart").checked = _allowZoomOnFlowchart
     document.getElementById("settings_altTurboTSlice").checked = _altTurboTSlice
     document.getElementById("settings_unlimitedConsole").checked = LOG_MAX_MESSAGES === 0
     document.getElementById("settings_unlimitedTurtle").checked = TURTLE_MAXPOINTS === 0
@@ -1662,12 +1661,6 @@ function settings_fps_changed() {
     const val = document.getElementById("settings_fps").checked
     storage.showFps = val
     document.getElementById("fps").style.display = val ? "block" : "none"
-}
-
-function settings_allowZoomOnFlowchart_changed() {
-    const val = document.getElementById("settings_allowZoomOnFlowchart").checked
-    storage.allowZoomOnFlowchart = val
-    _allowZoomOnFlowchart = val
 }
 
 function settings_altTurboTSlice_changed() {
@@ -2361,11 +2354,6 @@ function initApp() {
     document.getElementById("popupBackdrop").addEventListener("contextmenu", e => e.preventDefault())
     document.getElementById("fps").style.display = storage.showFps === "true" ? "block" : "none"
     updateFps()
-    if (typeof storage.allowZoomOnFlowchart !== "undefined") {
-        _allowZoomOnFlowchart = storage.allowZoomOnFlowchart === "true"
-    } else {
-        _allowZoomOnFlowchart = isElectron()
-    }
     if (typeof storage.altTurboTSlice !== "undefined") {
         _altTurboTSlice = storage.altTurboTSlice === "true"
     }

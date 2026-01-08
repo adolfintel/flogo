@@ -73,8 +73,6 @@ let ASSIGN_COLOR1,
     MINVIS,
     FLOWCHART_OCCLUDED_ON_TOP = 0
 
-let _allowZoomOnFlowchart = false
-
 function _makeArrowHighlightable(arrow) {
     arrow.on("mouseover", () => {
         if (arrow.flogo_forceHighlighted) return
@@ -1828,28 +1826,11 @@ function initFlowchart(id) {
     boundsFun()
     stage.on("wheel", e => {
         const ctrlKey = isMac ? (e.evt.ctrlKey || e.evt.metaKey) : e.evt.ctrlKey
-        if (ctrlKey) {
-            if (!_allowZoomOnFlowchart) return
-            e.evt.preventDefault()
-            const oldZoom = stage.scaleX()
-            const ptr = stage.getPointerPosition()
-            const mouseTo = {
-                x: (ptr.x - stage.x()) / oldZoom,
-                y: (ptr.y - stage.y()) / oldZoom,
-            }
-            let zoom = oldZoom * (1 - e.evt.deltaY / 1000)
-            setFlowchartZoom(zoom)
-            zoom = stage.scaleX()
-            stage.position({
-                x: ptr.x - mouseTo.x * zoom,
-                y: ptr.y - mouseTo.y * zoom,
-            })
-        } else {
-            stage.position({
-                x: stage.x() - e.evt.deltaX / 2,
-                y: stage.y() - e.evt.deltaY / 2
-            })
-        }
+        if (ctrlKey) return
+        stage.position({
+            x: stage.x() - e.evt.deltaX / 2,
+            y: stage.y() - e.evt.deltaY / 2
+        })
     })
     stage.on("click", e => {
         if (e.target === stage) {

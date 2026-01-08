@@ -56,6 +56,36 @@ const createWindow = openThis => {
             contextIsolation: false
         }
     })
+    win.webContents.on('zoom-changed', (e, dir) => {
+        e.preventDefault()
+        if (dir === 'in') {
+            if (win.webContents.getZoomLevel() < 2) {
+                win.webContents.setZoomLevel(win.webContents.getZoomLevel() + 1)
+            }
+        } else if (dir === 'out') {
+            if (win.webContents.getZoomLevel() > -2) {
+                win.webContents.setZoomLevel(win.webContents.getZoomLevel() - 1)
+            }
+        }
+    })
+    win.webContents.on('before-input-event', (e, input) => {
+        if (input.control && input.type === 'keyDown') {
+            if (input.key === '+') {
+                e.preventDefault()
+                if (win.webContents.getZoomLevel() < 2) {
+                    win.webContents.setZoomLevel(win.webContents.getZoomLevel() + 1)
+                }
+            } else if (input.key === '-') {
+                e.preventDefault()
+                if (win.webContents.getZoomLevel() > -2) {
+                    win.webContents.setZoomLevel(win.webContents.getZoomLevel() - 1)
+                }
+            } else if (input.key === '0') {
+                e.preventDefault()
+                win.webContents.setZoomLevel(0)
+            }
+        }
+    })
     win.on('ready-to-show', () => {
         win.show()
         if (typeof openThis !== "undefined") {
