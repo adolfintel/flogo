@@ -799,6 +799,11 @@ div.variable>.value.edit>div[contentEditable] {
     padding: var(--ui-measure-spacer-small);
 }
 
+div.variable>.value.edit>div.initVal {
+    max-height: 5rem;
+    overflow-y: auto;
+}
+
 div.variable>.value.edit>div.initVal[contentEditable]:empty::before {
     content: "Initial value";
     opacity: 0.5;
