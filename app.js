@@ -1137,10 +1137,8 @@ function variablesEditor_updateVariableValue(v) {
     if (variables[v.flogo_variable].isArray) {
         if (typeof v.flogo_val.vis.arrayViewer === "undefined" || //we haven't created the array viewer yet
             v.flogo_val.vis.arrayViewer.flogo_arrType !== variables[v.flogo_variable].type || //the type of the array has changed
-            ARRAY_VIEW_MAX !== Number.MAX_SAFE_INTEGER && v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size && v.flogo_val.vis.arrayViewer.arrContents.length < ARRAY_VIEW_MAX || //the array view limit is set and the array size has changed
-            ARRAY_VIEW_MAX === Number.MAX_SAFE_INTEGER && v.flogo_val.vis.arrayViewer.arrContents.length !== variables[v.flogo_variable].size || //the array view limit is disabled and the array size has changed or must no longer be truncated
-            v.flogo_val.vis.arrayViewer.arrContents.length > variables[v.flogo_variable].size || //the array view is bigger than the array
-            v.flogo_val.vis.arrayViewer.arrContents.length > ARRAY_VIEW_MAX //the array view exceeds the limit and we need to truncate
+            v.flogo_val.vis.arrayViewer.flogo_arrSize !== variables[v.flogo_variable].size || //the size of the array has changed
+            v.flogo_val.vis.arrayViewer.flogo_limit !== ARRAY_VIEW_MAX //the user has toggled the array view limit
         ) {
             if (typeof v.flogo_val.vis.simpleViewer !== "undefined") {
                 v.flogo_val.vis.simpleViewer.remove()
@@ -1152,6 +1150,8 @@ function variablesEditor_updateVariableValue(v) {
             const shortText = "" + variables[v.flogo_variable].value
             s.innerText = shortText.slice(0, 1).toUpperCase() + shortText.slice(1)
             v.flogo_val.vis.arrayViewer.flogo_arrType = variables[v.flogo_variable].type
+            v.flogo_val.vis.arrayViewer.flogo_arrSize = variables[v.flogo_variable].size
+            v.flogo_val.vis.arrayViewer.flogo_limit = ARRAY_VIEW_MAX
             d.appendChild(s)
             const t = document.createElement("table")
             v.flogo_val.vis.arrayViewer.tableElement = t
