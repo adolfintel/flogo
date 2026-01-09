@@ -1252,6 +1252,7 @@ p.settings_desc {
     max-height: 70rem;
     transform: translate(-50%, -50%);
     border: var(--ui-measure-border-thick) solid var(--ui-color-border1);
+    overflow: hidden;
 }
 
 #license {
