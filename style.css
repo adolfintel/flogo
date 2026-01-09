@@ -127,8 +127,8 @@
     --crash-Padding-spaceFromInstruction: 10;
     --layout-large-threshold: 80;
     --layout-small-threshold: 55;
-    --layout-consoleArea-width: 25rem;
-    --layout-variablesArea-width: 20rem;
+    --layout-consoleArea-width: 24rem;
+    --layout-variablesArea-width: 19rem;
     --toast-background: #ffffffd0;
     --toast-color: #000000;
     --toast-animation-duration: 0.4s;
