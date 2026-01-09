@@ -766,9 +766,15 @@ div.variable>.value table th {
 }
 
 div.variable>.value details {
-    max-height: 8rem;
+    max-height: 10rem;
     overflow-y: auto;
     contain: layout paint style;
+}
+
+@media all and (max-height: 50rem) {
+    div.variable>.value details {
+        max-height: 8rem;
+    }
 }
 
 div.variable>.value div.simpleViewer {
