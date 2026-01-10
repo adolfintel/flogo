@@ -2028,6 +2028,10 @@ function download(name) {
         a.href = URL.createObjectURL(blob)
         a.download = name
         a.click()
+    }).catch(e => {
+        setTimeout(() => {
+            window.onerror("CompressionStream", "flogo.js", "")
+        }, 0)
     })
 }
 
@@ -2050,7 +2054,14 @@ function loadFromFile(f, callback) {
         } catch (e) {
             callback(e)
         }
-    }).catch(() => {
+    }).catch(e => {
+        try {
+            if (e.message.contains("DecompressionStream")) {
+                setTimeout(() => {
+                    window.onerror("DecompressionStream", "flogo.js", "")
+                }, 0)
+            }
+        } catch (e) {}
         callback("Not a Flogo program")
     })
 }
