@@ -60,6 +60,8 @@ yarn run build-win-architecture
 
 Replacing `architecture` with either `x64` for an x86_64 build or `arm` for an aarch64 build.
 
+Note: if you're building the Windows version on GNU/Linux, ignore the signtool.exe error that appears at the end of the build.
+
 To build the installer , enter the `_SETUP` folder, open `setup-win-x64.iss` or `setup-win-arm.iss` in Inno Setup and hit Compile. This last step can be done in Wine if you're trying to build the Windows version from a Linux machine.
 
 If everything goes right, you'll find the installer exe files in the `setup` folder inside `_SETUP`.
