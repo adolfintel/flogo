@@ -990,6 +990,7 @@ function variablesEditor_editVariable(v) {
         v.flogo_val.edit.flogo_arrType.value = variables[v.flogo_variable].type
         v.flogo_val.edit.flogo_arrSize.innerText = variables[v.flogo_variable].size
     }
+    v.flogo_buttons.init.checked = variables[v.flogo_variable].initialValue !== null
     v.flogo_buttons.init.onchange()
     requestAnimationFrame(() => {
         //needs to happen on the next frame because we can't focus an element that's not currently visible
