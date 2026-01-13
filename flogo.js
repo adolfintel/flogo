@@ -204,7 +204,7 @@ function declareVariable(name, type, arraySize = 0, value = null) {
         v.reset = () => {
             v.value[0] = v.initialValue
             for (let i = 1; i < v.size; i++) {
-                arr[i] = v.value[0]
+                arr[i] = arr[0]
             }
             v.modified = false
         }
