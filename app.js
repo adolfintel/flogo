@@ -824,6 +824,7 @@ function variablesEditor_createVariable(name) {
     valVis.className = "value vis"
     const valEdit = document.createElement("div")
     valEdit.className = "value edit"
+    const valEditArrayOnly = document.createElement("div")
     const init = document.createElement("input")
     init.type = "checkbox"
     init.onchange = e => {
@@ -893,12 +894,13 @@ function variablesEditor_createVariable(name) {
     }
     disableSpellcheck(arrSize)
     disableSpellcheck(initVal)
+    valEditArrayOnly.appendChild(arrTypeLabel)
+    valEditArrayOnly.appendChild(arrType)
+    valEditArrayOnly.appendChild(arrSize)
+    valEdit.appendChild(valEditArrayOnly)
     valEdit.appendChild(init)
     valEdit.appendChild(initLabel)
     valEdit.appendChild(initVal)
-    valEdit.appendChild(arrTypeLabel)
-    valEdit.appendChild(arrType)
-    valEdit.appendChild(arrSize)
     v.appendChild(valVis)
     v.appendChild(valEdit)
     v.flogo_name = {
@@ -922,21 +924,11 @@ function variablesEditor_createVariable(name) {
     }
     typeEdit.onchange = () => {
         if (typeEdit.value === "array") {
-            arrTypeLabel.style.display = ""
-            arrType.style.display = ""
-            arrSize.style.display = ""
-            init.style.display = "none"
-            initLabel.style.display = "none"
-            initVal.style.display = "none"
+            valEditArrayOnly.style.display = ""
         } else {
-            arrTypeLabel.style.display = "none"
-            arrType.style.display = "none"
-            arrSize.style.display = "none"
-            init.style.display = ""
-            initLabel.style.display = ""
-            initVal.style.display = ""
-            init.onchange()
+            valEditArrayOnly.style.display = "none"
         }
+        init.onchange()
     }
     typeEdit.onchange()
     valEdit.ondragenter = valVis.ondragenter = () => {
@@ -997,9 +989,8 @@ function variablesEditor_editVariable(v) {
     if (variables[v.flogo_variable].isArray) {
         v.flogo_val.edit.flogo_arrType.value = variables[v.flogo_variable].type
         v.flogo_val.edit.flogo_arrSize.innerText = variables[v.flogo_variable].size
-    } else {
-        v.flogo_buttons.init.onchange()
     }
+    v.flogo_buttons.init.onchange()
     requestAnimationFrame(() => {
         //needs to happen on the next frame because we can't focus an element that's not currently visible
         v.flogo_name.edit.focus()
@@ -1041,7 +1032,8 @@ function variablesEditor_confirmEditVariable(v) {
     v.flogo_name.edit.innerText = name
     const type = v.flogo_type.edit.value,
         tempName = "temp_" + Date.now()
-    let size, arrType, val, changed = false,
+    let size, arrType, val = null,
+        changed = false,
         error = false
     if (type === "array") {
         try {
@@ -1049,10 +1041,37 @@ function variablesEditor_confirmEditVariable(v) {
             if (size === "") throw ""
             size = Number(size)
             if (isNaN(size) || !Number.isInteger(size) || size <= 0) throw ""
-            arrType = v.flogo_val.edit.flogo_arrType.value
-            declareVariable(tempName, arrType, size)
         } catch (e) {
             errorFlash(v.flogo_val.edit.flogo_arrSize)
+            error = true
+        }
+        try {
+            arrType = v.flogo_val.edit.flogo_arrType.value
+            if (v.flogo_val.edit.flogo_init.checked) {
+                val = v.flogo_val.edit.flogo_initVal.innerText
+                switch (arrType) {
+                    case "integer":
+                    case "real": {
+                        val = val.trim()
+                        v.flogo_val.edit.flogo_initVal.innerText = val
+                        if (val === "") throw ""
+                        val = Number(val)
+                    }
+                    break
+                    case "boolean": {
+                        val = val.trim()
+                        v.flogo_val.edit.flogo_initVal.innerText = val
+                        if (val !== "false" && val !== "true") throw ""
+                        val = val === "true"
+                    }
+                    break
+                }
+            }
+            if (!error) {
+                declareVariable(tempName, arrType, size, val)
+            }
+        } catch (e) {
+            errorFlash(v.flogo_val.edit.flogo_initVal)
             error = true
         }
     } else {
@@ -1077,7 +1096,6 @@ function variablesEditor_confirmEditVariable(v) {
                     break
                 }
             }
-            let changed = false
             declareVariable(tempName, type, 0, val)
         } catch (e) {
             errorFlash(v.flogo_val.edit.flogo_initVal)

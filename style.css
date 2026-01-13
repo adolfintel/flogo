@@ -795,40 +795,40 @@ div.variable>.value.edit {
     text-align: initial;
 }
 
-div.variable>.value.edit>div[contentEditable] {
+div.variable>.value.edit div[contentEditable] {
     padding: var(--ui-measure-spacer-small);
 }
 
-div.variable>.value.edit>div.initVal {
+div.variable>.value.edit div.initVal {
     max-height: 5rem;
     overflow-y: auto;
 }
 
-div.variable>.value.edit>div.initVal[contentEditable]:empty::before {
+div.variable>.value.edit div.initVal[contentEditable]:empty::before {
     content: "Initial value";
     opacity: 0.5;
 }
 
-div.variable>.value.edit>div.arrSize[contentEditable]:empty::before {
+div.variable>.value.edit div.arrSize[contentEditable]:empty::before {
     content: "[Size";
     opacity: 0.5;
 }
 
-div.variable>.value.edit>div.arrSize[contentEditable]::before {
+div.variable>.value.edit div.arrSize[contentEditable]::before {
     content: "[";
     opacity: 0.5;
 }
 
-div.variable>.value.edit>div.arrSize[contentEditable]::after {
+div.variable>.value.edit div.arrSize[contentEditable]::after {
     content: "]";
     opacity: 0.5;
 }
 
-div.variable>.value.edit>div.arrSize {
+div.variable>.value.edit div.arrSize {
     display: inline-block;
 }
 
-div.variable>.value.edit>select.arrType {
+div.variable>.value.edit select.arrType {
     margin-left: var(--ui-measure-spacer-small);
 }
 
