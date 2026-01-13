@@ -802,6 +802,7 @@ div.variable>.value.edit div[contentEditable] {
 div.variable>.value.edit div.initVal {
     max-height: 5rem;
     overflow-y: auto;
+    background: var(--ui-color-form-background);
 }
 
 div.variable>.value.edit div.initVal[contentEditable]:empty::before {
