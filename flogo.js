@@ -107,6 +107,7 @@ function declareVariable(name, type, arraySize = 0, value = null) {
         const v = {
             type: type,
             value: null,
+            initialValue: value,
             size: 0,
             isArray: true,
             modified: false
@@ -123,9 +124,6 @@ function declareVariable(name, type, arraySize = 0, value = null) {
         if (arraySize <= 0) throw "Array size must be >0"
         v.size = arraySize
         const arr = []
-        for (let i = 0; i < v.size; i++) {
-            arr[i] = null
-        }
         const arrayGetterAndSetter = {
             set(target, prop, value) {
                 try {
@@ -199,15 +197,18 @@ function declareVariable(name, type, arraySize = 0, value = null) {
         v.toSimpleObject = () => {
             return {
                 type: v.type,
-                arraySize: v.size
+                value: v.initialValue,
+                arraySize: v.size,
             }
         }
         v.reset = () => {
-            for (let i = 0; i < v.size; i++) {
-                arr[i] = null
+            v.value[0] = v.initialValue
+            for (let i = 1; i < v.size; i++) {
+                arr[i] = v.value[0]
             }
             v.modified = false
         }
+        v.reset()
         variables[name] = proxy
     }
 }
