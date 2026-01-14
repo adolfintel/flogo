@@ -224,7 +224,7 @@ function resetVariables() {
 }
 
 function removeVariable(name) {
-    if (typeof variables[name] === undefined) throw "Variable does not exist: " + name
+    if (typeof variables[name] === "undefined") throw "Variable does not exist: " + name
     delete variables[name]
 }
 
