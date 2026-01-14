@@ -1242,18 +1242,7 @@ For.prototype.createDrawable = function() {
         _makeArrowHighlightable(loopArrow)
         group.add(loopArrow)
     }
-    const arrowOut = new Konva.Arrow({
-        x: condition.flogo_width / 2,
-        y: 0,
-        points: [0, condition.flogo_height, 0, endY],
-        pointerLength: 0,
-        pointerWidth: 0,
-        fill: LINE_COLOR,
-        stroke: LINE_COLOR,
-        strokeWidth: LINE_THICKNESS,
-        hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
-    })
-    group.add(arrowOut)
+    group.flogo_nextArrowStartYOffset = endY - condition.flogo_height
     const fText = new Konva.Text({
         x: 0,
         y: condition.flogo_height + BLOCK_OUTLINE_THICKNESS,
