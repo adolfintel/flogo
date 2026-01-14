@@ -1913,9 +1913,6 @@ function registerWindowEvents(w, canResize = false) {
             e.stopImmediatePropagation()
         }
     })
-    bar.oncontextmenu = e => {
-        e.preventDefault()
-    }
     w.flogo_windowEventsInitialized = true
 }
 
@@ -2363,8 +2360,6 @@ function updateFps(t) {
 
 function initApp() {
     //workaround: on some chromium-based browsers, this context menu gets accidentally triggered when right-clicking a block, despite it having display:none when the event is triggered
-    document.getElementById("editor2").addEventListener("contextmenu", e => e.preventDefault())
-    document.getElementById("popupBackdrop").addEventListener("contextmenu", e => e.preventDefault())
     document.getElementById("fps").style.display = storage.showFps === "true" ? "block" : "none"
     updateFps()
     if (typeof storage.altTurboTSlice !== "undefined") {
@@ -2527,6 +2522,14 @@ function initApp() {
                 e.preventDefault()
                 shell.openExternal(e.target.href)
             }
+        })
+    } else {
+        document.querySelectorAll("*").forEach(el => {
+            el.addEventListener("contextmenu", e => {
+                if (!(e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT" && e.target.type === "text" || e.target.contentEditable === "true")) {
+                    e.preventDefault()
+                }
+            })
         })
     }
     if (isWebKit) { //webkit-based browsers don't support file filters with multiple types
