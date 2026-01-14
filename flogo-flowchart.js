@@ -460,13 +460,16 @@ InstructionSequence.prototype.createDrawable = function(skipFirstArrow = false, 
         group.add(a)
     }
     let n = contents.length
+    if (n > 0) {
+        group.flogo_nextArrowStartYOffset = contents[n - 1].flogo_nextArrowStartYOffset
+    }
     if (skipLastArrow) n--
     for (let i = 0; i < n; i++) {
         const b = contents[i]
         const a = new Konva.Arrow({
             x: b.x() + b.flogo_connX,
             y: b.y() + b.flogo_height,
-            points: [0, 0, 0, SPACE_BETWEEN_INSTRUCTIONS],
+            points: [0, -(b.flogo_nextArrowStartYOffset ?? 0), 0, SPACE_BETWEEN_INSTRUCTIONS],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -659,7 +662,7 @@ If.prototype.createDrawable = function() {
         const tArrowOut = new Konva.Arrow({
             x: t.x() + t.flogo_connX,
             y: t.y() + t.flogo_height,
-            points: [0, 0, 0, endY - (t.y() + t.flogo_height), -(t.flogo_connX + (t.x() - (condition.x() + condition.flogo_width / 2))), endY - (t.y() + t.flogo_height)],
+            points: [0, -(t.flogo_nextArrowStartYOffset ?? 0), 0, endY - (t.y() + t.flogo_height), -(t.flogo_connX + (t.x() - (condition.x() + condition.flogo_width / 2))), endY - (t.y() + t.flogo_height)],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -674,7 +677,7 @@ If.prototype.createDrawable = function() {
         const tArrowLoop = new Konva.Arrow({
             x: condition.x() + condition.flogo_width,
             y: condition.flogo_height / 2,
-            points: [0, 0, t.flogo_connX + minTPad, 0, t.flogo_connX + minTPad, endY - condition.flogo_height / 2, -condition.flogo_width / 2, endY - condition.flogo_height / 2],
+            points: [0, -(t.flogo_nextArrowStartYOffset ?? 0), t.flogo_connX + minTPad, 0, t.flogo_connX + minTPad, endY - condition.flogo_height / 2, -condition.flogo_width / 2, endY - condition.flogo_height / 2],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -704,7 +707,7 @@ If.prototype.createDrawable = function() {
         const fArrowOut = new Konva.Arrow({
             x: f.x() + f.flogo_connX,
             y: f.y() + f.flogo_height,
-            points: [0, 0, 0, endY - (f.y() + f.flogo_height), condition.x() - f.flogo_connX + condition.flogo_width / 2, endY - (f.y() + f.flogo_height)],
+            points: [0, -(f.flogo_nextArrowStartYOffset ?? 0), 0, endY - (f.y() + f.flogo_height), condition.x() - f.flogo_connX + condition.flogo_width / 2, endY - (f.y() + f.flogo_height)],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -852,7 +855,7 @@ DoWhile.prototype.createDrawable = function() {
         const arrowToCond = new Konva.Arrow({
             x: b.x() + b.flogo_connX,
             y: b.y() + b.flogo_height,
-            points: [0, 0, 0, condition.y() + condition.flogo_height / 2 - (b.y() + b.flogo_height), -(b.x() + b.flogo_connX - (condition.x() + condition.flogo_width)), condition.y() + condition.flogo_height / 2 - (b.y() + b.flogo_height)],
+            points: [0, -(b.flogo_nextArrowStartYOffset ?? 0), 0, condition.y() + condition.flogo_height / 2 - (b.y() + b.flogo_height), -(b.x() + b.flogo_connX - (condition.x() + condition.flogo_width)), condition.y() + condition.flogo_height / 2 - (b.y() + b.flogo_height)],
             pointerLength: LINE_ARROW_SIZE,
             pointerWidth: LINE_ARROW_SIZE,
             fill: LINE_COLOR,
@@ -1028,7 +1031,7 @@ While.prototype.createDrawable = function() {
             y: b.y() + b.flogo_height,
             points: [
                 0,
-                0,
+                -(b.flogo_nextArrowStartYOffset ?? 0),
                 0,
                 SPACE_BETWEEN_INSTRUCTIONS,
                 -(b.x() + b.flogo_connX) + condition.flogo_width / 2 + PADDING_BASE,
@@ -1073,18 +1076,7 @@ While.prototype.createDrawable = function() {
         _makeArrowHighlightable(loopArrow)
         group.add(loopArrow)
     }
-    const arrowOut = new Konva.Arrow({
-        x: condition.flogo_width / 2,
-        y: 0,
-        points: [0, condition.flogo_height, 0, endY],
-        pointerLength: 0,
-        pointerWidth: 0,
-        fill: LINE_COLOR,
-        stroke: LINE_COLOR,
-        strokeWidth: LINE_THICKNESS,
-        hitStrokeWidth: LINE_THICKNESS + LINE_HITBOX_EXTRA,
-    })
-    group.add(arrowOut)
+    group.flogo_nextArrowStartYOffset = endY - condition.flogo_height
     const fText = new Konva.Text({
         x: 0,
         y: condition.flogo_height + BLOCK_OUTLINE_THICKNESS,
@@ -1205,7 +1197,7 @@ For.prototype.createDrawable = function() {
             y: b.y() + b.flogo_height,
             points: [
                 0,
-                0,
+                -(b.flogo_nextArrowStartYOffset ?? 0),
                 0,
                 SPACE_BETWEEN_INSTRUCTIONS,
                 -(b.x() + b.flogo_connX) + condition.flogo_width / 2 + PADDING_BASE,
