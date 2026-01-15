@@ -158,6 +158,10 @@ body {
     font-family: "Noto Sans";
 }
 
+img {
+    pointer-events: none;
+}
+
 ::selection {
     background: var(--ui-color-accent1);
     color: var(--ui-color-text-accent);
@@ -1351,6 +1355,7 @@ p.settings_desc {
     max-width: 25rem;
     display: block;
     margin: 0 auto;
+    user-select: none;
 }
 
 #man h2 {
