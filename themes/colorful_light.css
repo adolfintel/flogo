@@ -84,3 +84,7 @@ div.expander {
 #man {
     background: #ffffff;
 }
+
+#popupBackdrop.important {
+    background: #00000020;
+}

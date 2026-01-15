@@ -554,7 +554,7 @@ function ui_onProgramCrash(e) {
     document.getElementById("crash_details").innerText = e
     c.style.top = 0
     c.style.left = 0
-    showPopup(c)
+    showPopup(c, true)
     const cBounds = c.getBoundingClientRect()
     const wBounds = {
         width: window.innerWidth,
@@ -1490,7 +1490,7 @@ function loadProgram(triggeredFromKeyboardShortcut = false) {
                 clipboard = null
                 if (e !== null) {
                     document.getElementById("loadError_details").innerText = e
-                    showPopup("loadError")
+                    showPopup("loadError", true)
                 } else {
                     toast("Program loaded")
                 }
@@ -1644,7 +1644,7 @@ function openSettings() {
     if (!isElectron() && location.protocol !== "https:") {
         document.getElementById("export_format_svg").disabled = true
     }
-    showPopup("settings")
+    showPopup("settings", true)
 }
 
 function settings_selectTab(id) {
@@ -1735,7 +1735,7 @@ function hideLicense() {
 
 //-------- MANUAL STUFF --------
 function openManual() {
-    showPopup("man")
+    showPopup("man", true)
     document.getElementById("man_contents").scrollTop = 0
 }
 
@@ -2010,15 +2010,21 @@ function closePopup(all = false) {
         }
     })
     if (document.querySelectorAll("div.popup.visible").length === 0) {
-        document.getElementById("popupBackdrop").classList.remove("active")
+        const backdrop = document.getElementById("popupBackdrop")
+        backdrop.classList.remove("active")
+        backdrop.classList.remove("important")
     }
 }
 
-function showPopup(d) {
+function showPopup(d, important = false) {
     closePopup()
     if (typeof d === "string") d = document.getElementById(d)
     d.classList.add("visible")
-    document.getElementById("popupBackdrop").classList.add("active")
+    const backdrop = document.getElementById("popupBackdrop")
+    backdrop.classList.add("active")
+    if (important) {
+        backdrop.classList.add("important")
+    }
 }
 
 function updateFlowchartOcclusion() {
@@ -2255,7 +2261,7 @@ function yesnoPrompt(title, details, e, callback_yes, callback_no) {
         yesno.style.left = "50vw"
         yesno.style.transform = "translate(-50%,-50%)"
     }
-    showPopup(yesno)
+    showPopup(yesno, true)
     let b = yesno.getBoundingClientRect()
     const wBounds = document.body.getBoundingClientRect()
     if (b.x + b.width >= wBounds.width) {
@@ -2413,7 +2419,7 @@ function initApp() {
                 systemColorSchemeChangeHandler()
                 window.addEventListener('resize', updateBarHeight)
                 if (typeof storage.recovery !== "undefined") {
-                    showPopup("errorRec")
+                    showPopup("errorRec", true)
                 } else {
                     crashHandlerMode = 1
                 }
@@ -2471,7 +2477,7 @@ function initApp() {
                     clipboard = null
                     if (e2 !== null) {
                         document.getElementById("loadError_details").innerText = e2
-                        showPopup("loadError")
+                        showPopup("loadError", true)
                     } else {
                         toast("Program loaded")
                     }
@@ -2508,7 +2514,7 @@ function initApp() {
                     clipboard = null
                     if (e2 !== null) {
                         document.getElementById("loadError_details").innerText = e2
-                        showPopup("loadError")
+                        showPopup("loadError", true)
                     } else {
                         toast("Program loaded")
                     }

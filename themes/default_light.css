@@ -89,3 +89,7 @@ div.expander {
 div.popup {
     border-color: var(--ui-color-border1);
 }
+
+#popupBackdrop.important {
+    background: #00000020;
+}

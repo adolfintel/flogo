@@ -120,3 +120,17 @@ div.window.visible {
 div.window>div.window_bar {
     background: #ffffff20;
 }
+
+#popupBackdrop {
+    transition: background 0.15s, display 0.15s allow-discrete;
+    background: #00000000;
+}
+
+#popupBackdrop.important {
+    background: #00000040;
+    transition: background 0.15s;
+
+    @starting-style {
+        background: #00000000;
+    }
+}

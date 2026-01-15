@@ -152,3 +152,7 @@
 #input:focus {
     box-shadow: 0 0 0 var(--ui-measure-border-thick) var(--ui-color-accent2) inset;
 }
+
+#popupBackdrop.important {
+    background: #00000020;
+}

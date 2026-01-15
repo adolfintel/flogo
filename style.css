@@ -210,6 +210,10 @@ a {
     display: block;
 }
 
+#popupBackdrop.important {
+    background: #00000040;
+}
+
 div.popup {
     display: none;
     position: fixed;
