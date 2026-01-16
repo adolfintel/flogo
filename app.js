@@ -1025,17 +1025,16 @@ function variablesEditor_cancelEditVariable(v) {
 }
 
 function variablesEditor_confirmEditVariable(v) {
+    let size, arrType, val = null,
+        changed = false,
+        errorFields = []
     const name = v.flogo_name.edit.innerText.trim()
     if (!_isValidVariableName(name) || (typeof variables[name] !== "undefined" && (name !== v.flogo_variable || v.flogo_isNewVariable))) {
-        errorFlash(v.flogo_name.edit)
-        return
+        errorFields.push(v.flogo_name.edit)
     }
     v.flogo_name.edit.innerText = name
     const type = v.flogo_type.edit.value,
         tempName = "temp_" + Date.now()
-    let size, arrType, val = null,
-        changed = false,
-        error = false
     if (type === "array") {
         try {
             size = v.flogo_val.edit.flogo_arrSize.innerText.trim()
@@ -1043,8 +1042,7 @@ function variablesEditor_confirmEditVariable(v) {
             size = Number(size)
             if (isNaN(size) || !Number.isInteger(size) || size <= 0) throw ""
         } catch (e) {
-            errorFlash(v.flogo_val.edit.flogo_arrSize)
-            error = true
+            errorFields.push(v.flogo_val.edit.flogo_arrSize)
         }
         try {
             arrType = v.flogo_val.edit.flogo_arrType.value
@@ -1072,8 +1070,7 @@ function variablesEditor_confirmEditVariable(v) {
                 declareVariable(tempName, arrType, size, val)
             }
         } catch (e) {
-            errorFlash(v.flogo_val.edit.flogo_initVal)
-            error = true
+            errorFields.push(v.flogo_val.edit.flogo_initVal)
         }
     } else {
         try {
@@ -1099,11 +1096,15 @@ function variablesEditor_confirmEditVariable(v) {
             }
             declareVariable(tempName, type, 0, val)
         } catch (e) {
-            errorFlash(v.flogo_val.edit.flogo_initVal)
-            error = true
+            errorFields.push(v.flogo_val.edit.flogo_initVal)
         }
     }
-    if (error) return
+    if (errorFields.length > 0) {
+        errorFields.forEach(e => {
+            errorFlash(e, errorFields[0])
+        })
+        return
+    }
     if (v.flogo_isNewVariable) {
         document.getElementById("variableList").appendChild(newVarBtn)
     }
@@ -2231,11 +2232,15 @@ function makeIcon(name) {
     return s
 }
 
-function errorFlash(element) {
+function errorFlash(element, focusOnAnimationEnd) {
     element.style.animation = "errorFlash 0.3s"
     element.onanimationend = () => {
         element.style.animation = ""
-        element.focus()
+        if (typeof focusOnAnimationEnd !== "undefined") {
+            focusOnAnimationEnd.focus()
+        } else {
+            element.focus()
+        }
     }
 }
 
