@@ -1707,7 +1707,7 @@ function _block_touchend(instr, e, parentInstr, parentPos) {
 }
 
 let stage = null
-let blockLayer, scollbarsLayer
+let blockLayer, scrollbarsLayer
 
 function initFlowchart(id) {
     if (stage !== null) throw "Already initialized"
@@ -2097,6 +2097,14 @@ function _getCSSVal(name, defaultValue, element = blockLayer.getCanvas()._canvas
     }
 }
 
+function _getFontNameForLoadingEvent(name) {
+    name = name.trim()
+    if (!(name.startsWith("'") && name.endsWith("'") || name.startsWith('"') && name.endsWith('"'))) {
+        name = '"' + name + '"'
+    }
+    return "1em " + name
+}
+
 function loadFlowchartThemeFromCSS(callback) {
     ASSIGN_COLOR1 = _getCSSVal("--flowchart-Assign-color1", "#696a30")
     ASSIGN_COLOR2 = _getCSSVal("--flowchart-Assign-color2", "#84853d")
@@ -2167,7 +2175,7 @@ function loadFlowchartThemeFromCSS(callback) {
     SCROLLBAR_THICKNESS = Number(_getCSSVal("--flowchart-scrollbar-thickness", 6))
     SCROLLBAR_PADDING = Number(_getCSSVal("--flowchart-scrollbar-padding", 4))
     SCROLLBAR_COLOR = _getCSSVal("--flowchart-scrollbar-color", "#ffffff60")
-    document.fonts.load("1em " + FLOWCHART_FONT, "a").then(() => {
+    document.fonts.load(_getFontNameForLoadingEvent(FLOWCHART_FONT), "a").then(() => {
         updateFlowchart(true)
         if (typeof callback !== "undefined") {
             callback()

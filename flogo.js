@@ -78,6 +78,7 @@ function declareVariable(name, type, arraySize = 0, value = null) {
                     target.value = null
                 }
                 target.modified = true
+                return true
             },
             get(target, prop, receiver) {
                 return target[prop]
@@ -174,6 +175,7 @@ function declareVariable(name, type, arraySize = 0, value = null) {
                     target[prop] = null
                 }
                 v.modified = true
+                return true
             },
             get(target, prop, receiver) {
                 if (typeof prop === "symbol") {
@@ -235,7 +237,7 @@ function removeVariable(name) {
  * Comparison operators: < > <= >= == !=
  * Logical operators: ! && ||
  * Literals and constants: true, false, PI, E, CURRENT_DAY, CURRENT_MONTH, CURRENT_YEAR, CURRENT_HOURS, CURRENT_MINUTES, CURRENT_SECONDS
- * Built-in functions: abs, sqrt, sin, cos, tan, asin, acos, atan, ln, log(base,val) ceil, floor, round, toFixed(val,digits), random (real between 0 and 1), len, charAt(string,index), codeToChar, charToCode, strToReal, strToInt
+ * Built-in functions: abs, sqrt, sin, cos, tan, asin, acos, atan, ln, log(base,val) ceil, floor, round, toFixed(val,digits), random (real between 0 and 1), len, end, charAt(string,index), codeToChar, charToCode, strToReal, strToInt
  * Round brackets are allowed in expressions
  * Strings are delimited by single or double quotes
  * Trigonometric functions work with rads
@@ -1963,7 +1965,7 @@ function save(updateMetadata = true) {
             program: program.toSimpleObject(),
         },
         null,
-        2,
+        2
     )
 }
 

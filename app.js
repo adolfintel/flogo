@@ -190,8 +190,8 @@ function insert_preparePopups() {
     TALL_INSERT_SPACE_BELOW_LABEL = Number(_getCSSVal("--insert-Tall-Padding-belowLabel", 10, document.body))
     TALL_INSERT_SPACE_BELOW_ROW = Number(_getCSSVal("--insert-Tall-Padding-belowRow", 20, document.body))
     TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS = Number(_getCSSVal("--insert-Tall-Padding-spaceBetweenInstructions", 20, document.body))
-    document.fonts.load("1em " + FLOWCHART_FONT, "a").then(() => {
-        document.fonts.load("1em " + INSERT_FONT, "a").then(() => {
+    document.fonts.load(_getFontNameForLoadingEvent(FLOWCHART_FONT), "a").then(() => {
+        document.fonts.load(_getFontNameForLoadingEvent(INSERT_FONT), "a").then(() => {
             closePopup()
             prepare_insertWide()
             prepare_insertTall()
@@ -251,7 +251,7 @@ function ui_insert(instruction, pos, evt, callback) {
         insertTall_stage.draw()
         insertWide_stage.draw()
     }
-    pBounds = p.getBoundingClientRect()
+    const pBounds = p.getBoundingClientRect()
     if (pBounds.x + pBounds.width >= wBounds.width) {
         p.style.left = wBounds.width - pBounds.width + "px"
     }
@@ -1521,8 +1521,8 @@ function saveProgram(triggeredFromKeyboardShortcut = false) {
 
 function updateBarHeight() {
     const bar = document.getElementById("bar"),
-        bar_contentsHeight = document.getElementById("bar_contents").getBoundingClientRect().height
-    bar_restHeight = document.querySelectorAll("#bar .group")[0].getBoundingClientRect().height //horrible workaround to get the height of the bar at rest
+        bar_contentsHeight = document.getElementById("bar_contents").getBoundingClientRect().height,
+        bar_restHeight = document.querySelectorAll("#bar .group")[0].getBoundingClientRect().height //horrible workaround to get the height of the bar at rest
     if (bar_contentsHeight > bar_restHeight) {
         bar.classList.add("small")
     } else {
@@ -2030,7 +2030,7 @@ function showPopup(d, important = false) {
 
 function updateFlowchartOcclusion() {
     const barBounds = document.querySelectorAll("#bar .group")[0].getBoundingClientRect() //horrible workaround to get the height of the bar at rest
-    fcBounds = document.getElementById("flowchartArea").getBoundingClientRect()
+    const fcBounds = document.getElementById("flowchartArea").getBoundingClientRect()
     FLOWCHART_OCCLUDED_ON_TOP = barBounds.y + barBounds.height - fcBounds.y
 }
 
