@@ -1066,7 +1066,7 @@ function variablesEditor_confirmEditVariable(v) {
                     break
                 }
             }
-            if (!error) {
+            if (errorFields.length === 0) {
                 declareVariable(tempName, arrType, size, val)
             }
         } catch (e) {
