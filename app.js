@@ -1094,7 +1094,9 @@ function variablesEditor_confirmEditVariable(v) {
                     break
                 }
             }
-            declareVariable(tempName, type, 0, val)
+            if (errorFields.length === 0) {
+                declareVariable(tempName, type, 0, val)
+            }
         } catch (e) {
             errorFields.push(v.flogo_val.edit.flogo_initVal)
         }
