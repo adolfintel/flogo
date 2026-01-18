@@ -2373,7 +2373,6 @@ function updateFps(t) {
 //-------- APPLICATION INITIALIZATION --------
 
 function initApp() {
-    //workaround: on some chromium-based browsers, this context menu gets accidentally triggered when right-clicking a block, despite it having display:none when the event is triggered
     document.getElementById("fps").style.display = storage.showFps === "true" ? "block" : "none"
     updateFps()
     if (typeof storage.altTurboTSlice !== "undefined") {
