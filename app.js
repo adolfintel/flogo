@@ -1517,6 +1517,7 @@ function saveProgram(triggeredFromKeyboardShortcut = false) {
     if (state === STATE_RUNNING || state === STATE_PAUSED) {
         stopProgram()
     }
+    variablesEditor_cancelAllEdits()
     if (!isElectron()) toast("Starting download")
     download()
 }
@@ -2569,6 +2570,9 @@ function deleteRecovery() {
 
 function saveProgramForRecovery() {
     if (program.body.length !== 0 || Object.keys(variables).length !== 0) {
+        try {
+            variablesEditor_cancelAllEdits()
+        } catch (e) {}
         storage.recovery = save(false)
         return 1
     } else {
