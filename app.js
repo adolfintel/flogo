@@ -1115,7 +1115,7 @@ function variablesEditor_confirmEditVariable(v) {
         //this is inefficient af, but necessary to keep them in the right order when a variable is renamed
         changed = true
         const newVars = {}
-        for (k in variables) {
+        for (const k in variables) {
             if (k !== v.flogo_variable) {
                 newVars[k] = variables[k]
             } else {
@@ -1336,7 +1336,7 @@ function updateVariableValues() {
 function recreateVariableList() {
     const list = document.getElementById("variableList")
     list.innerHTML = ""
-    for (v in variables) {
+    for (const v in variables) {
         const div = variablesEditor_createVariable(v)
         list.appendChild(div)
     }
