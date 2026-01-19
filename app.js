@@ -17,14 +17,14 @@ let INSERT_FONT,
     TALL_INSERT_SPACE_BELOW_ROW,
     TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS
 
-let insert_targetIstruction, insert_targetPos
+let insert_targetInstruction, insert_targetPos
 
 function insert_createBlockDrawable(type) {
     const b = new instructionTypes[type]().createDrawable().flogo_shapeOnly
     b.removeEventListener("click dblclick tap touchstart touchend touchmove")
     b.on("click tap", () => {
         const newInstr = new instructionTypes[type]()
-        insert_targetIstruction.body.splice(insert_targetPos, 0, newInstr)
+        insert_targetInstruction.body.splice(insert_targetPos, 0, newInstr)
         saveToHistory()
         closePopup()
         cancelSelection()
@@ -84,7 +84,7 @@ function prepare_insertWide() {
     paste.on("click tap", () => {
         if (clipboard === null) return
         closePopup()
-        pasteClipboard(insert_targetIstruction, insert_targetPos)
+        pasteClipboard(insert_targetInstruction, insert_targetPos)
     })
     addColumn(label, [paste])
     s.flogo_xAfterClipboard = x
@@ -158,7 +158,7 @@ function prepare_insertTall() {
     paste.on("click tap", () => {
         if (clipboard === null) return
         closePopup()
-        pasteClipboard(insert_targetIstruction, insert_targetPos)
+        pasteClipboard(insert_targetInstruction, insert_targetPos)
     })
     addRow(label, [paste])
     s.flogo_yAfterClipboard = y
@@ -204,7 +204,7 @@ function ui_insert(instruction, pos, evt, callback) {
     const clientY = _extractCoordFromEvent(evt.evt, "clientY")
     const pw = document.getElementById("insertWide")
     const pt = document.getElementById("insertTall")
-    insert_targetIstruction = instruction
+    insert_targetInstruction = instruction
     insert_targetPos = pos
     pw.flogo_closeCallback = callback
     pt.flogo_closeCallback = callback
