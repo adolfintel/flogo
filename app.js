@@ -2537,12 +2537,10 @@ function initApp() {
             }
         })
     } else {
-        document.querySelectorAll("*").forEach(el => {
-            el.addEventListener("contextmenu", e => {
-                if (!(e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT" && e.target.type === "text" || e.target.contentEditable === "true")) {
-                    e.preventDefault()
-                }
-            })
+        document.addEventListener("contextmenu", e => {
+            if (!(e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT" && e.target.type === "text" || e.target.contentEditable === "true")) {
+                e.preventDefault()
+            }
         })
     }
     if (isWebKit) { //webkit-based browsers don't support file filters with multiple types
