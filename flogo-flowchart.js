@@ -1899,7 +1899,7 @@ function initFlowchart(id) {
         requestAnimationFrame(highlightFun)
         const i = interpreter.currentInstruction,
             intState = interpreter.getState()
-        if (intState === STATE_RUNNING && (prevIntState === STATE_STOPPED || prevIntState === STATE_CRASHED)) {
+        if ((intState === STATE_RUNNING || intState === STATE_PAUSED) && (prevIntState === STATE_STOPPED || prevIntState === STATE_CRASHED)) {
             //when the program is started, make sure that all arrows are reset their original color, in case the user has the mouse over an arrow and pressed the run button with the keyboard
             const resetArrows_rec = i => {
                 if (typeof i.children !== "undefined") {
