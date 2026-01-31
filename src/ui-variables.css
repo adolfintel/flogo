@@ -1,0 +1,252 @@
+#variablesArea {
+    position: fixed;
+    top: 2.5rem;
+    left: 0;
+    bottom: 0;
+    width: var(--layout-variablesArea-width);
+    background: var(--ui-color-background2);
+    border-right: var(--ui-measure-border-thin) solid var(--ui-color-border1);
+    display: none;
+
+    button {
+        min-width: 2rem;
+    }
+
+    .text {
+        transform: rotate(180deg);
+    }
+
+    &.noedit {
+        button {
+            visibility: hidden;
+            width: 0 !important;
+        }
+    }
+
+    &.expanded {
+        display: block;
+
+        &+#variablesExpander {
+            left: var(--layout-variablesArea-width);
+        }
+    }
+}
+
+#variablesWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#variableList {
+    width: 100%;
+    overflow: auto;
+    flex-grow: 1;
+}
+
+/*
+ * Structure of a variable in the variables editor:
+ *
+ * div.variable (optional class: editing, while it's being edited)
+ * ├── div.nameType (the upper part)
+ * │   ├── div.name.vis (the name of the variable, visible while it's NOT being edited)
+ * │   ├── span.name.edit (the name of the variable, editable, visible while it's being edited)
+ * │   ├── div.type.vis (the type of the variable, visible while it's NOT being edited)
+ * │   ├── select.type.edit (the type of the variable, visible while it's being edited)
+ * │   └── div.buttonGroup (buttons on the right)
+ * │       ├── 2x button.vis (the delete and edit buttons, visible while it's NOT being edited)
+ * │       └── 2x button.edit (the cancel and confirm buttons, visible while it's being edited)
+ * ├── div.value.vis (the bottom part, visible while it's NOT being edited) (optional class: uninitialized, when the variable has no value)
+ * │   ├── div.simpleViewer (viewer for basic types, only contains text, only present if the variable is of a basic type)
+ * │   └── details (viewer for arrays, contains a summary and a table, only present if the variable is an array)
+ * └── div.value.edit (the bottom part, visible while it's being edited)
+ *    ├── div (array stuff)
+ *    │   ├── label (for select)
+ *    │   ├── select.arrType
+ *    │   └── div.arrSize (editable area where the user can write the array size)
+ *    ├── input[type="checkbox"] (checkbox for initializing the variable)
+ *    ├── label (for checkbox)
+ *    └── div.initVal (initial value for variable, only visible when the checkbox is checked)
+ *
+*/
+
+div.variable {
+    margin: var(--ui-measure-spacer-small);
+    border: var(--ui-measure-border-thin) solid var(--ui-color-border1);
+    border-radius: var(--ui-measure-border-radius);
+    position: relative;
+    overflow: hidden;
+
+    div.nameType {
+        background: var(--ui-color-form-background);
+        padding: var(--ui-measure-spacer-small);
+
+        &::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .buttonGroup {
+            float: right;
+            width: fit-content;
+            display: inline-flex;
+            gap: var(--ui-measure-spacer-small);
+        }
+
+        .name,
+        .type {
+            display: inline-block;
+            min-width: 3rem;
+            max-width: 100%;
+            padding: var(--ui-measure-spacer-small);
+            vertical-align: middle;
+        }
+
+        .name {
+            font-weight: bold;
+
+            &.edit {
+                overflow: auto;
+
+                &:empty::before {
+                    content: "name";
+                    opacity: 0.5;
+                }
+            }
+
+            &.vis {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+
+
+    .value {
+        padding: var(--ui-measure-spacer-small);
+        text-align: center;
+        min-height: 1.5rem;
+
+        div.simpleViewer {
+            max-height: 5rem;
+            overflow-y: auto;
+        }
+
+        details {
+            max-height: 10rem;
+            overflow-y: auto;
+            contain: layout paint style;
+        }
+
+        table {
+            width: 100%;
+            border-spacing: 0;
+            border-collapse: collapse;
+            font-size: 0.85em;
+
+            * {
+                border: var(--ui-measure-border-thin) solid var(--ui-color-border1);
+            }
+
+            th {
+                width: 25%;
+            }
+        }
+
+        &.modified {
+            background: var(--ui-color-form-highlighted);
+            font-weight: bold;
+
+            table {
+                font-weight: normal;
+            }
+        }
+
+        &.edit {
+            text-align: initial;
+
+            div.initVal {
+                padding: var(--ui-measure-spacer-small);
+                max-height: 5rem;
+                overflow-y: auto;
+                background: var(--ui-color-form-background);
+            }
+
+            div.arrSize {
+                display: inline-block;
+                padding: var(--ui-measure-spacer-small);
+
+                &::before {
+                    content: "[";
+                    opacity: 0.5;
+                }
+
+                &::after {
+                    content: "]";
+                    opacity: 0.5;
+                }
+
+                &:empty::before {
+                    content: "[Size";
+                    opacity: 0.5;
+                }
+            }
+
+            select.arrType {
+                margin-left: var(--ui-measure-spacer-small);
+            }
+        }
+    }
+
+    .uninitialized {
+        color: var(--ui-color-form-disabled);
+    }
+
+    &.editing .vis {
+        display: none !important;
+    }
+
+    &:not(.editing) .edit {
+        display: none !important;
+    }
+}
+
+@media all and (max-height: 50rem) {
+    div.variable>.value details {
+        max-height: 8rem;
+    }
+}
+
+#newVariable {
+    display: flex;
+    margin: var(--ui-measure-spacer-medium) auto;
+}
+
+#variableDropIndicator {
+    position: fixed;
+    left: 0;
+    width: var(--layout-variablesArea-width);
+    height: var(--ui-measure-spacer-small);
+    z-index: 999;
+    background: var(--ui-color-accent1);
+    display: none;
+
+    &.visible {
+        display: block;
+    }
+}
+
+#variablesExpander {
+    left: 0;
+    top: 10rem;
+    background: var(--ui-color-accent2);
+    border-radius: 0 var(--ui-measure-border-radius) var(--ui-measure-border-radius) 0;
+    border-left: none;
+}

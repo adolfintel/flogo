@@ -1,0 +1,113 @@
+#settings {
+    width: 100%;
+    max-width: 35rem;
+    max-height: 35rem;
+    background: var(--ui-color-background2);
+    overflow-y: auto;
+    border: var(--ui-measure-border-thick) solid var(--ui-color-border1);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+
+    p.settings_desc {
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+
+    div.settings_tab_buttons {
+        margin-top: var(--ui-measure-spacer-large);
+        text-align: center;
+        flex-grow: 1;
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        gap: var(--ui-measure-spacer-small);
+    }
+
+    #settings_tabSelector {
+        background: var(--ui-color-background2);
+        width: 100%;
+        overflow-x: auto;
+
+        div {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            padding: var(--ui-measure-spacer-medium);
+            display: inline-block;
+
+            &.selected {
+                background: var(--ui-color-background1);
+            }
+        }
+    }
+
+    #settings_tabs {
+        display: grid;
+
+        div.settings_tab {
+            background: var(--ui-color-background1);
+            padding: var(--ui-measure-spacer-medium);
+            visibility: hidden;
+            overflow-x: auto;
+            grid-row: 1;
+            grid-column: 1;
+            display: flex;
+            flex-direction: column;
+
+            &.selected {
+                visibility: visible;
+            }
+        }
+    }
+
+    #settings_about {
+        text-align: center;
+
+        #versionTypeBadge {
+            border-radius: 0.1rem;
+            margin: 0 0.5rem;
+            padding: 0 0.2rem;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        #about_logo {
+            width: 100%;
+            max-width: 24rem;
+            margin: 1rem;
+        }
+    }
+}
+
+#licenseViewer {
+    top: 50vh;
+    left: 50vw;
+    width: 90%;
+    max-width: 50rem;
+    height: 90%;
+    max-height: 70rem;
+    transform: translate(-50%, -50%);
+    border: var(--ui-measure-border-thick) solid var(--ui-color-border1);
+    overflow: hidden;
+
+    #license {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: white;
+        color: black;
+    }
+
+    #license_close {
+        background: var(--ui-color-accent2);
+        position: absolute;
+        top: calc(var(--ui-measure-spacer-large)*2);
+        right: calc(var(--ui-measure-spacer-large)*2);
+    }
+}

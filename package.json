@@ -1,49 +1,78 @@
 {
   "name": "flogo",
+  "private": true,
   "version": "1.3.0",
-  "description": "Create and run flow charts",
-  "main": "main.js",
+  "description": "Create and run programs using flow charts ",
+  "main": "electron/main.js",
+  "asar": true,
+  "type": "module",
   "scripts": {
-    "start": "electron .",
-    "build-win-x64": "electron-builder --win --x64 --dir",
-    "build-win-arm": "electron-builder --win --arm64 --dir",
-    "build-linux": "electron-builder --linux --dir",
-    "build-linux-x64": "electron-builder --linux --x64 --dir",
-    "build-linux-x64-appimage": "electron-builder --linux AppImage --x64",
-    "build-linux-arm": "electron-builder --linux --arm64 --dir",
-    "build-linux-arm-appimage": "electron-builder --linux AppImage --arm64",
-    "build-mac-arm": "electron-builder --mac --arm64 --dir",
-    "build-mac-arm-dmg": "electron-builder --mac --arm64",
-    "build-mac-intel": "electron-builder --mac --x64 --dir",
-    "build-mac-intel-dmg": "electron-builder --mac --x64"
+    "dev": "vite",
+    "build": "vite build",
+    "electron:dev": "vite --mode electron",
+    "electron:build": "vite build --mode electron && electron-builder",
+    "electron:build-win-x64": "vite build --mode electron && electron-builder --win --x64 --dir",
+    "electron:build-win-arm64": "vite build --mode electron && electron-builder --win --arm64 --dir",
+    "electron:build-linux-x64": "vite build --mode electron && electron-builder --linux --x64 --dir",
+    "electron:build-linux-arm64": "vite build --mode electron && electron-builder --linux --arm64 --dir",
+    "electron:build-linux-x64-appimage": "vite build --mode electron && electron-builder --linux AppImage --x64",
+    "electron:build-linux-arm64-appimage": "vite build --mode electron && electron-builder --linux AppImage --arm64",
+    "electron:build-mac-arm": "vite build --mode electron && electron-builder --mac --arm64 --dir",
+    "electron:build-mac-intel": "vite build --mode electron && electron-builder --mac --x64 --dir",
+    "electron:build-mac-arm-dmg": "vite build --mode electron && electron-builder --mac --arm64",
+    "electron:build-mac-intel-dmg": "vite build --mode electron && electron-builder --mac --x64"
   },
-  "author": "Federico Dossena",
-  "license": "AGPL-3.0-or-later",
-  "private": false,
   "devDependencies": {
-    "electron": "^39.2.7",
+    "electron": "^40.0.0",
     "electron-builder": "^26.4.0",
+    "vite": "^7.2.4",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-pwa": "^1.2.0",
     "@electron/notarize": "^3.1.1"
   },
   "dependencies": {
+    "@material-design-icons/font": "^0.14.15",
     "electron-context-menu": "^4.1.1",
-    "electron-store": "^11.0.2"
+    "electron-store": "^11.0.2",
+    "jsep": "^1.4.0",
+    "konva": "^10.2.0",
+    "svgcanvas": "^2.6.0"
   },
   "build": {
     "appId": "com.fdossena.flogo",
     "productName": "Flogo",
     "files": [
-      "!_SETUP/",
-      "!out/",
-      "!icons/",
-      "!flatpak-node"
+      {
+        "from": "dist",
+        "to": "."
+      },
+      {
+        "from": "electron",
+        "to": "electron",
+        "filter": "!icons"
+      },
+      "!release",
+      "!windows-installer",
+      "package.json"
     ],
     "directories": {
-      "output": "out"
+      "output": "release"
+    },
+    "extraResources": [
+      {
+        "from": "electron/icons/",
+        "to": "icons/",
+        "filter": "**/*"
+      }
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "electron/icons/winicon.ico"
     },
     "linux": {
+      "target": "AppImage",
       "category": "Education",
-      "icon": "icons/icon.png",
+      "icon": "electron/icons/icon.png",
       "mimeTypes": [
         "application/x-flogo"
       ],
@@ -51,35 +80,30 @@
         {
           "ext": "flogo",
           "name": "Flogo Program",
-          "icon": "icons/icon_file.png",
+          "icon": "electron/icons/icon_file.png",
           "mimeType": "application/x-flogo"
         }
       ]
     },
-    "win": {
-      "icon": "icons/winicon.ico"
-    },
     "afterSign": "@electron/notarize",
     "mac": {
       "hardenedRuntime": true,
-      "entitlements": "./node_modules/@electron/notarize/entitlements.mac.inherit.plist",
+      "entitlements": "./node_modules/app-builder-lib/templates/entitlements.mac.plist",
       "category": "public.app-category.education",
-      "target": [
-        "dmg"
-      ],
-      "icon": "icons/macicon.icns",
+      "target": "dmg",
+      "icon": "electron/icons/macicon.icns",
       "extendInfo": {},
       "fileAssociations": [
         {
           "ext": "flogo",
           "name": "Flogo Program",
-          "icon": "icons/macicon_file.icns",
+          "icon": "electron/icons/macicon_file.icns",
           "role": "Editor"
         }
       ]
     },
     "dmg": {
-      "icon": "icons/macicon.icns",
+      "icon": "electron/icons/macicon.icns",
       "iconSize": 100,
       "contents": [
         {

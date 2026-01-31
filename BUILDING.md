@@ -1,91 +1,94 @@
 # Flogo - Build instructions
+Flogo uses npm and vite as a build system and can be built very easily.
 
-## Webapp (PWA)
-Just copy all the downloaded files to the root of your web server, no build required. You will need a valid HTTPS certificate.
-
-## Electron version
-
-### Step 1: Tools
+## Step 1: Tools
 
 #### GNU/Linux
-You'll need `yarn` and `git`, install them through your package manager.
+You'll need `npm` and `git`, install them through your package manager.
 
 #### Windows
-Download and install [yarn](https://classic.yarnpkg.com/en/docs/install#windows-stable), [git](https://git-scm.com/downloads/win) and [Inno Setup](https://jrsoftware.org/isdl.php).
+Download and install [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), [git](https://git-scm.com/downloads/win) and [Inno Setup](https://jrsoftware.org/isdl.php).
 
-Note: the Windows version can be built on GNU/Linux, just use Wine to install Inno Setup.
-
-#### MacOS
-Note: a recent-ish mac is required to build the MacOS version
-
+#### macOS
 First, install [Homebrew](https://brew.sh/).
 
 Then, open a terminal and run the following commands to download the required tools:  
 ```bash
 brew install git
 brew install node
-brew install yarn
+brew install npm
 ```
 
-### Step 2: Source code preparation (all OS)
+## Step 2: Source code preparation
 Open a terminal and run these commands to fetch the source code and the requried libraries:  
 ```bash
 git clone https://github.com/adolfintel/flogo
 cd flogo
-yarn install
+npm install
 ```
 
-### Step 3: Building
+This will automatically download all the required dependencies.
 
-#### GNU/Linux
-To build an unpacked GNU/Linux version, use the following command:  
+## Step 3: Building
+
+#### Webapp (PWA)
+To build the PWA, run the following command:  
 ```bash
-yarn run build-linux-architecture
+npm run build
 ```
 
-Replacing `architecture` with either `x64` for an x86_64 build or `arm` for an aarch64 build.
+Once built, you'll find the files to upload to your web server in the `dist` folder.
 
-You can also build an AppImage with the following command:  
+#### Electron version
+To build the Electron version of Flogo for your current OS and architecture, run the following command:  
 ```bash
-yarn run build-linux-architecture-appimage
+npm run electron:build
 ```
 
-The output files will be placed in the `out` folder.
+Once built, you'll find the executable files in the `release` folder. For GNU/Linux, this is in the form of both unpacked files and an AppImage, for macOS, you'll find both unpacked files and a dmg.
 
-#### Windows
-To build an unpacked Windows version, use the following command:  
-```bash
-yarn run build-win-architecture
-```
+Note: no code signing is done automatically, see the instructions below for building a signed version on macOS.
 
-Replacing `architecture` with either `x64` for an x86_64 build or `arm` for an aarch64 build.
+It is also possible to cross-build for other platforms with the following commands:
+* `npm run electron:build-win-x64`: Windows (x64, unpacked)
+* `npm run electron:build-win-arm64`: Windows (ARM, unpacked)
+* `npm run electron:build-linux-x64`: GNU/Linux (x64, unpacked)
+* `npm run electron:build-linux-arm64`: GNU/Linux (ARM, unpacked)
+* `npm run electron:build-linux-x64-appimage`: GNU/Linux (x64, AppImage)
+* `npm run electron:build-linux-arm64-appimage`: GNU/Linux (ARM, AppImage)
+* `npm run electron:build-linux-mac-arm`: macOS (Apple Silicon, unpacked)
+* `npm run electron:build-linux-mac-intel`: macOS (Intel, unpacked)
+* `npm run electron:build-linux-mac-arm-dmg`: macOS (Apple Silicon, dmg)
+* `npm run electron:build-linux-mac-intel-dmg`: macOS (Intel, dmg)
 
-Note: if you're building the Windows version on GNU/Linux, ignore the signtool.exe error that appears at the end of the build.
+Notes:
+* .dmg creation is only available on macOS
+* Code signing for Windows and macOS is not possible when cross-building
 
-To build the installer , enter the `_SETUP` folder, open `setup-win-x64.iss` or `setup-win-arm.iss` in Inno Setup and hit Compile. This last step can be done in Wine if you're trying to build the Windows version from a Linux machine.
+##### Windows installer
+To build the installer for the Windows version, after running one of the above commands to build it, enter the `windows-installer` folder and open `setup-win-x64.iss` or `setup-win-arm64.iss` in Inno Setup and hit Compile. This last step can be done in Wine if you're trying to build the Windows version from a Linux machine.
 
-If everything goes right, you'll find the installer exe files in the `setup` folder inside `_SETUP`.
+If everything goes right, you'll find the installer exe files in the `release` folder.
 
-#### MacOS
-To build an unpacked MacOS version, use the following command:  
-```bash
-yarn run build-mac-architecture
-```
+If you have a certificate for code signing, you will need to do it manually using signtool in Windows. This is not mandatory.
 
-Replacing `architecture` with either `intel` for an x86_64 build or `arm` for an Apple Silicon build.
-
-You can also build a .dmg with the following command:  
-```bash
-yarn run build-mac-architecture-dmg
-```
-
-The output files will be placed in the `out` folder.
-
-Note that a **paid** Apple developer key is required to sign, notarize and distribute the app. Once you have the account, see [here](https://www.npmjs.com/package/electron-builder-notarize) for how to configure it. Without a developer account, you can build and test the app, but other users won't be able to install it without disabling GateKeeper.
+##### Signing and notarizing the macOS version
+Note: that a **paid** Apple developer key is required to sign, notarize and distribute the app. Once you have the account, see [here](https://www.npmjs.com/package/electron-builder-notarize) for how to configure it. Without a developer account, you can build and test the app, but other users won't be able to install it without disabling GateKeeper.
 
 To build, sign, and notarize the app, here's what you need to do:
 1. Generate a specific app password by going to https://account.apple.com/account/manage, clicking on Sign-In and Security section and then select App-Specific Passwords
 2. Run this command:
 ```bash
-export APPLE_ID="yourappleuser@email.com" APP_ID="TheAppNameYouWroteWhenGeneratingAppPassword" APPLE_APP_SPECIFIC_PASSWORD="the-generated-app-password" APPLE_ID_PASSWORD="the-generated-app-password" APPLE_TEAM_ID="YOUR10CHARDEVELOPERTEAMID" && yarn run build-mac-architecture-dmg
+export APPLE_ID="yourappleuser@email.com" APP_ID="TheAppNameYouWroteWhenGeneratingAppPassword" APPLE_APP_SPECIFIC_PASSWORD="the-generated-app-password" APPLE_ID_PASSWORD="the-generated-app-password" APPLE_TEAM_ID="YOUR10CHARDEVELOPERTEAMID" && npm run electron:build-mac-arm-dmg
+```
+
+## Testing the app without building (for development)
+To test the webapp locally, use this command:
+```bash
+npm run dev
+```
+
+To test the Electron version without building it, use this command:
+```bash
+npm run electron:dev
 ```

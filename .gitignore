@@ -1,3 +1,4 @@
-out/
+dist/
+dist-electron/
+release/
 node_modules/
-_SETUP/setup/

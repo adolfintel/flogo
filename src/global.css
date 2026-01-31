@@ -1,0 +1,417 @@
+/*
+ * This file contains:
+ * - Font definitions
+ * - Variables used throughout the application that can be overridden by themes
+ * - Basic rules used by all components, such as form styles
+ */
+
+/* FONTS */
+@font-face {
+    font-family: "Roboto Mono";
+    src: url("/fonts/RobotoMono-Regular.woff2");
+    /*must be absolute*/
+    font-display: block;
+}
+
+@font-face {
+    font-family: "Noto Sans";
+    src: url("/fonts/NotoSans-Regular.woff2");
+    /*must be absolute*/
+    font-weight: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: "Noto Sans";
+    src: url("/fonts/NotoSans-Bold.woff2");
+    /*must be absolute*/
+    font-weight: bold;
+    font-display: block;
+}
+
+/* DEFAULT THEME */
+:root {
+    --browser-theme-color: #4080ff;
+    --ui-color-background1: #282828;
+    --ui-color-background2: #000000;
+    --ui-color-text: #ffffff;
+    --ui-color-accent1: #4080ff;
+    --ui-color-accent2: #ff4040;
+    --ui-color-text-accent: #ffffff;
+    --ui-color-border1: #ffffff40;
+    --ui-color-border2: #ffffff60;
+    --ui-color-disabled: #c0c0c0;
+    --ui-color-form-background: #404040;
+    --ui-color-form-highlighted: #2d4b79;
+    --ui-color-form-text: #ffffff;
+    --ui-color-form-border: #ffffff60;
+    --ui-color-form-border-selected: #ffffffa0;
+    --ui-color-form-disabled: #808080;
+    --ui-measure-border-thin: 1px;
+    --ui-measure-border-medium: 0.1rem;
+    --ui-measure-border-thick: 0.15rem;
+    --ui-measure-spacer-small: 0.25rem;
+    --ui-measure-spacer-medium: 0.5rem;
+    --ui-measure-spacer-large: 0.75rem;
+    --ui-measure-form-padding-base: 0.35rem 0.5rem;
+    --ui-measure-form-font-size: 0.9rem;
+    --ui-measure-border-radius: 0.35rem;
+    --flowchart-Assign-color1: #696a30;
+    --flowchart-Assign-color2: #84853d;
+    --flowchart-Assign-color3: #ffffff;
+    --flowchart-Output-color1: #3f7335;
+    --flowchart-Output-color2: #509243;
+    --flowchart-Output-color3: #ffffff;
+    --flowchart-Input-color1: #305c6a;
+    --flowchart-Input-color2: #3d7585;
+    --flowchart-Input-color3: #ffffff;
+    --flowchart-If-color1: #783753;
+    --flowchart-If-color2: #924365;
+    --flowchart-If-color3: #ffffff;
+    --flowchart-DoWhile-color1: #326d4f;
+    --flowchart-DoWhile-color2: #3e8762;
+    --flowchart-DoWhile-color3: #ffffff;
+    --flowchart-While-color1: #326d4f;
+    --flowchart-While-color2: #3e8762;
+    --flowchart-While-color3: #ffffff;
+    --flowchart-For-color1: #326d4f;
+    --flowchart-For-color2: #3e8762;
+    --flowchart-For-color3: #ffffff;
+    --flowchart-Breakpoint-color1: #9a5758;
+    --flowchart-Breakpoint-color2: #bd6b6c;
+    --flowchart-Breakpoint-color3: #ffffff;
+    --flowchart-Comment-color1: transparent;
+    --flowchart-Comment-color2: #cccccc;
+    --flowchart-Comment-color3: #ffffff;
+    --flowchart-Comment-dashLength: 10;
+    --flowchart-Comment-text-maxLength: 350;
+    --flowchart-Turtle-Move-color1: #3b4f78;
+    --flowchart-Turtle-Move-color2: #5d7ebd;
+    --flowchart-Turtle-Move-color3: #ffffff;
+    --flowchart-Turtle-Turn-color1: #593b78;
+    --flowchart-Turtle-Turn-color2: #8d5dbd;
+    --flowchart-Turtle-Turn-color3: #ffffff;
+    --flowchart-Turtle-Home-color1: #593b78;
+    --flowchart-Turtle-Home-color2: #8d5dbd;
+    --flowchart-Turtle-Home-color3: #ffffff;
+    --flowchart-Error-color1: #000000;
+    --flowchart-Error-color2: #c00000;
+    --flowchart-Error-color3: #ffffff;
+    --flowchart-Round-color1: #4c45a5;
+    --flowchart-Round-color2: #3d3886;
+    --flowchart-Round-color3: #ffffff;
+    --flowchart-Block-outline-thickness: 1.75;
+    --flowchart-Block-highlight-color1: keep;
+    --flowchart-Block-highlight-color2: #ffffff;
+    --flowchart-Block-highlight-color3: keep;
+    --flowchart-Font-family: "Roboto Mono";
+    --flowchart-Font-svgEmbeddableFile: "fonts/RobotoMono-Regular.woff2";
+    /*must be relative*/
+    --flowchart-Block-font-size: 12;
+    --flowchart-Line-thickness: 2;
+    --flowchart-Line-arrow-size: 4;
+    --flowchart-Line-color: #ffffff;
+    --flowchart-Line-font-size: 10;
+    --flowchart-Line-selected-color: #ff0000;
+    --flowchart-selected-color1: #ffffff;
+    --flowchart-selected-color2: #1330b0;
+    --flowchart-selected-color3: #ffffff;
+    --flowchart-Padding-base: 10;
+    --flowchart-Padding-spaceBetweenInstructions: 24;
+    --flowchart-Block-text-maxWidth: 40;
+    --flowchart-Comment-text-maxWidth: 30;
+    --flowchart-Block-wrapMode: new;
+    --flowchart-Round-text-minWidth: 7;
+    --flowchart-scrollbar-thickness: 6;
+    --flowchart-scrollbar-padding: 4;
+    --flowchart-scrollbar-color: #ffffff60;
+    --insert-Font-size: 14;
+    --insert-Wide-Padding-betweenColumns: 18;
+    --insert-Wide-Padding-belowLabel: 20;
+    --insert-Wide-Padding-spaceBetweenInstructions: 20;
+    --insert-Tall-Padding-belowLabel: 10;
+    --insert-Tall-Padding-belowRow: 20;
+    --insert-Tall-Padding-spaceBetweenInstructions: 20;
+    --turtle-color-cursor: #009000;
+    --turtle-color-background: #404040;
+    --turtle-color-foreground: #f0f0f0;
+    --crash-Padding-spaceFromInstruction: 10;
+    --layout-large-threshold: 80;
+    --layout-small-threshold: 55;
+    --layout-consoleArea-width: 24rem;
+    --layout-variablesArea-width: 19rem;
+    --toast-background: #ffffffd0;
+    --toast-color: #000000;
+    --toast-animation-duration: 0.4s;
+}
+
+/* BASIC RULES */
+* {
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    outline: none;
+}
+
+@media print {
+    body {
+        display: none;
+    }
+}
+
+html {
+    font-size: 11pt;
+    background: black;
+    color: white;
+}
+
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--ui-color-background1);
+    color: var(--ui-color-text);
+    font-family: "Noto Sans";
+}
+
+::selection {
+    background: var(--ui-color-accent1);
+    color: var(--ui-color-text-accent);
+}
+
+::-webkit-scrollbar {
+    width: calc(var(--flowchart-scrollbar-thickness) * 1px + var(--flowchart-scrollbar-padding) * 2px);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--flowchart-scrollbar-color);
+    border: calc(var(--flowchart-scrollbar-padding) * 1px) solid transparent;
+    border-radius: 999rem;
+    background-clip: content-box;
+}
+
+a {
+    color: var(--ui-color-accent1);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+img {
+    pointer-events: none;
+}
+
+.floatLeft {
+    float: left;
+}
+
+.floatRight {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
+div.autoVert {
+    display: flex;
+    flex-direction: column;
+}
+
+div.autoHor {
+    display: flex;
+    flex-direction: row;
+    gap: var(--ui-measure-spacer-medium);
+
+    &>* {
+        flex-grow: 1;
+    }
+}
+
+div.expander {
+    position: absolute;
+    z-index: 99;
+    padding: var(--ui-measure-spacer-medium);
+    cursor: pointer;
+    text-transform: uppercase;
+    border: var(--ui-measure-border-thin) solid var(--ui-color-border1);
+    text-align: center;
+
+    .icon {
+        display: block;
+        margin-bottom: var(--ui-measure-spacer-medium);
+        font-size: 1.1rem;
+    }
+
+    .text {
+        writing-mode: vertical-rl;
+        text-orientation: sideways;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+}
+
+div.sideHeader {
+    margin: var(--ui-measure-spacer-small);
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    flex: none;
+}
+
+button {
+    background: none;
+    padding: var(--ui-measure-form-padding-base);
+    border: var(--ui-measure-border-medium) solid var(--ui-color-form-border);
+    color: var(--ui-color-form-text);
+    border-radius: var(--ui-measure-border-radius);
+    font-weight: bold;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+
+    * {
+        line-height: 1;
+    }
+
+    .icon {
+        font-size: 1.15rem;
+        vertical-align: bottom;
+    }
+
+    &:hover,
+    &:focus {
+        border-color: var(--ui-color-form-border-selected);
+    }
+
+    &.important {
+        background: var(--ui-color-accent1);
+        color: var(--ui-color-text-accent);
+        border-color: transparent;
+
+        &:hover,
+        &:focus {
+            border-color: var(--ui-color-form-border-selected);
+        }
+
+        &:active {
+            box-shadow: none;
+        }
+    }
+
+    &.danger {
+        background: var(--ui-color-accent2);
+        color: var(--ui-color-text-accent);
+        border-color: transparent;
+
+        &:hover,
+        &:focus {
+            border-color: var(--ui-color-form-border-selected);
+        }
+
+        &:active {
+            box-shadow: none;
+        }
+    }
+
+    &[disabled] {
+        color: var(--ui-color-form-disabled) !important;
+        border-color: var(--ui-color-form-disabled) !important;
+    }
+}
+
+input[type="text"] {
+    font-family: "Roboto Mono";
+    background: var(--ui-color-form-background);
+    color: var(--ui-color-form-text);
+    border: none;
+    font-size: var(--ui-mesaure-form-font-size);
+    border-radius: var(--ui-measure-border-radius);
+    padding: var(--ui-measure-form-padding-base);
+}
+
+*[contenteditable] {
+    color: var(--ui-color-form-text);
+    padding: var(--ui-measure-form-padding-base);
+    border-radius: var(--ui-measure-border-radius);
+    cursor: text;
+}
+
+textarea {
+    font-family: "Roboto Mono";
+    resize: none;
+    background: var(--ui-color-form-background);
+    color: var(--ui-color-form-text);
+    border: none;
+    font-size: var(--ui-mesaure-form-font-size);
+    border-radius: var(--ui-measure-border-radius);
+    padding: var(--ui-measure-form-padding-base);
+    height: 5rem;
+}
+
+input[type="checkbox"] {
+    accent-color: var(--ui-color-accent1);
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+
+    &:focus {
+        outline: var(--ui-measure-border-thin) solid var(--ui-color-accent1);
+    }
+
+    &+label {
+        vertical-align: top;
+    }
+}
+
+select {
+    background: var(--ui-color-form-background);
+    color: var(--ui-color-form-text);
+    border: none;
+    font-size: var(--ui-mesaure-form-font-size);
+    border-radius: var(--ui-measure-border-radius);
+    padding: var(--ui-measure-form-padding-base);
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+*[contenteditable]:focus {
+    box-shadow: 0 0 0 var(--ui-measure-border-thick) var(--ui-color-accent1) inset;
+}
+
+@keyframes errorFlash {
+    0% {
+        box-shadow: 0 0 0 0rem var(--ui-color-accent2) inset;
+    }
+
+    25% {
+        box-shadow: 0 0 0 var(--ui-measure-border-thick) var(--ui-color-accent2) inset;
+    }
+
+    50% {
+        box-shadow: 0 0 0 0rem var(--ui-color-accent2) inset;
+    }
+
+    75% {
+        box-shadow: 0 0 0 var(--ui-measure-border-thick) var(--ui-color-accent2) inset;
+    }
+
+    100% {
+        box-shadow: 0 0 0 0rem var(--ui-color-accent2) inset;
+    }
+}
+
+div.sideHeader button {
+    border: none;
+    padding: 0;
+    margin-left: 0.5rem;
+    vertical-align: bottom;
+
+    .icon {
+        font-size: 1.25rem;
+    }
+}

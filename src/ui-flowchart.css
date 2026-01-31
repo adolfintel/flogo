@@ -1,0 +1,130 @@
+#flowchartArea {
+    position: fixed;
+    top: 2.5rem;
+    left: var(--layout-variablesArea-width);
+    right: var(--layout-consoleArea-width);
+    bottom: 0;
+    overflow: hidden;
+    background: var(--ui-color-background1);
+    left: 0;
+    right: 0;
+
+    &.variablesExpanded {
+        left: var(--layout-variablesArea-width);
+    }
+
+    &.consoleExpanded {
+        right: var(--layout-consoleArea-width);
+    }
+}
+
+#editor {
+    padding: var(--ui-measure-spacer-medium);
+
+    label {
+        font-weight: bold;
+        margin-left: 0.15rem;
+    }
+
+    #editor_buttons {
+        margin-top: var(--ui-measure-spacer-large);
+    }
+
+    div.editor_graphics_container {
+        display: flex;
+        align-items: center;
+        margin-bottom: var(--ui-measure-spacer-large);
+
+        div.editor_graphics {
+            flex: none;
+            margin-right: var(--ui-measure-spacer-large);
+        }
+
+        div.editor_graphics_description {
+            flex-grow: 1;
+            height: fit-content;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+    }
+
+    #editor_Input {
+        width: 20rem;
+    }
+
+    #editor_Output {
+        width: 30rem;
+    }
+
+    #editor_Assign {
+        width: 30rem;
+    }
+
+    #editor_If {
+        width: 30rem;
+    }
+
+    #editor_DoWhile {
+        width: 30rem;
+    }
+
+    #editor_While {
+        width: 30rem;
+    }
+
+    #editor_For {
+        width: 30rem;
+    }
+
+    #editor_Comment {
+        width: 30rem;
+    }
+
+    #editor_Breakpoint {
+        width: 15rem;
+    }
+
+    #editor_Move {
+        width: 30rem;
+    }
+
+    #editor_Turn {
+        width: 30rem;
+    }
+
+    #editor_Home {
+        width: 20rem;
+    }
+
+    #editor_Comment textarea {
+        height: 12rem;
+    }
+}
+
+#editor2 {
+    padding: var(--ui-measure-spacer-medium);
+    width: 8rem;
+
+    .icon {
+        font-size: 1.5rem;
+        margin-right: var(--ui-measure-spacer-small);
+    }
+
+    div {
+        padding: var(--ui-measure-spacer-small);
+        border-radius: var(--ui-measure-border-radius);
+        display: flex;
+        align-items: center;
+
+        &:hover {
+            background: var(--ui-color-accent1);
+            color: var(--ui-color-text-accent);
+        }
+    }
+}
+
+#insertWide,
+#insertTall {
+    box-sizing: content-box;
+    padding: 0 var(--ui-measure-spacer-small);
+}

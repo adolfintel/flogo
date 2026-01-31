@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://flogo.fdossena.com" target="_blank">
-        <img alt="Flogo logo" width="500" src="images/logo_large.webp">
+        <img alt="Flogo logo" width="500" src="public/images/logo_large.webp">
     </a>
 </p>
 
@@ -90,7 +90,9 @@ __Strings__
 * [Date and Time](https://downloads.fdossena.com/geth.php?r=flogo-demo-16)
 
 __Arrays__
-TODO
+* [Sorting numbers](https://downloads.fdossena.com/geth.php?r=flogo-demo-20)
+* [52 cards shuffle](https://downloads.fdossena.com/geth.php?r=flogo-demo-21)
+* [Queue simulation](https://downloads.fdossena.com/geth.php?r=flogo-demo-22)
 
 __Mini games__
 * [Rock, paper, scissors](https://downloads.fdossena.com/geth.php?r=flogo-demo-14)

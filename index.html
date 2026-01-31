@@ -10,65 +10,12 @@
     <meta name="author" content="Federico Dossena">
     <meta name="image" content="https://fdossena.com/flogo/cover.jpg">
     <title>Flogo</title>
-    <link rel="icon" type="image/png" href="images/favicon.png">
-    <link rel="manifest" href="manifest.json">
-    <script type="text/javascript" src="platformSpecific.js"></script>
-    <script type="text/javascript">
-        let crashHandlerMode = 0 //0=reload on error, 1=show crash screen
-        window.onerror = (e, url, line) => {
-            console.log("Unhandled exception caught: " + e + " in " + url + "@" + line + ", handling error")
-            const rok = document.getElementById("error_recoveryOk"),
-                rf = document.getElementById("error_recoveryFailed"),
-                rnn = document.getElementById("error_recoveryNotNecessary")
-            if (crashHandlerMode === 1) {
-                window.onerror = null
-                try {
-                    document.getElementById("theme").remove()
-                } catch (ex) {}
-                setTimeout(() => {
-                    try {
-                        document.querySelectorAll("body>*").forEach(e => e.style.display = "none")
-                    } catch (ex) {}
-                    try {
-                        document.getElementById("errorScreen").style.display = "block"
-                        try {
-                            const res = saveProgramForRecovery()
-                            if (res === 1) {
-                                rok.style.display = "block"
-                                rf.style.display = "none"
-                                rnn.style.display = "none"
-                            } else {
-                                rok.style.display = "none"
-                                rf.style.display = "none"
-                                rnn.style.display = "block"
-                            }
-                        } catch (ex) {
-                            rok.style.display = "none"
-                            rf.style.display = "block"
-                            rnn.style.display = "none"
-                            delete storage.recovery
-                        }
-                    } catch (ex) {
-                        try {
-                            delete storage.recovery
-                        } catch (ex) {}
-                        window.location.reload()
-                    }
-                }, 0)
-            } else if (crashHandlerMode === 0) {
-                window.location.reload()
-            }
-        }
-    </script>
-    <script type="text/javascript" src="lib/jsep.iife.min.js"></script>
-    <script type="text/javascript" src="lib/konva.min.js"></script>
-    <script type="text/javascript" src="flogo.js"></script>
-    <script type="text/javascript" src="lib/svgcanvas.min.js"></script>
-    <script type="text/javascript" src="flogo-flowchart.js"></script>
-    <script type="text/javascript" src="app.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="stylesheet" type="text/css" href="lib/material-design-icons/sharp.css">
+    <link rel="icon" type="image/png" href="/images/favicon.png">
     <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+
         #loadOverlay {
             position: fixed;
             top: 0;
@@ -124,31 +71,6 @@
                 background: conic-gradient(black, white);
             }
         }
-
-        #errorScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: black;
-            z-index: 999999;
-            background: #c00000;
-            color: #000000;
-            text-align: center;
-            display: none;
-        }
-
-        #error_title {
-            font-size: 3rem;
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        #error_title .icon {
-            font-size: 6rem;
-            display: block;
-        }
     </style>
 </head>
 
@@ -159,53 +81,23 @@
             This app requires JavaScript to be enabled in your browser. Don't worry, it's <a href="https://github.com/adolfintel/flogo" target="_blank">free and open source</a> software 😉
         </noscript>
     </div>
-    <div id="errorScreen">
-        <p id="error_title">
-            <span class="icon material-icons-sharp">sentiment_very_dissatisfied</span>
-            Bomboclaat!
-        </p>
-        <p>
-            Flogo has crashed. This is not a problem with your program but a bug in Flogo.
-        </p>
-        <p id="error_recoveryOk">
-            <b>Your program can be recovered.</b><br>
-            <button onclick="window.location.reload()" class="important">Restart Flogo</button>
-        </p>
-        <p id="error_recoveryFailed">
-            <b>Unfortunately, your program was lost in the crash.</b><br>
-            <button onclick="window.location.reload()" class="danger">Restart Flogo</button>
-        </p>
-        <p id="error_recoveryNotNecessary">
-            <b>Try restarting the app, if the problem persists, try another browser.</b><br>
-            <button onclick="window.location.reload()" class="important">Restart Flogo</button>
-        </p>
-    </div>
-    <div id="errorRec" class="popup noAutoClose">
-        <p>
-            Flogo has just recovered from a crash. What do you want to do?
-        </p>
-        <p>
-            <button onclick="recoverProgram()" class="important">Recover program</button>
-            <button onclick="deleteRecovery()" class="danger">Discard program</button>
-        </p>
-    </div>
     <div id="bar">
-        <span id="expandBar" class="expandCollapse" onclick="expandBar()"><span class="icon material-icons-sharp">expand_more</span>More</span>
-        <span id="collapseBar" class="expandCollapse" onclick="collapseBar()"><span class="icon material-icons-sharp">expand_less</span>Less</span>
+        <span id="expandBar" class="expandCollapse"><span class="icon material-icons-sharp">expand_more</span>More</span>
+        <span id="collapseBar" class="expandCollapse"><span class="icon material-icons-sharp">expand_less</span>Less</span>
         <div id="bar_contents">
             <span class="group">
-                <button id="newProgram" title="New" onclick="newProgram()"><span class="icon material-icons-sharp">note_add</span></button>
-                <button id="loadProgram" title="Load" onclick="loadProgram()"><span class="icon material-icons-sharp">folder_open</span></button>
-                <button id="saveProgram" title="Save" onclick="saveProgram()"><span class="icon material-icons-sharp">save_as</span></button>
+                <button id="newProgram" title="New"><span class="icon material-icons-sharp">note_add</span></button>
+                <button id="loadProgram" title="Load"><span class="icon material-icons-sharp">folder_open</span></button>
+                <button id="saveProgram" title="Save"><span class="icon material-icons-sharp">save_as</span></button>
                 <input type="file" id="filePicker" accept=".flogo">
             </span>
             <span class="group">
-                <button id="runProgram" title="Run" onclick="runProgram()"><span class="icon material-icons-sharp">play_arrow</span></button>
-                <button id="pauseProgram" title="Pause" onclick="pauseProgram()"><span class="icon material-icons-sharp">pause</span></button>
-                <button id="stopProgram" title="Stop" onclick="stopProgram()"><span class="icon material-icons-sharp">stop</span></button>
+                <button id="runProgram" title="Run"><span class="icon material-icons-sharp">play_arrow</span></button>
+                <button id="pauseProgram" title="Pause"><span class="icon material-icons-sharp">pause</span></button>
+                <button id="stopProgram" title="Stop"><span class="icon material-icons-sharp">stop</span></button>
             </span>
             <span class="group">
-                <span class="icon material-icons-sharp">bolt</span><select id="executionMode" title="Execution speed" onchange="setProgramExecutionMode()">
+                <span class="icon material-icons-sharp">bolt</span><select id="executionMode" title="Execution speed">
                     <option value="turbo">Turbo</option>
                     <option value="normal" selected>Normal</option>
                     <option value="slow">Slow</option>
@@ -213,12 +105,12 @@
                 </select>
             </span>
             <span class="group">
-                <button id="undo" title="Undo" onclick="undo()"><span class="icon material-icons-sharp">undo</span></button>
-                <button id="redo" title="Redo" onclick="redo()"><span class="icon material-icons-sharp">redo</span></button>
+                <button id="undo" title="Undo"><span class="icon material-icons-sharp">undo</span></button>
+                <button id="redo" title="Redo"><span class="icon material-icons-sharp">redo</span></button>
             </span>
             <span id="bar_settings" class="group">
-                <button id="openManual" title="Documentation" onclick="openManual()"><span class="icon material-icons-sharp">question_mark</span></button>
-                <button id="openSettings" title="Settings" onclick="openSettings()"><span class="icon material-icons-sharp">settings</span></button>
+                <button id="openManual" title="Documentation"><span class="icon material-icons-sharp">question_mark</span></button>
+                <button id="openSettings" title="Settings"><span class="icon material-icons-sharp">settings</span></button>
             </span>
         </div>
     </div>
@@ -230,37 +122,37 @@
             <div id="variableList"></div>
         </div>
     </div>
-    <div id="variablesExpander" onclick="toggleVariablesArea()" ontouchstart="toggleVariablesArea()" class="expander"><span id="variablesExpander_icon" class="icon material-icons-sharp">list</span><span class="text">Variables</span></div>
+    <div id="variablesExpander" class="expander"><span id="variablesExpander_icon" class="icon material-icons-sharp">list</span><span class="text">Variables</span></div>
     <div id="consoleArea">
         <div id="logWrapper">
             <div class="sideHeader">
                 Console
-                <button onclick="console_save()" title="Save text"><span class="icon material-icons-sharp">download</span></button>
+                <button id="console_save" title="Save text"><span class="icon material-icons-sharp">download</span></button>
             </div>
             <div id="log"></div>
         </div>
         <div id="inputArea">
-            <textarea id="input" onkeydown="input_keypressed(event)" disabled></textarea>
+            <textarea id="input" disabled></textarea>
             <button id="input_send" disabled><span class="icon material-icons-sharp">send</span></button>
         </div>
     </div>
-    <div id="consoleExpander" onclick="toggleConsoleArea()" ontouchstart="toggleConsoleArea()" class="expander"><span id="consoleExpander_icon" class="icon material-icons-sharp">chat_bubble</span><span class="text">Console</span></div>
+    <div id="consoleExpander" class="expander"><span id="consoleExpander_icon" class="icon material-icons-sharp">chat_bubble</span><span class="text">Console</span></div>
     <div id="turtleArea" class="window">
         <div class="window_bar">
             <div class="window_title">Turtle graphics</div>
             <div class="window_buttons">
-                <button id="turtle_openMenu" onclick="turtle_openMenu()"><span class="icon material-icons-sharp">menu</span></button>
-                <button onclick="ui_turtle_hide()"><span class="icon material-icons-sharp">close</span></button>
+                <button id="turtle_openMenu"><span class="icon material-icons-sharp">menu</span></button>
+                <button id="turtle_hide"><span class="icon material-icons-sharp">close</span></button>
             </div>
         </div>
         <div id="ui_turtle_canvas" class="window_contents"></div>
     </div>
     <div id="turtleMenu" class="popup">
-        <div id="turtleMenu_savePNG" onclick="turtle_savePNG()"><span class="icon material-icons-sharp">image</span>Save as PNG</div>
-        <div id="turtleMenu_hideCursor" onclick="turtle_hideCursor()"><span class="icon material-icons-sharp">visibility_off</span>Hide turtle</div>
-        <div id="turtleMenu_showCursor" onclick="turtle_showCursor()"><span class="icon material-icons-sharp">visibility</span>Show turtle</div>
+        <div id="turtleMenu_savePNG"><span class="icon material-icons-sharp">image</span>Save as PNG</div>
+        <div id="turtleMenu_hideCursor"><span class="icon material-icons-sharp">visibility_off</span>Hide turtle</div>
+        <div id="turtleMenu_showCursor"><span class="icon material-icons-sharp">visibility</span>Show turtle</div>
     </div>
-    <div id="popupBackdrop" onclick="closePopup()"></div>
+    <div id="popupBackdrop"></div>
     <div id="insertWide" class="popup"></div>
     <div id="insertTall" class="popup"></div>
     <div id="crash" class="popup">
@@ -269,7 +161,7 @@
             <div id="crash_details"></div>
         </div>
         <div id="crash_buttons">
-            <button onclick="closePopup()" class="important">Ok</button>
+            <button class="important closePopup">Ok</button>
         </div>
     </div>
     <div id="loadError" class="popup">
@@ -278,7 +170,7 @@
             <div id="loadError_details"></div>
         </div>
         <div id="loadError_buttons">
-            <button onclick="closePopup()" class="important">Ok</button>
+            <button class="important closePopup">Ok</button>
         </div>
     </div>
     <div id="editor" class="popup noAutoClose">
@@ -435,9 +327,8 @@
             </div>
         </div>
         <div id="editor_buttons">
-            <button onclick="edit_confirm()" class="important">Ok</button>
-            <button onclick="closePopup(true)">Cancel</button>
-            <!--<button onclick="edit_delete()" class="danger floatRight">Delete</button>-->
+            <button id="edit_confirm" class="important">Ok</button>
+            <button id="edit_cancel">Cancel</button>
         </div>
     </div>
     <div id="editor2" class="popup">
@@ -460,11 +351,11 @@
     </div>
     <div id="settings" class="popup noAutoClose">
         <div id="settings_tabSelector">
-            <div for="program_metadata" onclick="settings_selectTab('program_metadata')">Program</div>
-            <div for="settings_style" onclick="settings_selectTab('settings_style')">Style</div>
-            <div for="settings_export" onclick="settings_selectTab('settings_export')">Export</div>
-            <div for="settings_advanced" onclick="settings_selectTab('settings_advanced')">Advanced</div>
-            <div for="settings_about" onclick="settings_selectTab('settings_about')">About</div>
+            <div for="program_metadata" settings_selectTab="program_metadata">Program</div>
+            <div for="settings_style" settings_selectTab="settings_style">Style</div>
+            <div for="settings_export" settings_selectTab="settings_export">Export</div>
+            <div for="settings_advanced" settings_selectTab="settings_advanced">Advanced</div>
+            <div for="settings_about" settings_selectTab="settings_about">About</div>
         </div>
         <div id="settings_tabs">
             <div id="program_metadata" class="settings_tab">
@@ -478,8 +369,8 @@
                     <input type="text" id="metadata_author">
                 </div>
                 <div class="settings_tab_buttons">
-                    <button class="important" onclick="settings_updateMetadata()">Save</button>
-                    <button onclick="closePopup(true)">Close</button>
+                    <button class="important" id="settings_updateMetadata">Save</button>
+                    <button class="closePopup">Close</button>
                 </div>
             </div>
             <div id="settings_style" class="settings_tab">
@@ -487,8 +378,8 @@
                     Choose a theme for the application. This setting will be saved for the current user, but not in your program.
                 </p>
                 <div>
-                    <label for="style_theme">Theme</label>
-                    <select id="style_theme" onchange="settings_setTheme()">
+                    <label for="style_theme_select">Theme</label>
+                    <select id="style_theme_select">
                         <optgroup label="Dark">
                             <option value="default_dark">🌘 Default</option>
                             <option value="night_dark">🌘 Night city</option>
@@ -506,7 +397,7 @@
                     </select>
                 </div>
                 <div class="settings_tab_buttons">
-                    <button onclick="closePopup(true)">Close</button>
+                    <button class="closePopup">Close</button>
                 </div>
             </div>
             <div id="settings_export" class="settings_tab">
@@ -526,8 +417,8 @@
                     </div>
                 </div>
                 <div class="settings_tab_buttons">
-                    <button class="important" onclick="settings_export()">Export</button>
-                    <button onclick="closePopup(true)">Close</button>
+                    <button class="important" id="settings_export_button">Export</button>
+                    <button class="closePopup">Close</button>
                 </div>
             </div>
             <div id="settings_advanced" class="settings_tab">
@@ -544,7 +435,7 @@
                     </div>
                 </div>
                 <div class="settings_tab_buttons">
-                    <button onclick="closePopup(true)">Close</button>
+                    <button class="closePopup">Close</button>
                 </div>
             </div>
             <div id="settings_about" class="settings_tab">
@@ -552,11 +443,11 @@
                     <div><img src="images/logo_large.webp" id="about_logo" alt="Logo"></div>
                     <div>Flogo - Version 1.3.0 (dev)<span id="versionTypeBadge"></span></div>
                     <div>Made with ❤️ by <a href="https://fdossena.com" target="_blank">Federico Dossena</a></div>
-                    <div>Distributed under the <a href="javascript:showLicense()">GNU AGPL v3</a> license</div>
+                    <div>Distributed under the <a id="showLicense">GNU AGPL v3</a> license</div>
                     <div><a href="https://fdossena.com/?p=flogo/index.frag" target="_blank">Website</a> | <a href="https://github.com/adolfintel/flogo" target="_blank">GitHub</a></div>
                 </div>
                 <div class="settings_tab_buttons">
-                    <button onclick="closePopup(true)">Close</button>
+                    <button class="closePopup">Close</button>
                 </div>
             </div>
         </div>
@@ -567,20 +458,20 @@
             <img src="images/logo_large.webp" id="man_logo">
             <h1>Documentation</h1>
             <ul>
-                <li><a onclick="man_scrollTo('variables')">Variables and types</a></li>
-                <li><a onclick="man_scrollTo('instructions')">Basic instructions</a></li>
+                <li><a man_scrollTo="variables">Variables and types</a></li>
+                <li><a man_scrollTo="instructions">Basic instructions</a></li>
                 <li>
-                    <a onclick="man_scrollTo('expressions')">Expressions</a>
+                    <a man_scrollTo="expressions">Expressions</a>
                     <ul>
-                        <li><a onclick="man_scrollTo('operators1')">Mathematical operators</a></li>
-                        <li><a onclick="man_scrollTo('operators2')">Comparison operators</a></li>
-                        <li><a onclick="man_scrollTo('operators3')">Logical operators</a></li>
-                        <li><a onclick="man_scrollTo('functions')">Built-in functions</a></li>
-                        <li><a onclick="man_scrollTo('constants')">Built-in constants</a></li>
+                        <li><a man_scrollTo="operators1">Mathematical operators</a></li>
+                        <li><a man_scrollTo="operators2">Comparison operators</a></li>
+                        <li><a man_scrollTo="operators3">Logical operators</a></li>
+                        <li><a man_scrollTo="functions">Built-in functions</a></li>
+                        <li><a man_scrollTo="constants">Built-in constants</a></li>
                     </ul>
                 </li>
-                <li><a onclick="man_scrollTo('arrays')">Arrays</a></li>
-                <li><a onclick="man_scrollTo('turtle')">Graphics</a></li>
+                <li><a man_scrollTo="arrays">Arrays</a></li>
+                <li><a man_scrollTo="turtle">Graphics</a></li>
             </ul>
             <a name="variables"></a>
             <h2>Variables and types</h2>
@@ -590,7 +481,7 @@
                 Each variable has:
             </p>
             <ul>
-                <li><b>Name</b>: a short name that lets you use the variable in expressions. Names can only contain letters and numbers and the underscore symbol "_" and must start with a letter. Spaces, symbols and accented letters are not allowed. Also, variables can't have the same name as one of the <a onclick="man_scrollTo('constants')">built-in constants</a>. Names are case-sensitive, meaning that the variable <code>n</code> is not the same as the variable <code>N</code>.</li>
+                <li><b>Name</b>: a short name that lets you use the variable in expressions. Names can only contain letters and numbers and the underscore symbol "_" and must start with a letter. Spaces, symbols and accented letters are not allowed. Also, variables can't have the same name as one of the <a man_scrollTo="constants">built-in constants</a>. Names are case-sensitive, meaning that the variable <code>n</code> is not the same as the variable <code>N</code>.</li>
                 <li><b>Type</b>: what kind of value can be stored in the variable: Integer, Real, String, Boolean or Array</li>
                 <li><b>Initial value</b>: if you want, you can give a value to the variable automatically when the program starts. This is useful for things like counters that have to start at 0, or for constants such as a speed limit</li>
             </ul>
@@ -621,7 +512,7 @@
             </p>
             <h4>Array</h4>
             <p>
-                Can store multiple values of the same basic type. See <a onclick="man_scrollTo('arrays')">Arrays</a>.
+                Can store multiple values of the same basic type. See <a man_scrollTo="arrays">Arrays</a>.
             </p>
             <a name="instructions"></a>
             <h2>Basic instructions</h2>
@@ -1061,15 +952,13 @@
                 Instantly moves the turtle back to the starting position (its "home"), pointing upwards. It does not draw a line while moving.
             </p>
         </div>
-        <button id="man_close" onclick="closePopup(true)"><span class="icon material-icons-sharp">close</span></button>
+        <button id="man_close"><span class="icon material-icons-sharp">close</span></button>
     </div>
     <div id="licenseViewer" class="popup noAutoClose">
         <iframe src="LICENSE.txt" id="license"></iframe>
-        <button id="license_close" onclick="hideLicense()"><span class="icon material-icons-sharp">close</span></button>
+        <button id="license_close"><span class="icon material-icons-sharp">close</span></button>
     </div>
-    <script type="text/javascript">
-        initApp()
-    </script>
+    <script type="module" src="/src/app.js"></script>
 </body>
 
 </html>

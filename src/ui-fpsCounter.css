@@ -1,0 +1,12 @@
+#fps {
+    position: fixed;
+    bottom: 0;
+    left: 50vw;
+    transform: translate(-50%, 0);
+    font-size: 2rem;
+    display: inline-block;
+    z-index: 9999999;
+    background: red;
+    color: black;
+    font-family: monospace;
+}

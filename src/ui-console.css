@@ -1,0 +1,141 @@
+#consoleArea {
+    position: fixed;
+    top: 2.5rem;
+    right: 0;
+    bottom: 0;
+    width: var(--layout-consoleArea-width);
+    overflow: hidden;
+    background: var(--ui-color-background2);
+    border-left: var(--ui-measure-border-thin) solid var(--ui-color-border1);
+    overflow: visible;
+    display: none;
+
+    &.expanded {
+        display: block;
+    }
+}
+
+#inputArea {
+    position: absolute;
+    bottom: var(--ui-measure-spacer-small);
+    left: var(--ui-measure-spacer-small);
+    right: var(--ui-measure-spacer-small);
+    height: calc(5rem - var(--ui-measure-spacer-small));
+
+    #input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-family: "Noto Sans";
+        border-radius: var(--ui-measure-border-radius) 0 0 var(--ui-measure-border-radius);
+        margin: 0;
+        height: 100%;
+        width: calc(100% - 4.75rem);
+
+        &[disabled] {
+            opacity: 0.8;
+        }
+    }
+
+    #input_send {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 4.75rem;
+        background: var(--ui-color-accent1);
+        color: var(--ui-color-text-accent);
+        border: none;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0 var(--ui-measure-border-radius) var(--ui-measure-border-radius) 0;
+
+        .icon {
+            font-size: 1.5rem;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 var(--ui-measure-border-medium) var(--ui-color-text-accent) inset;
+        }
+
+        &[disabled] {
+            background: var(--ui-color-form-background);
+            color: var(--ui-color-form-text) !important;
+            opacity: 0.6;
+        }
+    }
+}
+
+#logWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: calc(5rem + var(--ui-measure-spacer-small));
+    display: flex;
+    flex-direction: column;
+
+    #log {
+        width: 100%;
+        display: flex;
+        flex-direction: column-reverse;
+        overflow: auto;
+        flex-grow: 1;
+
+        div.message {
+            max-width: 85%;
+            min-width: 3rem;
+            border-width: calc(var(--flowchart-Block-outline-thickness) * 1px);
+            border-style: solid;
+            padding: 0.35rem 0.6rem;
+            margin-top: var(--ui-measure-spacer-small);
+            width: fit-content;
+            overflow-wrap: break-word;
+            color: var(--flowchart-Text-color);
+        }
+
+        div.message.output {
+            align-self: flex-start;
+            background: var(--flowchart-Output-color1);
+            border-color: var(--flowchart-Output-color2);
+            color: var(--flowchart-Output-color3);
+            margin-left: var(--ui-measure-spacer-small);
+            border-radius: 1rem 1rem 1rem 0;
+        }
+
+        div.message.input {
+            align-self: flex-end;
+            background: var(--flowchart-Input-color1);
+            border-color: var(--flowchart-Input-color2);
+            color: var(--flowchart-Input-color3);
+            margin-right: var(--ui-measure-spacer-small);
+            border-radius: 1rem 1rem 0 1rem;
+        }
+
+        div.notice {
+            color: var(--ui-color-disabled);
+            text-align: center;
+            font-size: 0.85rem;
+            margin-top: var(--ui-measure-spacer-small);
+        }
+    }
+}
+
+#consoleExpander {
+    right: 0;
+    top: 10rem;
+    background: var(--ui-color-accent1);
+    border-radius: var(--ui-measure-border-radius) 0 0 var(--ui-measure-border-radius);
+    border-right: none;
+}
+
+#consoleArea.expanded+#consoleExpander {
+    right: var(--layout-consoleArea-width);
+}
+
+@media all and (max-width: 30rem) {
+    #consoleExpander {
+        top: initial;
+        bottom: 10rem;
+    }
+}

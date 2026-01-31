@@ -1,0 +1,94 @@
+#bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    padding: 0 var(--ui-measure-spacer-small);
+    background: var(--ui-color-accent1);
+    border-bottom: var(--ui-measure-border-thin) solid var(--ui-color-border1);
+    color: var(--ui-color-text-accent);
+    z-index: 99;
+    overflow: hidden;
+}
+
+#bar_contents {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ui-measure-spacer-large);
+    row-gap: 0;
+}
+
+#bar .group {
+    height: 2.5rem;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ui-measure-spacer-small);
+}
+
+#bar .group>.icon {
+    font-size: 1rem;
+}
+
+#bar .separator {
+    margin-right: var(--ui-measure-spacer-large);
+}
+
+#bar button[disabled] {
+    color: var(--ui-color-text-accent) !important;
+    border-color: var(--ui-color-form-border) !important;
+    opacity: 0.5;
+}
+
+#bar select {
+    border: var(--ui-measure-border-medium) solid var(--ui-color-form-border);
+    background: transparent;
+    max-height: 100%;
+}
+
+#bar select:hover,
+#bar select:focus {
+    border-color: var(--ui-color-form-border-selected);
+}
+
+#bar select>option {
+    color: black;
+    background: white;
+}
+
+#filePicker {
+    display: none;
+}
+
+#bar_settings {
+    margin-left: auto;
+}
+
+#bar .expandCollapse {
+    display: none;
+}
+
+#bar.small .expandCollapse {
+    display: inline-flex;
+    float: right;
+    align-items: center;
+    flex-direction: column;
+    line-height: 0;
+    justify-content: center;
+    width: 3rem;
+}
+
+#bar.small.expanded #expandBar {
+    display: none;
+}
+
+#bar.small:not(.expanded) #collapseBar {
+    display: none;
+}
+
+#bar.small #bar_settings {
+    margin-left: 0;
+}

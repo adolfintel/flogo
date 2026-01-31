@@ -1,0 +1,34 @@
+#turtleArea {
+    min-width: 25rem;
+    min-height: 25rem;
+    width: 45vw;
+    height: 45vh;
+    top: 5rem;
+    left: 5rem;
+    background: var(--turtle-color-background);
+
+    #turtle_openMenu {
+        border: none;
+    }
+}
+
+#turtleMenu {
+    padding: var(--ui-measure-spacer-medium);
+
+    .icon {
+        font-size: 1.5rem;
+        margin-right: var(--ui-measure-spacer-small);
+    }
+
+    div {
+        padding: var(--ui-measure-spacer-small);
+        border-radius: var(--ui-measure-border-radius);
+        display: flex;
+        align-items: center;
+
+        &:hover {
+            background: var(--ui-color-accent1);
+            color: var(--ui-color-text-accent);
+        }
+    }
+}
