@@ -17,6 +17,8 @@ import {
     Buffer
 } from "buffer"
 
+const isMac = process.platform === "darwin"
+
 const store = new Store()
 ipcMain.on("electron-store-get", (event, key) => {
     const value = store.get(key)
@@ -98,7 +100,7 @@ const createWindow = openThis => {
         width: 1280,
         height: 720
     }
-    if (process.platform !== "darwin") {
+    if (!isMac) {
         size = screen.getPrimaryDisplay().workAreaSize
         if (size.width < 2000) {
             size.width = ~~(0.85 * size.width)
@@ -128,30 +130,31 @@ const createWindow = openThis => {
     win.webContents.on("zoom-changed", (e, dir) => {
         e.preventDefault()
         if (dir === "in") {
-            if (win.webContents.getZoomLevel() < 2) {
-                win.webContents.setZoomLevel(win.webContents.getZoomLevel() + 1)
+            if (win.webContents.getZoomFactor() < 2) {
+                win.webContents.setZoomFactor(win.webContents.getZoomFactor() + 0.1)
             }
         } else if (dir === "out") {
-            if (win.webContents.getZoomLevel() > -2) {
-                win.webContents.setZoomLevel(win.webContents.getZoomLevel() - 1)
+            if (win.webContents.getZoomFactor() > 0.6) {
+                win.webContents.setZoomFactor(win.webContents.getZoomFactor() - 0.1)
             }
         }
     })
     win.webContents.on("before-input-event", (e, input) => {
-        if (input.control && input.type === "keyDown") {
+        const ctrlKey = isMac ? input.meta : input.control
+        if (ctrlKey && input.type === "keyDown") {
             if (input.key === "+") {
                 e.preventDefault()
-                if (win.webContents.getZoomLevel() < 2) {
-                    win.webContents.setZoomLevel(win.webContents.getZoomLevel() + 1)
+                if (win.webContents.getZoomFactor() < 2) {
+                    win.webContents.setZoomFactor(win.webContents.getZoomFactor() + 0.1)
                 }
             } else if (input.key === "-") {
                 e.preventDefault()
-                if (win.webContents.getZoomLevel() > -2) {
-                    win.webContents.setZoomLevel(win.webContents.getZoomLevel() - 1)
+                if (win.webContents.getZoomFactor() > 0.6) {
+                    win.webContents.setZoomFactor(win.webContents.getZoomFactor() - 0.1)
                 }
             } else if (input.key === "0") {
                 e.preventDefault()
-                win.webContents.setZoomLevel(0)
+                win.webContents.setZoomFactor(1)
             }
         }
     })
@@ -165,7 +168,7 @@ const createWindow = openThis => {
         e.preventDefault()
         win.webContents.executeJavaScript("electron_closeWindow()")
     })
-    if (process.platform !== "darwin") {
+    if (!isMac) {
         win.setMenu(null)
     }
     if (app.isPackaged) {
@@ -199,7 +202,7 @@ app.whenReady().then(() => {
     })
 })
 
-if (process.platform === "darwin") {
+if (isMac) {
     app.on("ready", () => {
         const appMenu = Menu.buildFromTemplate([{
                 label: app.name,
@@ -250,7 +253,7 @@ if (process.platform === "darwin") {
 }
 
 app.on("window-all-closed", () => {
-    if (process.platform !== "darwin") {
+    if (!isMac) {
         app.quit()
     }
 })
