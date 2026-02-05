@@ -56,10 +56,10 @@ It is also possible to cross-build for other platforms with the following comman
 * `npm run electron:build-linux-arm64`: GNU/Linux (ARM, unpacked)
 * `npm run electron:build-linux-x64-appimage`: GNU/Linux (x64, AppImage)
 * `npm run electron:build-linux-arm64-appimage`: GNU/Linux (ARM, AppImage)
-* `npm run electron:build-linux-mac-arm`: macOS (Apple Silicon, unpacked)
-* `npm run electron:build-linux-mac-intel`: macOS (Intel, unpacked)
-* `npm run electron:build-linux-mac-arm-dmg`: macOS (Apple Silicon, dmg)
-* `npm run electron:build-linux-mac-intel-dmg`: macOS (Intel, dmg)
+* `npm run electron:build-mac-arm`: macOS (Apple Silicon, unpacked)
+* `npm run electron:build-mac-intel`: macOS (Intel, unpacked)
+* `npm run electron:build-mac-arm-dmg`: macOS (Apple Silicon, dmg)
+* `npm run electron:build-mac-intel-dmg`: macOS (Intel, dmg)
 
 Notes:
 * .dmg creation is only available on macOS
