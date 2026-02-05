@@ -1502,7 +1502,7 @@ function selectionMode_deselect_rec(i) {
     if (Array.isArray(i)) {
         i.forEach(i => selectionMode_deselect_rec(i))
     } else {
-        if (i.drawable.flogo_highlightable !== null) {
+        if (typeof i.drawable !== "undefined" && i.drawable.flogo_highlightable !== null) {
             i.drawable.flogo_highlightable.stroke(i.drawable.flogo_highlightable.flogo_originalStroke)
             i.drawable.flogo_highlightable.fill(i.drawable.flogo_highlightable.flogo_originalFill)
             i.drawable.flogo_highlightable.flogo_text.forEach(e => {
