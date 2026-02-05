@@ -2,7 +2,7 @@ import * as FlogoLang from "./flogo-language.js"
 import * as Windowing from "./ui-windowing.js"
 import * as Popups from "./ui-popup.js"
 
-FlogoLang.interpreter.uiBridge.turtle_containerId = "ui_turtle_canvas"
+FlogoLang.interpreter.uiBridge.turtle_containerId = "turtle_canvas"
 
 export function show() {
     document.getElementById("turtleArea").classList.add("visible")
