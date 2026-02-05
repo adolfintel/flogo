@@ -155,6 +155,9 @@ const createWindow = openThis => {
             } else if (input.key === "0") {
                 e.preventDefault()
                 win.webContents.setZoomFactor(1)
+            } else if (input.key === "w") {
+                e.preventDefault()
+                win.webContents.executeJavaScript("electron_closeWindow()")
             }
         }
     })
