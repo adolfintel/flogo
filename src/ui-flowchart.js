@@ -10,7 +10,7 @@ import {
 } from './platformSpecific.js'
 import * as Utils from "./ui-utils.js"
 import * as Theming from "./ui-theming.js"
-import '@material-design-icons/font'
+import '@material-design-icons/font/sharp.css'
 import * as History from "./ui-history.js"
 
 export let callbacks = {

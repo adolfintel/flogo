@@ -1,5 +1,5 @@
 import "./style.css"
-import '@material-design-icons/font'
+import '@material-design-icons/font/sharp.css'
 import * as Theming from "./ui-theming.js"
 import * as Flowchart from "./ui-flowchart.js"
 import * as Popups from "./ui-popup.js"

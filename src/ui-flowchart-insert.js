@@ -9,7 +9,7 @@ import * as Flowchart from "./ui-flowchart.js"
 import * as Popups from "./ui-popup.js"
 import * as History from "./ui-history.js"
 import * as Theming from "./ui-theming.js"
-import '@material-design-icons/font'
+import '@material-design-icons/font/sharp.css'
 
 let insertWide_stage = null
 let insertTall_stage = null
