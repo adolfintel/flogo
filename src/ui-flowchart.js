@@ -1433,7 +1433,10 @@ function dispatchEdit2(instruction, evt, parent, posInParent) {
 function dispatchInsert(instruction, pos, evt, arrow) {
     const intState = FlogoLang.interpreter.getState()
     if (intState === "running" || intState === "paused") return
-    cancelSelection()
+    const ctrlKey = Platform.isMac ? (evt.evt.ctrlKey || evt.evt.metaKey) : evt.evt.ctrlKey
+    if (!ctrlKey) {
+        cancelSelection()
+    }
     arrow.flogo_forceHighlighted = true
     arrow.stroke(Theming.LINE_SELECTED_COLOR)
     arrow.fill(Theming.LINE_SELECTED_COLOR)
@@ -1794,6 +1797,8 @@ export function init() {
         })
     })
     stage.on("click", e => {
+        const ctrlKey = Platform.isMac ? (e.evt.ctrlKey || e.evt.metaKey) : e.evt.ctrlKey
+        if (ctrlKey) return
         if (e.target === stage) {
             cancelSelection()
         }
