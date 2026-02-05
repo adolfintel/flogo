@@ -1724,7 +1724,6 @@ export function init() {
     scrollbarsLayer.add(hbar)
     let bounds = null
     const resizeFun = () => {
-        requestAnimationFrame(resizeFun)
         if (window.devicePixelRatio !== blockLayer.getCanvas().getPixelRatio()) {
             blockLayer.getCanvas().setPixelRatio(window.devicePixelRatio)
         }
@@ -1743,10 +1742,10 @@ export function init() {
             }*/
             bounds = b
         }
+        requestAnimationFrame(resizeFun)
     }
     resizeFun()
     const boundsFun = () => {
-        requestAnimationFrame(boundsFun)
         const minVis = Theming.PADDING_BASE * 2
         const stageTop = stage.y(),
             stageLeft = stage.x(),
@@ -1783,6 +1782,7 @@ export function init() {
             stage.x(stage.width() / 2 - chartMidX)
             hbar.hide()
         }
+        requestAnimationFrame(boundsFun)
     }
     boundsFun()
     stage.on("wheel", e => {
@@ -1876,7 +1876,6 @@ export function init() {
     let prevHighlightInstr = null,
         prevIntState = "stopped"
     const highlightFun = () => {
-        requestAnimationFrame(highlightFun)
         const i = FlogoLang.interpreter.currentInstruction,
             intState = FlogoLang.interpreter.getState()
         if ((intState === "running" || intState === "paused") && (prevIntState === "stopped" || prevIntState === "crashed")) {
@@ -1919,11 +1918,11 @@ export function init() {
         }
         prevHighlightInstr = i
         prevIntState = intState
+        requestAnimationFrame(highlightFun)
     }
     highlightFun()
     let oldScrollbarState = null
     const updateScrollbars = () => {
-        requestAnimationFrame(updateScrollbars)
         const minVis = Theming.PADDING_BASE * 2
         const newScrollbarState = JSON.stringify([
             //TODO: there's probably a better way to detect changes in these
@@ -1967,6 +1966,7 @@ export function init() {
                 hbar.setHitStrokeWidth(Theming.SCROLLBAR_PADDING)
             }
         }
+        requestAnimationFrame(updateScrollbars)
     }
     let yDragOff = 0,
         xDragOff = 0
