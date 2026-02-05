@@ -10,7 +10,7 @@ import contextMenu from "electron-context-menu"
 import Store from "electron-store"
 import {
     fileURLToPath
-} from "url";
+} from "url"
 import path from "path"
 import fs from "fs"
 import {
