@@ -95,17 +95,41 @@ export function refresh() {
 
 window.addEventListener("resize", refresh)
 
-document.getElementById("newProgram").onclick = Actions.newProgram
-document.getElementById("loadProgram").onclick = Actions.loadProgram
-document.getElementById("saveProgram").onclick = Actions.saveProgram
-document.getElementById("runProgram").onclick = Actions.runProgram
-document.getElementById("pauseProgram").onclick = Actions.pauseProgram
-document.getElementById("stopProgram").onclick = Actions.stopProgram
+document.getElementById("newProgram").onclick = () => {
+    collapse()
+    Actions.newProgram()
+}
+document.getElementById("loadProgram").onclick = () => {
+    collapse()
+    Actions.loadProgram()
+}
+document.getElementById("saveProgram").onclick = () => {
+    collapse()
+    Actions.saveProgram()
+}
+document.getElementById("runProgram").onclick = () => {
+    collapse()
+    Actions.runProgram()
+}
+document.getElementById("pauseProgram").onclick = () => {
+    collapse()
+    Actions.pauseProgram()
+}
+document.getElementById("stopProgram").onclick = () => {
+    collapse()
+    Actions.stopProgram()
+}
 document.getElementById("executionMode").onchange = Actions.setProgramExecutionMode
 document.getElementById("undo").onclick = History.undo
 document.getElementById("redo").onclick = History.redo
-document.getElementById("openManual").onclick = Manual.show
-document.getElementById("openSettings").onclick = Settings.show
+document.getElementById("openManual").onclick = () => {
+    collapse()
+    Manual.show()
+}
+document.getElementById("openSettings").onclick = () => {
+    collapse()
+    Settings.show()
+}
 
 if (Platform.isWebKit) { //webkit-based browsers don't support file filters with multiple types
     document.getElementById("filePicker").removeAttribute("accept")
