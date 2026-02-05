@@ -79,7 +79,20 @@ To build, sign, and notarize the app, here's what you need to do:
 1. Generate a specific app password by going to https://account.apple.com/account/manage, clicking on Sign-In and Security section and then select App-Specific Passwords
 2. Run this command:
 ```bash
-export APPLE_ID="yourappleuser@email.com" APP_ID="TheAppNameYouWroteWhenGeneratingAppPassword" APPLE_APP_SPECIFIC_PASSWORD="the-generated-app-password" APPLE_ID_PASSWORD="the-generated-app-password" APPLE_TEAM_ID="YOUR10CHARDEVELOPERTEAMID" && npm run electron:build-mac-arm-dmg
+export APPLE_ID="yourappleuser@email.com" APP_ID="TheAppNameYouWroteWhenGeneratingAppPassword" APPLE_APP_SPECIFIC_PASSWORD="the-generated-app-password" APPLE_TEAM_ID="YOUR10CHARDEVELOPERTEAMID" && npm run electron:build-mac-arm-dmg
+```
+
+If the notarization process fails, it's possible that the certificate used to sign the app is not in the keychain or it's expired. To fix this, go to https://developer.apple.com/account/resources/certificates/list, create a Developer ID Application certificate, follow the steps to download the certificate and add it to your mac's keychain.
+
+To test that the certificate was added correctly, use this command:
+```bash
+security find-identity -v -p codesigning
+```
+
+To ensure that the app was signed and notarized correctly, use these commands:
+```bash
+spctl -a -vvv -t install release/mac-arm64/Flogo.app
+spctl -a -vvv -t execute release/mac-arm64/Flogo.app
 ```
 
 ## Testing the app without building (for development)
