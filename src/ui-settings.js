@@ -74,7 +74,7 @@ document.getElementById("settings_updateMetadata").onclick = () => {
     Popups.close(true)
 }
 
-document.getElementById("style_theme_select").onclick = () => {
+document.getElementById("style_theme_select").onchange = () => {
     Theming.loadTheme(document.getElementById("style_theme_select").value)
 }
 
