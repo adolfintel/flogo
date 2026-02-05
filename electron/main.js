@@ -124,7 +124,8 @@ const createWindow = openThis => {
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
             nodeIntegration: false,
-            contextIsolation: true
+            contextIsolation: true,
+            partition: "" + Math.random()
         }
     })
     win.webContents.on("zoom-changed", (e, dir) => {
