@@ -85,7 +85,6 @@
         }
       ]
     },
-    "afterSign": "@electron/notarize",
     "mac": {
       "hardenedRuntime": true,
       "entitlements": "./node_modules/app-builder-lib/templates/entitlements.mac.plist",
