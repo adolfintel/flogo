@@ -253,9 +253,7 @@ if (isMac) {
 }
 
 app.on("window-all-closed", () => {
-    if (!isMac) {
-        app.quit()
-    }
+    app.quit()
 })
 
 app.on("second-instance", (e, args) => {
