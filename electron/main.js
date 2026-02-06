@@ -50,11 +50,8 @@ ipcMain.on("clipboard-clear", (event) => {
 })
 
 ipcMain.on("new-window", (event, path) => {
-    if (typeof path === "undefined") {
-        createWindow()
-    } else {
-        createWindow(path)
-    }
+    const zoom = event.sender.getZoomFactor()
+    createWindow(path, zoom)
     event.returnValue = "success"
 })
 
@@ -95,7 +92,7 @@ ipcMain.handle("read-file-blob", (event, path) => {
     }
 })
 
-const createWindow = openThis => {
+const createWindow = (openThis, initialZoom) => {
     let size = {
         width: 1280,
         height: 720
@@ -164,6 +161,9 @@ const createWindow = openThis => {
     })
     win.on("ready-to-show", () => {
         win.show()
+        if (typeof initialZoom !== "undefined") {
+            win.webContents.setZoomFactor(initialZoom)
+        }
         if (typeof openThis !== "undefined") {
             win.webContents.send("open-file", openThis)
         }
