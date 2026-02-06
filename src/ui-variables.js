@@ -4,7 +4,8 @@ import * as History from "./ui-history.js"
 import * as Utils from "./ui-utils.js"
 import * as Platform from "./platformSpecific.js"
 
-let dragging = null
+let dragging = null,
+    touchscreenDragWorkaround = false
 
 function createVariable(name) {
     const v = document.createElement("div")
@@ -25,7 +26,7 @@ function createVariable(name) {
         })
     }
     v.ondragend = e => {
-        if (Platform.isWebKit || e.dataTransfer.dropEffect !== "none") {
+        if (Platform.isWebKit || e.dataTransfer.dropEffect !== "none" || touchscreenDragWorkaround) {
             moveVariableAtDropIndicator(v)
         }
         hideVariableDropIndicator()
@@ -33,6 +34,10 @@ function createVariable(name) {
         document.querySelectorAll("#variableList > div.variable > .value *").forEach(el => {
             el.style.pointerEvents = ""
         })
+    }
+    v.onpointerdown = e => {
+        //workaround: on mobile chromium, in ondragend, event.dataTransfer.dropEffect is none despite it being a valid drag
+        touchscreenDragWorkaround = e.pointerType !== "mouse"
     }
     const nt = document.createElement("div")
     nt.className = "nameType"
