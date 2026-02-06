@@ -127,3 +127,7 @@ button.danger:focus {
         background: #c0c0c0;
     }
 }
+
+#popupBackdrop.important {
+    background: transparent;
+}
