@@ -17,6 +17,19 @@ import {
     Buffer
 } from "buffer"
 
+function getDefaultZoom() {
+    const z = store.get("defaultZoom")
+    if (typeof z === "undefined") {
+        return 1
+    } else {
+        return z
+    }
+}
+
+function saveDefaultZoom(z) {
+    store.set("defaultZoom", z)
+}
+
 const isMac = process.platform === "darwin"
 
 const store = new Store()
@@ -130,10 +143,12 @@ const createWindow = (openThis, initialZoom) => {
         if (dir === "in") {
             if (win.webContents.getZoomFactor() < 2) {
                 win.webContents.setZoomFactor(win.webContents.getZoomFactor() + 0.1)
+                saveDefaultZoom(win.webContents.getZoomFactor())
             }
         } else if (dir === "out") {
             if (win.webContents.getZoomFactor() > 0.6) {
                 win.webContents.setZoomFactor(win.webContents.getZoomFactor() - 0.1)
+                saveDefaultZoom(win.webContents.getZoomFactor())
             }
         }
     })
@@ -144,15 +159,18 @@ const createWindow = (openThis, initialZoom) => {
                 e.preventDefault()
                 if (win.webContents.getZoomFactor() < 2) {
                     win.webContents.setZoomFactor(win.webContents.getZoomFactor() + 0.1)
+                    saveDefaultZoom(win.webContents.getZoomFactor())
                 }
             } else if (input.key === "-") {
                 e.preventDefault()
                 if (win.webContents.getZoomFactor() > 0.6) {
                     win.webContents.setZoomFactor(win.webContents.getZoomFactor() - 0.1)
+                    saveDefaultZoom(win.webContents.getZoomFactor())
                 }
             } else if (input.key === "0") {
                 e.preventDefault()
                 win.webContents.setZoomFactor(1)
+                saveDefaultZoom(win.webContents.getZoomFactor())
             } else if (input.key === "w") {
                 e.preventDefault()
                 win.webContents.executeJavaScript("electron_closeWindow()")
@@ -163,6 +181,9 @@ const createWindow = (openThis, initialZoom) => {
         win.show()
         if (typeof initialZoom !== "undefined") {
             win.webContents.setZoomFactor(initialZoom)
+            saveDefaultZoom(initialZoom)
+        } else {
+            win.webContents.setZoomFactor(getDefaultZoom())
         }
         if (typeof openThis !== "undefined") {
             win.webContents.send("open-file", openThis)
