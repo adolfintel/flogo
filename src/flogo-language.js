@@ -1075,52 +1075,54 @@ For.prototype = {
             }
             this.state = 0
         }
-        if (this.state !== 0) {
+        if (this.state === 1) {
             if (this.body.tick()) {
-                interpreter.currentInstruction = this
-                if (this.step === null || this.direction === null) throw "Incomplete instruction"
-                const inc = evaluateExpression(this.step)
-                if (typeof inc !== "number") throw "Invalid expression: step"
-                const n = this.parsedVariableName
-                switch (this.direction) {
-                    case "up": {
-                        switch (n.type) {
-                            case jsep.IDENTIFIER: {
-                                variables[n.name].value += inc
-                            }
-                            break
-                            case jsep.MEMBER_EXP: {
-                                const idx = evaluateExpression(n.property)
-                                variables[n.object.name].value[idx] += inc
-                            }
-                            break
-                            default:
-                                throw "Invalid variable name"
+                this.state = 2
+            }
+            return false
+        } else if (this.state === 2) {
+            if (this.step === null || this.direction === null) throw "Incomplete instruction"
+            const inc = evaluateExpression(this.step)
+            if (typeof inc !== "number") throw "Invalid expression: step"
+            const n = this.parsedVariableName
+            switch (this.direction) {
+                case "up": {
+                    switch (n.type) {
+                        case jsep.IDENTIFIER: {
+                            variables[n.name].value += inc
                         }
-                    }
-                    break
-                    case "down": {
-                        switch (n.type) {
-                            case jsep.IDENTIFIER: {
-                                variables[n.name].value -= inc
-                            }
-                            break
-                            case jsep.MEMBER_EXP: {
-                                const idx = evaluateExpression(n.property)
-                                variables[n.object.name].value[idx] -= inc
-                            }
-                            break
-                            default:
-                                throw "Invalid variable name"
+                        break
+                        case jsep.MEMBER_EXP: {
+                            const idx = evaluateExpression(n.property)
+                            variables[n.object.name].value[idx] += inc
                         }
-                    }
-                    break
-                    default: {
-                        throw "Invalid direction: " + this.direction
+                        break
+                        default:
+                            throw "Invalid variable name"
                     }
                 }
-                this.state = 0
+                break
+                case "down": {
+                    switch (n.type) {
+                        case jsep.IDENTIFIER: {
+                            variables[n.name].value -= inc
+                        }
+                        break
+                        case jsep.MEMBER_EXP: {
+                            const idx = evaluateExpression(n.property)
+                            variables[n.object.name].value[idx] -= inc
+                        }
+                        break
+                        default:
+                            throw "Invalid variable name"
+                    }
+                }
+                break
+                default: {
+                    throw "Invalid direction: " + this.direction
+                }
             }
+            this.state = 0
             return false
         } else {
             if (this.to === null || this.direction === null) throw "Incomplete instruction"
