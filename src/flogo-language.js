@@ -1071,7 +1071,7 @@ For.prototype = {
                 }
                 break
                 default:
-                    throw "Invalid variable name"
+                    throw "Invalid variable name: " + this.variable
             }
             this.state = 0
         }
@@ -1097,8 +1097,6 @@ For.prototype = {
                             variables[n.object.name].value[idx] += inc
                         }
                         break
-                        default:
-                            throw "Invalid variable name"
                     }
                 }
                 break
@@ -1113,8 +1111,6 @@ For.prototype = {
                             variables[n.object.name].value[idx] -= inc
                         }
                         break
-                        default:
-                            throw "Invalid variable name"
                     }
                 }
                 break
@@ -1142,8 +1138,6 @@ For.prototype = {
                             repeat = variables[n.object.name].value[idx] <= endVal
                         }
                         break
-                        default:
-                            throw "Invalid variable name"
                     }
                 }
                 break
@@ -1158,8 +1152,6 @@ For.prototype = {
                             repeat = variables[n.object.name].value[idx] >= endVal
                         }
                         break
-                        default:
-                            throw "Invalid variable name"
                     }
                 }
                 break
