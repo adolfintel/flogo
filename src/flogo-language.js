@@ -1065,6 +1065,7 @@ For.prototype = {
                 break
                 case jsep.MEMBER_EXP: {
                     if (typeof variables[n.object.name] === "undefined") throw "Variable does not exist: " + n.object.name
+                    if (!variables[n.object.name].isArray) throw "Variable is not an array: " + n.object.name
                     const idx = evaluateExpression(n.property)
                     variables[n.object.name].value[idx] = val
                 }
@@ -1298,6 +1299,7 @@ Input.prototype = {
                 break
                 case jsep.MEMBER_EXP: {
                     if (typeof variables[n.object.name] === "undefined") throw "Variable does not exist: " + n.object.name
+                    if (!variables[n.object.name].isArray) throw "Variable is not an array: " + n.object.name
                     varType = variables[n.object.name].type
                 }
                 break
@@ -1351,7 +1353,7 @@ Input.prototype = {
                     break
                     case jsep.MEMBER_EXP: {
                         if (typeof variables[n.object.name] === "undefined") throw "Variable does not exist: " + n.object.name
-                        if (!typeof variables[n.object.name].isArray) throw "Variable is not an array: " + n.object.name
+                        if (!variables[n.object.name].isArray) throw "Variable is not an array: " + n.object.name
                         const idx = evaluateExpression(n.property)
                         switch (variables[n.object.name].type) {
                             case "integer":
