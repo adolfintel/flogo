@@ -1077,6 +1077,7 @@ For.prototype = {
         }
         if (this.state !== 0) {
             if (this.body.tick()) {
+                interpreter.currentInstruction = this
                 if (this.step === null || this.direction === null) throw "Incomplete instruction"
                 const inc = evaluateExpression(this.step)
                 if (typeof inc !== "number") throw "Invalid expression: step"
