@@ -70,7 +70,7 @@ div.popup {
 }
 
 #consoleArea {
-    transition: right 0.3s, display 0.3s allow-discrete;
+    transition: right 0.3s, display 0.3s allow-discrete, width 0.3s;
     right: calc(var(--layout-consoleArea-width) * -1);
 
     &.expanded {

@@ -145,6 +145,12 @@
     --toast-animation-duration: 0.4s;
 }
 
+@media all and (max-width:35rem) {
+    :root {
+        --layout-consoleArea-width: 19rem;
+    }
+}
+
 /* BASIC RULES */
 * {
     box-sizing: border-box;
