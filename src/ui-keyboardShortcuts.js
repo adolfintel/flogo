@@ -140,34 +140,31 @@ export function init() {
             }
             break
             case 's': {
-                if (e.target !== document.body) return
-                const intState = FlogoLang.interpreter.getState()
-                if (intState === "running" || intState === "paused") return
-                if (Popups.areVisible()) return
                 if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
+                    const intState = FlogoLang.interpreter.getState()
+                    if (intState === "running" || intState === "paused") return
+                    if (Popups.areVisible()) return
                     Actions.saveProgram(true)
                 }
             }
             break
             case 'l': {
-                if (e.target !== document.body) return
-                const intState = FlogoLang.interpreter.getState()
-                if (intState === "running" || intState === "paused") return
-                if (Popups.areVisible()) return
                 if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
+                    const intState = FlogoLang.interpreter.getState()
+                    if (intState === "running" || intState === "paused") return
+                    if (Popups.areVisible()) return
                     Actions.loadProgram(true)
                 }
             }
             break
             case 'n': {
-                if (e.target !== document.body) return
-                const intState = FlogoLang.interpreter.getState()
-                if (intState === "running" || intState === "paused") return
-                if (Popups.areVisible()) return
                 if (ctrlKey && !e.shiftKey) {
                     e.preventDefault()
+                    const intState = FlogoLang.interpreter.getState()
+                    if (intState === "running" || intState === "paused") return
+                    if (Popups.areVisible()) return
                     Actions.newProgram(true)
                 }
             }
