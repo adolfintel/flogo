@@ -29,6 +29,7 @@ export function show() {
     document.getElementById("settings_unlimitedConsole").checked = Console.isUnlimited()
     document.getElementById("settings_unlimitedTurtle").checked = FlogoLang.interpreter.uiBridge.turtle_maxPoints === 0
     document.getElementById("settings_unlimitedArrayView").checked = VariablesEditor.getUnlimitedArrayView()
+    document.getElementById("settings_disableCulling").checked = !Flowchart.isCullingEnabled()
     const badge = document.getElementById("versionTypeBadge")
     if (Platform.isElectron) {
         badge.innerText = "Electron " + flogoElectronAPI.getElectronVersion()
@@ -116,6 +117,12 @@ document.getElementById("settings_unlimitedArrayView").onchange = () => {
     VariablesEditor.setUnlimitedArrayView(val)
 }
 
+document.getElementById("settings_disableCulling").onchange = () => {
+    const val = document.getElementById("settings_disableCulling").checked
+    storage.disableCulling = val
+    Flowchart.setCulling(!val)
+}
+
 document.getElementById("settings_export_button").onclick = () => {
     switch (document.getElementById("export_format").value) {
         case "svg":
@@ -146,4 +153,7 @@ if (typeof storage.unlimitedTurtle !== "undefined") {
 }
 if (typeof storage.unlimitedArrayView !== "undefined") {
     VariablesEditor.setUnlimitedArrayView(storage.unlimitedArrayView === "true")
+}
+if (typeof storage.disableCulling !== "undefined") {
+    Flowchart.setCulling(storage.disableCulling === "false")
 }

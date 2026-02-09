@@ -1686,6 +1686,78 @@ function block_touchend(instr, e, parentInstr, parentPos) {
     }
 }
 
+let cullingEnabled = true
+
+function cull_rec(instruction, parentCoords, cameraViewRect) {
+    if (typeof instruction.drawable === "undefined") return
+    const coords = {
+        x: parentCoords.x + instruction.drawable.x(),
+        y: parentCoords.y + instruction.drawable.y(),
+        width: instruction.flogo_width,
+        height: instruction.flogo_height
+    }
+    if (Konva.Util.haveIntersection(coords, cameraViewRect)) {
+        if (!instruction.drawable.visible()) {
+            instruction.drawable.visible(true)
+        }
+        if (instruction.type === "InstructionSequence") {
+            instruction.body.forEach(i => cull_rec(i, coords, cameraViewRect))
+        } else {
+            if (typeof instruction.body !== "undefined") {
+                cull_rec(instruction.body, coords, cameraViewRect)
+            }
+            if (typeof instruction.trueBranch !== "undefined") {
+                cull_rec(instruction.trueBranch, coords, cameraViewRect)
+            }
+            if (typeof instruction.falseBranch !== "undefined") {
+                cull_rec(instruction.falseBranch, coords, cameraViewRect)
+            }
+        }
+    } else {
+        if (instruction.drawable.visible()) {
+            instruction.drawable.visible(false)
+        }
+    }
+}
+
+let prevCameraViewRect = null
+
+function doCulling(forced = false) {
+    if (!cullingEnabled) return
+    const cameraViewRect = {
+        x: -stage.x() / stage.scaleX(),
+        y: -stage.y() / stage.scaleY(),
+        width: stage.width() / stage.scaleX(),
+        height: stage.height() / stage.scaleY()
+    }
+    if (forced || JSON.stringify(prevCameraViewRect) !== JSON.stringify(cameraViewRect)) {
+        prevCameraViewRect = cameraViewRect
+        if (typeof cameraViewRect !== "undefined") {
+            const origin = {
+                x: 0,
+                y: 0
+            }
+            cull_rec(FlogoLang.program, origin, cameraViewRect)
+        }
+    }
+}
+
+export function setCulling(enabled) {
+    if (enabled) {
+        cullingEnabled = true
+        prevCameraViewRect = null
+    } else {
+        cullingEnabled = false
+        if (typeof blockLayer !== "undefined") {
+            update()
+        }
+    }
+}
+
+export function isCullingEnabled() {
+    return cullingEnabled
+}
+
 let stage = null
 let blockLayer, scrollbarsLayer
 
@@ -2009,6 +2081,11 @@ export function init() {
         }
     })
     updateScrollbars()
+    const updateCulling = () => {
+        doCulling()
+        requestAnimationFrame(updateCulling)
+    }
+    updateCulling()
 }
 
 export function ensureInstructionVisibleInFlowchart(i) {
@@ -2046,6 +2123,8 @@ export function update(resetCamera = false) {
     if (resetCamera) {
         setZoom(1)
         setCamera(stage.width() / 2 - i.flogo_connX, Theming.PADDING_BASE + FLOWCHART_OCCLUDED_ON_TOP)
+    } else {
+        doCulling(true)
     }
 }
 
