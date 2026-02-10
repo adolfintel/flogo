@@ -5,9 +5,6 @@ import * as Flowchart from "./ui-flowchart.js"
 import * as FlowchartInsert from "./ui-flowchart-insert.js"
 import * as VariablesEditor from "./ui-variables.js"
 import * as Platform from "./platformSpecific.js"
-import {
-    clipboard
-} from "./platformSpecific.js"
 import * as FlogoLang from "./flogo-language.js"
 
 export function init() {

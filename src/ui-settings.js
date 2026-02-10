@@ -1,7 +1,4 @@
 import * as FlogoLang from "./flogo-language.js"
-import {
-    storage
-} from './platformSpecific.js'
 import * as Platform from "./platformSpecific.js"
 import * as Theming from "./ui-theming.js"
 import * as Flowchart from "./ui-flowchart.js"
@@ -81,29 +78,25 @@ document.getElementById("style_theme_select").onchange = () => {
 
 document.getElementById("settings_fps").onchange = () => {
     const val = document.getElementById("settings_fps").checked
-    storage.showFps = val
-    if (val) {
-        FpsCounter.show()
-    } else {
-        FpsCounter.hide()
-    }
+    Platform.storage.showFps = val
+    FpsCounter.setVisible(val)
 }
 
 document.getElementById("settings_altTurboTSlice").onchange = () => {
     const val = document.getElementById("settings_altTurboTSlice").checked
-    storage.altTurboTSlice = val
+    Platform.storage.altTurboTSlice = val
     FlogoLang.interpreter.setAltTurboTSlice(val)
 }
 
 document.getElementById("settings_unlimitedConsole").onchange = () => {
     const val = document.getElementById("settings_unlimitedConsole").checked
-    storage.unlimitedConsole = val
+    Platform.storage.unlimitedConsole = val
     Console.setUnlimited(val)
 }
 
 document.getElementById("settings_unlimitedTurtle").onchange = () => {
     const val = document.getElementById("settings_unlimitedTurtle").checked
-    storage.unlimitedTurtle = val
+    Platform.storage.unlimitedTurtle = val
     if (val) {
         FlogoLang.interpreter.uiBridge.turtle_maxPoints = 0
     } else {
@@ -113,13 +106,13 @@ document.getElementById("settings_unlimitedTurtle").onchange = () => {
 
 document.getElementById("settings_unlimitedArrayView").onchange = () => {
     const val = document.getElementById("settings_unlimitedArrayView").checked
-    storage.unlimitedArrayView = val
+    Platform.storage.unlimitedArrayView = val
     VariablesEditor.setUnlimitedArrayView(val)
 }
 
 document.getElementById("settings_disableCulling").onchange = () => {
     const val = document.getElementById("settings_disableCulling").checked
-    storage.disableCulling = val
+    Platform.storage.disableCulling = val
     Flowchart.setCulling(!val)
 }
 
@@ -142,18 +135,21 @@ document.getElementById("license_close").onclick = () => {
     document.getElementById("licenseViewer").classList.remove("visible")
 }
 
-if (typeof storage.altTurboTSlice !== "undefined") {
-    FlogoLang.interpreter.setAltTurboTSlice(storage.altTurboTSlice === "true")
+if (typeof Platform.storage.altTurboTSlice !== "undefined") {
+    FlogoLang.interpreter.setAltTurboTSlice(Platform.storage.altTurboTSlice === "true")
 }
-if (typeof storage.unlimitedConsole !== "undefined") {
-    Console.setUnlimited(storage.unlimitedConsole === "true")
+if (typeof Platform.storage.unlimitedConsole !== "undefined") {
+    Console.setUnlimited(Platform.storage.unlimitedConsole === "true")
 }
-if (typeof storage.unlimitedTurtle !== "undefined") {
-    if (storage.unlimitedTurtle === "true") FlogoLang.interpreter.uiBridge.turtle_maxPoints = 0
+if (typeof Platform.storage.unlimitedTurtle !== "undefined") {
+    if (Platform.storage.unlimitedTurtle === "true") FlogoLang.interpreter.uiBridge.turtle_maxPoints = 0
 }
-if (typeof storage.unlimitedArrayView !== "undefined") {
-    VariablesEditor.setUnlimitedArrayView(storage.unlimitedArrayView === "true")
+if (typeof Platform.storage.unlimitedArrayView !== "undefined") {
+    VariablesEditor.setUnlimitedArrayView(Platform.storage.unlimitedArrayView === "true")
 }
-if (typeof storage.disableCulling !== "undefined") {
-    Flowchart.setCulling(storage.disableCulling === "false")
+if (typeof Platform.storage.disableCulling !== "undefined") {
+    Flowchart.setCulling(Platform.storage.disableCulling === "false")
+}
+if (typeof Platform.storage.showFps !== "undefined") {
+    FpsCounter.setVisible(Platform.storage.showFps === "true")
 }

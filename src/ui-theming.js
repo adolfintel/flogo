@@ -1,6 +1,4 @@
-import {
-    storage
-} from './platformSpecific.js'
+import * as Platform from './platformSpecific.js'
 import * as Utils from "./ui-utils.js"
 import * as Flowchart from "./ui-flowchart.js"
 import * as FlogoLang from "./flogo-language.js"
@@ -138,7 +136,7 @@ export async function loadTheme(name, saveToStorage = true) {
         Utils.getCSSVal("--turtle-color-foreground", "#000000")
     )
     if (saveToStorage) {
-        storage.theme = name
+        Platform.storage.theme = name
     }
     TopBar.refresh()
     ASSIGN_COLOR1 = Utils.getCSSVal("--flowchart-Assign-color1", "#696a30")
@@ -239,8 +237,8 @@ export function getCurrentTheme() {
 }
 
 export function getPreferredTheme() {
-    if (typeof storage.theme !== "undefined") {
-        return storage.theme
+    if (typeof Platform.storage.theme !== "undefined") {
+        return Platform.storage.theme
     } else {
         return getDefaultTheme()
     }

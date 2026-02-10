@@ -1,9 +1,6 @@
 import * as FlogoLang from "./flogo-language.js"
 import Konva from "konva"
 import * as Platform from "./platformSpecific.js"
-import {
-    clipboard
-} from "./platformSpecific.js"
 import * as Utils from "./ui-utils.js"
 import * as Flowchart from "./ui-flowchart.js"
 import * as Popups from "./ui-popup.js"
@@ -79,7 +76,7 @@ function prepareWide() {
         fill: Theming.LINE_COLOR,
     })
     paste.on("click tap", () => {
-        if (clipboard.isEmpty()) return
+        if (Platform.clipboard.isEmpty()) return
         Popups.close()
         return Flowchart.pasteClipboard(targetInstruction, targetPos)
     })
@@ -154,7 +151,7 @@ function prepareTall() {
         fill: Theming.LINE_COLOR,
     })
     paste.on("click tap", () => {
-        if (clipboard.isEmpty()) return 0
+        if (Platform.clipboard.isEmpty()) return 0
         Popups.close()
         return Flowchart.pasteClipboard(targetInstruction, targetPos)
     })
@@ -216,15 +213,15 @@ Flowchart.callbacks.ui_insert = (instruction, pos, evt, callback) => {
         width: window.innerWidth,
         height: window.innerHeight
     } /*document.body.getBoundingClientRect()*/ //workaround: chromium-based browsers sometimes report incorrect size on mobile with getBoundingClientRect
-    const realWideStageWidth = clipboard.isEmpty() ? insertWide_stage.flogo_width - insertWide_stage.flogo_xAfterClipboard : insertWide_stage.flogo_width
-    const realTallStageHeight = clipboard.isEmpty() ? insertTall_stage.flogo_height - insertTall_stage.flogo_yAfterClipboard : insertTall_stage.flogo_height
+    const realWideStageWidth = Platform.clipboard.isEmpty() ? insertWide_stage.flogo_width - insertWide_stage.flogo_xAfterClipboard : insertWide_stage.flogo_width
+    const realTallStageHeight = Platform.clipboard.isEmpty() ? insertTall_stage.flogo_height - insertTall_stage.flogo_yAfterClipboard : insertTall_stage.flogo_height
     const zoomW = Math.min(1, Math.min(wBounds.width / realWideStageWidth, wBounds.height / insertWide_stage.flogo_height) * 0.9),
         zoomT = Math.min(1, Math.min(wBounds.width / insertTall_stage.flogo_width, wBounds.height / realTallStageHeight) * 0.9)
     insertWide_stage.scale({
         x: zoomW,
         y: zoomW,
     })
-    insertWide_stage.x((Theming.PADDING_BASE - (clipboard.isEmpty() ? insertWide_stage.flogo_xAfterClipboard : 0)) * zoomW)
+    insertWide_stage.x((Theming.PADDING_BASE - (Platform.clipboard.isEmpty() ? insertWide_stage.flogo_xAfterClipboard : 0)) * zoomW)
     insertWide_stage.y(Theming.PADDING_BASE * zoomW)
     insertWide_stage.width((realWideStageWidth + Theming.PADDING_BASE * 2) * zoomW)
     insertWide_stage.height((insertWide_stage.flogo_height + Theming.PADDING_BASE * 2) * zoomW)
@@ -233,7 +230,7 @@ Flowchart.callbacks.ui_insert = (instruction, pos, evt, callback) => {
         y: zoomT,
     })
     insertTall_stage.x(Theming.PADDING_BASE * zoomT)
-    insertTall_stage.y((Theming.PADDING_BASE - (clipboard.isEmpty() ? insertTall_stage.flogo_yAfterClipboard : 0)) * zoomT)
+    insertTall_stage.y((Theming.PADDING_BASE - (Platform.clipboard.isEmpty() ? insertTall_stage.flogo_yAfterClipboard : 0)) * zoomT)
     insertTall_stage.width((insertTall_stage.flogo_width + Theming.PADDING_BASE * 2) * zoomT)
     insertTall_stage.height((realTallStageHeight + Theming.PADDING_BASE * 2) * zoomT)
     pw.style.top = clientY + "px"

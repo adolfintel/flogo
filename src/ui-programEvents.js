@@ -3,7 +3,6 @@ import * as Flowchart from "./ui-flowchart.js"
 import * as Popups from "./ui-popup.js"
 import * as VariablesEditor from "./ui-variables.js"
 import * as Console from "./ui-console.js"
-import * as Utils from "./ui-utils.js"
 import * as Theming from "./ui-theming.js"
 
 FlogoLang.interpreter.uiBridge.onProgramCrash = e => {

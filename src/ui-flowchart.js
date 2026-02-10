@@ -4,10 +4,6 @@ import {
     Context as SVGCanvasContext
 } from "svgcanvas"
 import * as Platform from "./platformSpecific.js"
-import {
-    storage,
-    clipboard
-} from './platformSpecific.js'
 import * as Utils from "./ui-utils.js"
 import * as Theming from "./ui-theming.js"
 import '@material-design-icons/font/sharp.css'
@@ -1551,7 +1547,7 @@ export function copySelectedInstructions() {
     if (selectedInstructions.length === 0) return
     const saved = []
     selectedInstructions.forEach(i => saved.push(i.toSimpleObject()))
-    clipboard.write(saved)
+    Platform.clipboard.write(saved)
     cancelSelection()
     return saved.length
 }
@@ -1573,7 +1569,7 @@ export function cutSelectedInstructions() {
         saved.push(i.toSimpleObject())
         i.drawable.flogo_parentInstruction.body.splice(i.drawable.flogo_parentInstruction.body.indexOf(i), 1)
     })
-    clipboard.write(saved)
+    Platform.clipboard.write(saved)
     History.commit()
     cancelSelection()
     update()
@@ -1581,8 +1577,8 @@ export function cutSelectedInstructions() {
 }
 
 export function pasteClipboard(parent, posInParent) {
-    if (clipboard.isEmpty()) return
-    const saved = clipboard.read()
+    if (Platform.clipboard.isEmpty()) return
+    const saved = Platform.clipboard.read()
     const instructionTypes = FlogoLang.getInstructionTypes()
     for (let i = 0; i < saved.length; i++) {
         parent.body.splice(posInParent + i, 0, instructionTypes[saved[i].type].fromSimpleObject(saved[i]))

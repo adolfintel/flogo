@@ -1,7 +1,3 @@
-import {
-    storage
-} from './platformSpecific.js'
-
 const counter = document.getElementById("fps")
 
 let oldTimestamp = 0,
@@ -9,7 +5,7 @@ let oldTimestamp = 0,
 
 function update(t) {
     requestAnimationFrame(update)
-    if (counter.style.display === "none") return
+    if (!isVisible()) return
     const fps = 1000 / (t - oldTimestamp)
     if (fps === Infinity || isNaN(fps)) return
     smoothedFps = smoothedFps * 0.9 + fps * 0.1
@@ -17,22 +13,17 @@ function update(t) {
     oldTimestamp = t
 }
 
-export function show() {
-    counter.style.display = "block"
-}
-
-export function hide() {
-    counter.style.display = "none"
+export function setVisible(visible) {
+    if (visible) {
+        counter.style.display = "block"
+    } else {
+        counter.style.display = "none"
+    }
 }
 
 export function isVisible() {
     return counter.style.display !== "none"
 }
 
-if (storage.showFps === "true") {
-    show()
-} else {
-    hide()
-}
-
+setVisible(false)
 update()

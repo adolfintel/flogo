@@ -1,8 +1,4 @@
 import * as Platform from "./platformSpecific.js"
-import {
-    storage,
-    clipboard
-} from './platformSpecific.js'
 import * as Utils from "./ui-utils.js"
 import * as FlogoLang from "./flogo-language.js"
 import * as Flowchart from "./ui-flowchart.js"
@@ -62,7 +58,7 @@ function resetUI() {
     History.commit()
     Flowchart.update(true)
     if (!Platform.isElectron) {
-        clipboard.clear()
+        Platform.clipboard.clear()
     }
 }
 
