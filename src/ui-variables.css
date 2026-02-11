@@ -178,7 +178,8 @@ div.variable {
             textarea.initVal {
                 padding: var(--ui-measure-spacer-small);
                 width: 100%;
-                min-height: 2em;
+                min-height: calc(1.35em + 2 * var(--ui-measure-spacer-small));
+                line-height: 1.35em;
                 max-height: 5rem;
                 background: var(--ui-color-form-background);
                 font-family: "Noto Sans";
