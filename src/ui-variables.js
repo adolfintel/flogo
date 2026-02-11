@@ -155,11 +155,17 @@ function createVariable(name) {
     arrSize.onfocus = () => {
         Utils.selectContents(arrSize)
     }
+    const arrSizeLabelBefore = document.createElement("span")
+    arrSizeLabelBefore.innerText = "["
+    const arrSizeLabelAfter = document.createElement("span")
+    arrSizeLabelAfter.innerText = "]"
     Utils.disableSpellcheck(arrSize)
     Utils.disableSpellcheck(initVal)
     valEditArrayOnly.appendChild(arrTypeLabel)
     valEditArrayOnly.appendChild(arrType)
+    valEditArrayOnly.appendChild(arrSizeLabelBefore)
     valEditArrayOnly.appendChild(arrSize)
+    valEditArrayOnly.appendChild(arrSizeLabelAfter)
     valEdit.appendChild(valEditArrayOnly)
     valEdit.appendChild(init)
     valEdit.appendChild(initLabel)

@@ -182,25 +182,22 @@ div.variable {
             div.arrSize {
                 display: inline-block;
                 padding: var(--ui-measure-spacer-small);
-
-                &::before {
-                    content: "[";
-                    opacity: 0.5;
-                }
-
-                &::after {
-                    content: "]";
-                    opacity: 0.5;
-                }
+                min-width: 1rem;
 
                 &:empty::before {
-                    content: "[Size";
+                    content: "Size";
                     opacity: 0.5;
                 }
             }
 
+            div.arrSize+span,
+            span:has(+div.arrSize) {
+                opacity: 0.5;
+            }
+
             select.arrType {
                 margin-left: var(--ui-measure-spacer-small);
+                margin-right: var(--ui-measure-spacer-small);
             }
         }
     }
