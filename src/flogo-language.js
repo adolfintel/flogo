@@ -754,6 +754,7 @@ function evaluateExpression(expression) { //both text and pre-parsed jsep expres
  * - tick(): runs a "step" of execution for this instruction; returns true if the instruction has finished executing, false otherwise. This allows for easy implementation of nested ifs, loops, etc.
  *          If this instruction has other sub-instructions inside it (such as a loop), these instructions will be in an InstructionSequence; this tick function will call the tick function recursively of the InstructionSequence and it will take care of keeping track of where we are inside the body/branch. Eventually the InstructionSequence's tick function will return true and we can update this instruction's state (for instance, if it's a for loop, we can do the increment and reevaluate the condition). To keep track of the current state, all instructions use a state attribute that is automatically reset when the program is (re)started; if you're going to implement your own instructions, remember to delete this.state before returning true
  *          The tick function of the "main" (the variable called program) is called repeatedly from the main loop; the call then continues recursively
+ * - reset(): deletes any state information from the instruction (if any), recursively if necessary
  * - toSimpleObject(): returns a simplified version of this instruction that only contains the data that needs to be stored when the program is saved to JSON. Format described below
  * - fromSimpleObject(o): static method, transforms a simple object back into a regular instruction that can be executed and returns it. This method also recursively transforms any sub-instruction. Format described below.
  *
@@ -828,6 +829,10 @@ InstructionSequence.prototype = {
             return true
         }
     },
+    reset: function() {
+        delete this.state
+        this.body.forEach(i => i.reset())
+    },
     toSimpleObject: function() {
         const type = this.type
         const b = []
@@ -836,7 +841,7 @@ InstructionSequence.prototype = {
             type: type,
             body: b,
         }
-    },
+    }
 }
 InstructionSequence.fromSimpleObject = function(o) {
     if (o.type !== this.prototype.type) throw "Not a " + this.prototype.type
@@ -875,6 +880,7 @@ Assign.prototype = {
         }
         return true
     },
+    reset: function() {},
     toSimpleObject: function() {
         const type = this.type
         return {
@@ -914,6 +920,11 @@ If.prototype = {
             this.state = val
             return false
         }
+    },
+    reset: function() {
+        delete this.state
+        this.trueBranch.reset()
+        this.falseBranch.reset()
     },
     toSimpleObject: function() {
         const type = this.type
@@ -967,6 +978,10 @@ DoWhile.prototype = {
             }
         }
     },
+    reset: function() {
+        delete this.state
+        this.body.reset()
+    },
     toSimpleObject: function() {
         const type = this.type
         const b = []
@@ -1016,6 +1031,10 @@ While.prototype = {
                 return false
             }
         }
+    },
+    reset: function() {
+        delete this.state
+        this.body.reset()
     },
     toSimpleObject: function() {
         const type = this.type
@@ -1168,6 +1187,10 @@ For.prototype = {
             }
         }
     },
+    reset: function() {
+        delete this.state
+        this.body.reset()
+    },
     toSimpleObject: function() {
         const type = this.type
         return {
@@ -1208,6 +1231,7 @@ Comment.prototype = {
         interpreter.currentInstruction = this
         return true
     },
+    reset: function() {},
     toSimpleObject: function() {
         const type = this.type
         return {
@@ -1235,6 +1259,9 @@ Breakpoint.prototype = {
             delete this.state
             return true
         }
+    },
+    reset: function() {
+        delete this.state
     },
     toSimpleObject: function() {
         const type = this.type
@@ -1380,6 +1407,10 @@ Input.prototype = {
             }
         }
     },
+    reset: function() {
+        delete this.state
+        delete this.parsedVariableNames
+    },
     toSimpleObject: function() {
         const type = this.type
         return {
@@ -1411,6 +1442,7 @@ Output.prototype = {
         }
         return true
     },
+    reset: function() {},
     toSimpleObject: function() {
         const type = this.type
         return {
@@ -1736,6 +1768,7 @@ Move.prototype = {
         turtle_updateCursor()
         return true
     },
+    reset: function() {},
     toSimpleObject: function() {
         const type = this.type
         return {
@@ -1777,6 +1810,7 @@ Turn.prototype = {
         turtle_updateCursor()
         return true
     },
+    reset: function() {},
     toSimpleObject: function() {
         const type = this.type
         return {
@@ -1805,6 +1839,7 @@ Home.prototype = {
         turtle_updateCursor()
         return true
     },
+    reset: function() {},
     toSimpleObject: function() {
         const type = this.type
         return {
@@ -1900,23 +1935,7 @@ export const interpreter = {
         if (interpreter_internal.state === STATE_RUNNING) throw "Program is already running"
         if (interpreter_internal.state === STATE_CRASHED || interpreter_internal.state === STATE_STOPPED) {
             resetVariables()
-            const reset_rec = instruction => {
-                delete instruction.state
-                if (instruction.type === "InstructionSequence") {
-                    instruction.body.forEach(i => reset_rec(i))
-                } else {
-                    if (typeof instruction.body !== "undefined") {
-                        reset_rec(instruction.body)
-                    }
-                    if (typeof instruction.trueBranch !== "undefined") {
-                        reset_rec(instruction.trueBranch)
-                    }
-                    if (typeof instruction.falseBranch !== "undefined") {
-                        reset_rec(instruction.falseBranch)
-                    }
-                }
-            }
-            reset_rec(program)
+            program.reset()
         }
         interpreter_internal.state = STATE_RUNNING
         interpreter.preventTurbo = false
