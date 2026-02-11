@@ -70,7 +70,7 @@
  *    │   └── div.arrSize (editable area where the user can write the array size)
  *    ├── input[type="checkbox"] (checkbox for initializing the variable)
  *    ├── label (for checkbox)
- *    └── div.initVal (initial value for variable, only visible when the checkbox is checked)
+ *    └── textarea.initVal (initial value for variable, only visible when the checkbox is checked)
  *
 */
 
@@ -172,11 +172,14 @@ div.variable {
         &.edit {
             text-align: initial;
 
-            div.initVal {
+            textarea.initVal {
                 padding: var(--ui-measure-spacer-small);
+                width: 100%;
+                min-height: 2em;
                 max-height: 5rem;
-                overflow-y: auto;
                 background: var(--ui-color-form-background);
+                font-family: "Noto Sans";
+                contain: layout paint style;
             }
 
             div.arrSize {

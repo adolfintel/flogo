@@ -129,8 +129,13 @@ function createVariable(name) {
     initLabel.onclick = () => {
         init.click()
     }
-    const initVal = document.createElement("div")
-    initVal.contentEditable = true
+    const initVal = document.createElement("textarea")
+    initVal.rows = 1
+    initVal.oninput = () => { //workaround: textarea doesn't resize automatically
+        initVal.style.height = "auto"
+        initVal.style.height = initVal.scrollHeight + "px"
+    }
+    initVal.oninput()
     initVal.className = "initVal"
     initVal.style.display = "none"
     initVal.onfocus = () => {
@@ -236,7 +241,7 @@ function createVariable(name) {
         if (typeof FlogoLang.variables[name].initialValue !== "undefined" && FlogoLang.variables[name].initialValue !== null) {
             init.checked = true
             initVal.style.display = "block"
-            initVal.innerText = FlogoLang.variables[name].initialValue
+            initVal.value = FlogoLang.variables[name].initialValue
         } else {
             init.checked = false
             initVal.style.display = "none"
@@ -292,10 +297,10 @@ function cancelEditVariable(v) {
             v.flogo_type.edit.value = FlogoLang.variables[v.flogo_variable].type
             if (FlogoLang.variables[v.flogo_variable].initialValue !== null) {
                 v.flogo_val.edit.flogo_init.checked = true
-                v.flogo_val.edit.flogo_initVal.innerText = FlogoLang.variables[v.flogo_variable].initialValue
+                v.flogo_val.edit.flogo_initVal.value = FlogoLang.variables[v.flogo_variable].initialValue
             } else {
                 v.flogo_val.edit.flogo_init.checked = false
-                v.flogo_val.edit.flogo_initVal.innerText = ""
+                v.flogo_val.edit.flogo_initVal.value = ""
             }
         }
     }
@@ -324,19 +329,19 @@ function confirmEditVariable(v) {
         try {
             arrType = v.flogo_val.edit.flogo_arrType.value
             if (v.flogo_val.edit.flogo_init.checked) {
-                val = v.flogo_val.edit.flogo_initVal.innerText
+                val = v.flogo_val.edit.flogo_initVal.value
                 switch (arrType) {
                     case "integer":
                     case "real": {
                         val = val.trim()
-                        v.flogo_val.edit.flogo_initVal.innerText = val
+                        v.flogo_val.edit.flogo_initVal.value = val
                         if (val === "") throw ""
                         val = Number(val)
                     }
                     break
                     case "boolean": {
                         val = val.trim()
-                        v.flogo_val.edit.flogo_initVal.innerText = val
+                        v.flogo_val.edit.flogo_initVal.value = val
                         if (val !== "false" && val !== "true") throw ""
                         val = val === "true"
                     }
@@ -352,19 +357,19 @@ function confirmEditVariable(v) {
     } else {
         try {
             if (v.flogo_val.edit.flogo_init.checked) {
-                val = v.flogo_val.edit.flogo_initVal.innerText
+                val = v.flogo_val.edit.flogo_initVal.value
                 switch (type) {
                     case "integer":
                     case "real": {
                         val = val.trim()
-                        v.flogo_val.edit.flogo_initVal.innerText = val
+                        v.flogo_val.edit.flogo_initVal.value = val
                         if (val === "") throw ""
                         val = Number(val)
                     }
                     break
                     case "boolean": {
                         val = val.trim()
-                        v.flogo_val.edit.flogo_initVal.innerText = val
+                        v.flogo_val.edit.flogo_initVal.value = val
                         if (val !== "false" && val !== "true") throw ""
                         val = val === "true"
                     }
