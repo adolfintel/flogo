@@ -105,7 +105,7 @@ div.variable {
             min-width: 3rem;
             max-width: 100%;
             padding: var(--ui-measure-spacer-small);
-            vertical-align: middle;
+            vertical-align: bottom;
         }
 
         .name {
