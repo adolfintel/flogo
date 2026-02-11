@@ -121,6 +121,7 @@ function createVariable(name) {
             if (typeof e !== "undefined") {
                 initVal.focus()
             }
+            initVal.oninput()
         } else {
             initVal.style.display = "none"
         }
@@ -242,8 +243,9 @@ function createVariable(name) {
         }
         if (typeof FlogoLang.variables[name].initialValue !== "undefined" && FlogoLang.variables[name].initialValue !== null) {
             init.checked = true
-            initVal.style.display = "block"
+            initVal.style.display = ""
             initVal.value = FlogoLang.variables[name].initialValue
+            initVal.oninput()
         } else {
             init.checked = false
             initVal.style.display = "none"
