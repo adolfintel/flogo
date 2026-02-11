@@ -68,8 +68,9 @@
  *    │   ├── label (for select)
  *    │   ├── select.arrType
  *    │   └── div.arrSize (editable area where the user can write the array size)
- *    ├── input[type="checkbox"] (checkbox for initializing the variable)
- *    ├── label (for checkbox)
+ *    ├── div (initialize)
+ *    │   ├── input[type="checkbox"] (checkbox for initializing the variable)
+ *    │   └── label (for checkbox)
  *    └── textarea.initVal (initial value for variable, only visible when the checkbox is checked)
  *
 */
@@ -171,6 +172,8 @@ div.variable {
 
         &.edit {
             text-align: initial;
+            display: flex;
+            flex-direction: column;
 
             textarea.initVal {
                 padding: var(--ui-measure-spacer-small);

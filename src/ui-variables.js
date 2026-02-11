@@ -112,6 +112,7 @@ function createVariable(name) {
     const valEdit = document.createElement("div")
     valEdit.className = "value edit"
     const valEditArrayOnly = document.createElement("div")
+    const initDiv = document.createElement("div")
     const init = document.createElement("input")
     init.type = "checkbox"
     init.onchange = e => {
@@ -172,8 +173,9 @@ function createVariable(name) {
     valEditArrayOnly.appendChild(arrSize)
     valEditArrayOnly.appendChild(arrSizeLabelAfter)
     valEdit.appendChild(valEditArrayOnly)
-    valEdit.appendChild(init)
-    valEdit.appendChild(initLabel)
+    initDiv.appendChild(init)
+    initDiv.appendChild(initLabel)
+    valEdit.appendChild(initDiv)
     valEdit.appendChild(initVal)
     v.appendChild(valVis)
     v.appendChild(valEdit)
