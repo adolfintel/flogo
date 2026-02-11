@@ -2185,6 +2185,8 @@ export async function downloadSVG(name, background = true) {
         x: 1,
         y: 1,
     })
+    const oldCulling = cullingEnabled
+    setCulling(false)
     stage.draw()
     let out = tempCtx.getSerializedSvg()
     const bkColor = Utils.getCSSVal("--ui-color-background1", null)
@@ -2196,6 +2198,7 @@ export async function downloadSVG(name, background = true) {
     blockLayer.canvas.context._context = oldContext
     stage.position(oldPos)
     stage.scale(oldZ)
+    setCulling(oldCulling)
     stage.draw()
     if (typeof name === "undefined") {
         if (FlogoLang.metadata.title.trim() !== "") {
@@ -2269,6 +2272,8 @@ export function downloadPNG(name, background = true, superSampling = 2) {
             rect.moveToBottom()
         }
     }
+    const oldCulling = cullingEnabled
+    setCulling(false)
     stage.draw()
     const out = tempCanvas.toDataURL("image/png")
     if (rect !== null) {
@@ -2277,6 +2282,7 @@ export function downloadPNG(name, background = true, superSampling = 2) {
     blockLayer.canvas.context._context = oldContext
     stage.position(oldPos)
     stage.scale(oldZ)
+    setCulling(oldCulling)
     stage.draw()
     if (typeof name === "undefined") {
         if (FlogoLang.metadata.title.trim() !== "") {
