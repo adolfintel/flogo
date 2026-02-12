@@ -28,10 +28,10 @@
 
         #loadingSpinner {
             position: absolute;
-            left: calc(50vw - 5vmin);
-            top: calc(50vh - 5vmin);
-            width: 10vmin;
-            height: 10vmin;
+            left: calc(50vw - clamp(1rem, 10vmin, 4rem) / 2);
+            top: calc(50vh - clamp(1rem, 10vmin, 4rem) / 2);
+            width: clamp(1rem, 10vmin, 4rem);
+            height: clamp(1rem, 10vmin, 4rem);
             background: conic-gradient(white, black);
             border-radius: 9999rem;
             position: relative;
