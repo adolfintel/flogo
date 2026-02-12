@@ -2257,6 +2257,8 @@ export function downloadPNG(name, background = true, superSampling = 2) {
         x: superSampling,
         y: superSampling,
     })
+    const oldCulling = cullingEnabled
+    setCulling(false)
     let rect = null
     if (background) {
         const bkColor = Utils.getCSSVal("--ui-color-background1", null)
@@ -2272,8 +2274,6 @@ export function downloadPNG(name, background = true, superSampling = 2) {
             rect.moveToBottom()
         }
     }
-    const oldCulling = cullingEnabled
-    setCulling(false)
     stage.draw()
     const out = tempCanvas.toDataURL("image/png")
     if (rect !== null) {
