@@ -15,6 +15,8 @@
     "electron:build": "vite build --mode electron && electron-builder",
     "electron:build-win-x64": "vite build --mode electron && electron-builder --win --x64 --dir",
     "electron:build-win-arm64": "vite build --mode electron && electron-builder --win --arm64 --dir",
+    "electron:build-win-x64-installer": "vite build --mode electron && electron-builder --win --x64",
+    "electron:build-win-arm64-installer": "vite build --mode electron && electron-builder --win --arm64",
     "electron:build-linux-x64": "vite build --mode electron && electron-builder --linux --x64 --dir",
     "electron:build-linux-arm64": "vite build --mode electron && electron-builder --linux --arm64 --dir",
     "electron:build-linux-x64-appimage": "vite build --mode electron && electron-builder --linux AppImage --x64",
@@ -52,10 +54,9 @@
       {
         "from": "electron",
         "to": "electron",
-        "filter": "!icons"
+        "filter": ["!icons","!windows-installer"]
       },
       "!release",
-      "!windows-installer",
       "package.json"
     ],
     "directories": {
@@ -69,8 +70,29 @@
       }
     ],
     "win": {
-      "target": "portable",
-      "icon": "electron/icons/winicon.ico"
+      "target": "nsis",
+      "icon": "electron/icons/winicon.ico",
+      "artifactName": "${productName}-${version}-${arch}.exe",
+      "fileAssociations": [
+        {
+          "ext": "flogo",
+          "name": "Flogo Program",
+          "description": "Flogo Program",
+          "icon": "electron/icons/winicon_file.ico"
+        }
+      ]
+    },
+    "nsis":{
+      "oneClick": false,
+      "selectPerMachineByDefault": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "license": "public/LICENSE.txt",
+      "installerIcon": "electron/icons/winicon.ico",
+      "installerHeaderIcon": "electron/icons/winicon.ico",
+      "include": "electron/windows-installer/dpiaware.nsh"
     },
     "linux": {
       "target": "AppImage",

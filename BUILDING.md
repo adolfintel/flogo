@@ -7,7 +7,7 @@ Flogo uses npm and vite as a build system and can be built very easily.
 You'll need `npm` and `git`, install them through your package manager.
 
 #### Windows
-Download and install [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), [git](https://git-scm.com/downloads/win) and [Inno Setup](https://jrsoftware.org/isdl.php).
+Download and install [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [git](https://git-scm.com/downloads/win)
 
 #### macOS
 First, install [Homebrew](https://brew.sh/).
@@ -52,6 +52,8 @@ Note: no code signing is done automatically, see the instructions below for buil
 It is also possible to cross-build for other platforms with the following commands:
 * `npm run electron:build-win-x64`: Windows (x64, unpacked)
 * `npm run electron:build-win-arm64`: Windows (ARM, unpacked)
+* `npm run electron:build-win-x64-installer`: Windows (x64, exe installer)
+* `npm run electron:build-win-arm64-installer`: Windows (ARM, exe installer)
 * `npm run electron:build-linux-x64`: GNU/Linux (x64, unpacked)
 * `npm run electron:build-linux-arm64`: GNU/Linux (ARM, unpacked)
 * `npm run electron:build-linux-x64-appimage`: GNU/Linux (x64, AppImage)
@@ -64,13 +66,6 @@ It is also possible to cross-build for other platforms with the following comman
 Notes:
 * .dmg creation is only available on macOS
 * Code signing for Windows and macOS is not possible when cross-building
-
-##### Windows installer
-To build the installer for the Windows version, after running one of the above commands to build it, enter the `windows-installer` folder and open `setup-win-x64.iss` or `setup-win-arm64.iss` in Inno Setup and hit Compile. This last step can be done in Wine if you're trying to build the Windows version from a Linux machine.
-
-If everything goes right, you'll find the installer exe files in the `release` folder.
-
-If you have a certificate for code signing, you will need to do it manually using signtool in Windows. This is not mandatory.
 
 ##### Signing and notarizing the macOS version
 Note: that a **paid** Apple developer key is required to sign, notarize and distribute the app. Once you have the account, see [here](https://www.npmjs.com/package/electron-builder-notarize) for how to configure it. Without a developer account, you can build and test the app, but other users won't be able to install it without disabling GateKeeper.
