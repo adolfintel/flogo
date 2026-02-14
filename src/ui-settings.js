@@ -9,6 +9,9 @@ import * as Console from "./ui-console.js"
 import * as Actions from "./ui-actions.js"
 import * as FpsCounter from "./ui-fpsCounter.js"
 import * as History from "./ui-history.js"
+import * as BuildPackage from '~build/package'
+import * as BuildGit from '~build/git'
+import * as BuildTime from '~build/time'
 
 export function show() {
     Popups.close()
@@ -27,6 +30,19 @@ export function show() {
     document.getElementById("settings_unlimitedTurtle").checked = FlogoLang.interpreter.uiBridge.turtle_maxPoints === 0
     document.getElementById("settings_unlimitedArrayView").checked = VariablesEditor.getUnlimitedArrayView()
     document.getElementById("settings_disableCulling").checked = !Flowchart.isCullingEnabled()
+    document.getElementById("versionNumber").innerText = BuildPackage.version
+    const devBuildInfo = document.getElementById("devBuildInfo")
+    try {
+        if (BuildGit.branch !== "master") {
+            devBuildInfo.innerText = "Development build (" + BuildGit.branch + " " + BuildGit.abbreviatedSha + " " + BuildTime.default.toISOString() + ")"
+            devBuildInfo.style.display = "block"
+        } else {
+            devBuildInfo.style.display = ""
+        }
+    } catch (e) {
+        devBuildInfo.innerText = "Development build (local)"
+        devBuildInfo.style.display = "block"
+    }
     const badge = document.getElementById("versionTypeBadge")
     if (Platform.isElectron) {
         badge.innerText = "Electron " + flogoElectronAPI.getElectronVersion()

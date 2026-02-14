@@ -77,6 +77,12 @@
             max-width: 24rem;
             margin: 1rem;
         }
+
+        #devBuildInfo {
+            color: red;
+            font-size: 0.75em;
+            user-select: text;
+        }
     }
 }
 

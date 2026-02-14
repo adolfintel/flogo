@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import ElectronPlugin from 'vite-plugin-electron'
+import Info from 'unplugin-info/vite'
 
 export default defineConfig(({ mode }) => {
   const base = mode === 'electron' ? './' : '/' //can use this with import.meta.env.BASE_URL in js
@@ -54,6 +55,7 @@ export default defineConfig(({ mode }) => {
       }
     }))
   }
+  plugins.push(Info())
   return {
     base,
     plugins,

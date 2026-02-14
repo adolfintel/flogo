@@ -25,12 +25,12 @@
     "electron:build-mac-intel-dmg": "vite build --mode electron && electron-builder --mac --x64"
   },
   "devDependencies": {
+    "@electron/notarize": "^3.1.1",
     "electron": "^40.0.0",
     "electron-builder": "^26.4.0",
     "vite": "^7.2.4",
     "vite-plugin-electron": "^0.29.0",
-    "vite-plugin-pwa": "^1.2.0",
-    "@electron/notarize": "^3.1.1"
+    "vite-plugin-pwa": "^1.2.0"
   },
   "dependencies": {
     "@material-design-icons/font": "^0.14.15",
@@ -38,7 +38,8 @@
     "electron-store": "^11.0.2",
     "jsep": "^1.4.0",
     "konva": "^10.2.0",
-    "svgcanvas": "^2.6.0"
+    "svgcanvas": "^2.6.0",
+    "unplugin-info": "^1.2.4"
   },
   "build": {
     "appId": "com.fdossena.flogo",
