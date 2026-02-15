@@ -1,0 +1,206 @@
+name: Build Electron Version (All)
+
+on:
+  push:
+    branches:
+      - '**'
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  # Windows 64-bit
+  build-win-x64:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get Version
+        run: |
+            $version = node -p "require('./package.json').version"
+            echo "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Build and Package Windows x64
+        run: npm run electron:build-win-x64-installer
+        env:
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+
+      - name: Upload Artifacts Windows x64
+        uses: actions/upload-artifact@v4
+        with:
+          name: flogo-win-x64-v${{ env.VERSION }}.exe
+          path: release/*.exe
+
+  # Windows 64-bit ARM
+  build-win-arm64:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get Version
+        run: |
+            $version = node -p "require('./package.json').version"
+            echo "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Build and Package Windows ARM64
+        run: npm run electron:build-win-arm64-installer
+        env:
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+
+      - name: Upload Artifacts Windows ARM64
+        uses: actions/upload-artifact@v4
+        with:
+          name: flogo-win-arm64-v${{ env.VERSION }}.exe
+          path: release/*.exe
+
+  # macOS Intel
+  build-mac-intel:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get Version
+        run: |
+            VERSION=$(node -p "require('./package.json').version")
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Build and Package macOS Intel
+        run: npm run electron:build-mac-intel-dmg
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APP_ID: ${{ secrets.APP_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+      - name: Upload Artifacts macOS Intel
+        uses: actions/upload-artifact@v4
+        with:
+          name: flogo-mac-intel-v${{ env.VERSION }}.dmg
+          path: release/*.dmg
+
+  # macOS ARM (Apple Silicon)
+  build-mac-arm:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get Version
+        run: |
+            VERSION=$(node -p "require('./package.json').version")
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Build and Package macOS ARM
+        run: npm run electron:build-mac-arm-dmg
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APP_ID: ${{ secrets.APP_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+      - name: Upload Artifacts macOS ARM
+        uses: actions/upload-artifact@v4
+        with:
+          name: flogo-mac-arm-v${{ env.VERSION }}.dmg
+          path: release/*.dmg
+
+  # Linux x64
+  build-linux-x64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get Version
+        run: |
+            VERSION=$(node -p "require('./package.json').version")
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Build and Package Linux x64
+        run: npm run electron:build-linux-x64-appimage
+
+      - name: Upload Artifacts Linux x64
+        uses: actions/upload-artifact@v4
+        with:
+          name: flogo-linux-x64-v${{ env.VERSION }}.AppImage
+          path: release/*.AppImage
+
+  # Linux ARM64
+  build-linux-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get Version
+        run: |
+            VERSION=$(node -p "require('./package.json').version")
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Build and Package Linux ARM64
+        run: npm run electron:build-linux-arm64-appimage
+
+      - name: Upload Artifacts Linux ARM64
+        uses: actions/upload-artifact@v4
+        with:
+          name: flogo-linux-arm64-v${{ env.VERSION }}.AppImage
+          path: release/*.AppImage
