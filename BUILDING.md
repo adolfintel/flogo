@@ -89,14 +89,3 @@ To ensure that the app was signed and notarized correctly, use these commands:
 spctl -a -vvv -t install release/mac-arm64/Flogo.app
 spctl -a -vvv -t execute release/mac-arm64/Flogo.app
 ```
-
-## Testing the app without building (for development)
-To test the webapp locally, use this command:
-```bash
-npm run dev
-```
-
-To test the Electron version without building it, use this command:
-```bash
-npm run electron:dev
-```

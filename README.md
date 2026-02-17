@@ -133,7 +133,7 @@ If you enjoy Flogo, you can support it by leaving a donation using one of the fo
 If you want to donate using other methods, [get in touch](mailto:info@fdossena.com) and we can discuss it.
 
 ## Contributing
-If you're a developer, see `BUILDING.md` for instructions on how to build the app.
+If you're a developer, see `BUILDING.md` and `CONTRIBUTING.md` for instructions on how to build and test the app.
 
 Pull requests are welcome.
 
@@ -147,11 +147,8 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>. 
 
 __Credits:__
-* [Konva](https://konvajs.org/): Object-oriented JS canvas library (MIT License)
-* [jsep](https://ericsmekens.github.io/jsep/): JS expression parser (MIT License)
-* [SVGCanvas](https://zenozeng.github.io/svgcanvas/): SVG export library for JS canvas (MIT License)
+* [Emanuele Magon](https://github.com/e-magon): for the help with the macOS version
 * [Material Design Icons](https://marella.github.io/material-design-icons): Icons used throughout the application (Apache-2.0 License)
 * Fonts distributed under the [SIL Open Font License](https://openfontlicense.org/): Noto Sans, Roboto Mono, Monoton, Caveat, Cinzel
 * Some themes use graphics from [SVG Repo](https://www.svgrepo.com/) (CC0)
 * The Flogo program file icon is modified from [KDE Breeze Icons](https://github.com/KDE/breeze-icons) (LGPL 2.1)
-* [Emanuele Magon](https://github.com/e-magon): for the help with the macOS version
