@@ -61,6 +61,12 @@
         }
     }
 
+    #program_metadata {
+        input[type="text"] {
+            font-family: "Noto Sans";
+        }
+    }
+
     #settings_about {
         text-align: center;
 
