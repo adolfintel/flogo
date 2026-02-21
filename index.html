@@ -16,6 +16,10 @@
             overflow: hidden;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         #loadOverlay {
             position: fixed;
             top: 0;
@@ -32,22 +36,11 @@
             top: calc(50vh - clamp(1rem, 10vmin, 4rem) / 2);
             width: clamp(1rem, 10vmin, 4rem);
             height: clamp(1rem, 10vmin, 4rem);
-            background: conic-gradient(white, black);
+            border: clamp(0.1rem, 1vmin, 0.4rem) solid #80808080;
+            border-top-color: white;
             border-radius: 9999rem;
             position: relative;
             animation: loading 1s linear infinite;
-        }
-
-        #loadingSpinner::after {
-            content: "";
-            display: block;
-            background: black;
-            top: 7.5%;
-            left: 7.5%;
-            right: 7.5%;
-            bottom: 7.5%;
-            position: absolute;
-            border-radius: 9999rem;
         }
 
         @keyframes loading {
@@ -56,7 +49,7 @@
             }
 
             100% {
-                transform: rotate(-360deg);
+                transform: rotate(360deg);
             }
         }
 
@@ -68,7 +61,7 @@
             }
 
             #loadingSpinner {
-                background: conic-gradient(black, white);
+                border-top-color: black;
             }
         }
     </style>
