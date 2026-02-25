@@ -43,7 +43,14 @@ export default defineConfig(({ mode }) => {
             "action":"/",
             "accept":{
               "application/x-flogo": [".flogo"]
-            }
+            },
+            "icons": [
+              {
+                "src": "icons/pwaicon_file.png",
+                "sizes": "256x256",
+                "type": "image/png"
+              }
+            ]
           }
         ],
         start_url: "/",
