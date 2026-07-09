@@ -1,0 +1,107 @@
+@font-face {
+    font-family: "Share Tech Mono";
+    src: url("./ShareTechMono-Regular.woff2");
+}
+
+:root {
+    --browser-theme-color: #e8913a;
+    --ui-color-background1: #1a1d24;
+    --ui-color-background2: #232730;
+    --ui-color-accent1: #e8913a;
+    --ui-color-accent2: #c56127;
+    --ui-color-form-background: #2a2e38;
+    --ui-color-form-highlighted: #2a5a8a;
+    --ui-measure-border-thick:0.1rem;
+    --flowchart-Assign-color1: #2a5a8a;
+    --flowchart-Assign-color2: #4a9ae0;
+    --flowchart-Assign-color3: #e8f0fa;
+    --flowchart-Output-color1: #2a7a4a;
+    --flowchart-Output-color2: #50d080;
+    --flowchart-Output-color3: #e0fae8;
+    --flowchart-Input-color1: #5a3a8a;
+    --flowchart-Input-color2: #9a6ae0;
+    --flowchart-Input-color3: #f0e8fa;
+    --flowchart-If-color1: #8a4a2a;
+    --flowchart-If-color2: #e08a50;
+    --flowchart-If-color3: #fae8e0;
+    --flowchart-DoWhile-color1: #8a6a2a;
+    --flowchart-DoWhile-color2: #e0b04a;
+    --flowchart-DoWhile-color3: #faf0e0;
+    --flowchart-While-color1: #8a6a2a;
+    --flowchart-While-color2: #e0b04a;
+    --flowchart-While-color3: #faf0e0;
+    --flowchart-For-color1: #8a6a2a;
+    --flowchart-For-color2: #e0b04a;
+    --flowchart-For-color3: #faf0e0;
+    --flowchart-Breakpoint-color1: #aa2a2a;
+    --flowchart-Breakpoint-color2: #e05050;
+    --flowchart-Breakpoint-color3: #fae0e0;
+    --flowchart-Comment-dashLength: 4;
+    --flowchart-Turtle-Move-color1: #2a5a7a;
+    --flowchart-Turtle-Move-color2: #50a0d0;
+    --flowchart-Turtle-Move-color3: #e0f0fa;
+    --flowchart-Turtle-Turn-color1: #6a2a8a;
+    --flowchart-Turtle-Turn-color2: #a060e0;
+    --flowchart-Turtle-Turn-color3: #f0e0fa;
+    --flowchart-Turtle-Home-color1: #6a2a8a;
+    --flowchart-Turtle-Home-color2: #a060e0;
+    --flowchart-Turtle-Home-color3: #f0e0fa;
+    --flowchart-Error-color1: #801010;
+    --flowchart-Error-color2: #d04040;
+    --flowchart-Error-color3: #fff0f0;
+    --flowchart-Round-color1: #3a4a8a;
+    --flowchart-Round-color2: #6080d0;
+    --flowchart-Round-color3: #e8e8fa;
+    --flowchart-Block-outline-thickness: 1.25;
+    --flowchart-Block-highlight-color1: #e8913a;
+    --flowchart-Block-highlight-color2: #ffffff;
+    --flowchart-Block-highlight-color3: #fff8f0;
+    --flowchart-Line-thickness: 1.5;
+    --flowchart-Line-color: #c0c8d8;
+    --flowchart-Line-arrow-size: 5;
+    --flowchart-Line-font-size: 11;
+    --flowchart-Line-selected-color: #ffcc66;
+    --flowchart-selected-color1: #ffffff;
+    --flowchart-selected-color2: #e8913a;
+    --flowchart-selected-color3: #ffead4;
+    --flowchart-Padding-base: 10;
+    --flowchart-Padding-spaceBetweenInstructions: 24;
+    --flowchart-Block-font-size: 13;
+    --flowchart-Block-text-maxWidth: 30;
+    --flowchart-Block-wrapMode: new;
+    --flowchart-Font-family: "Share Tech Mono";
+    --flowchart-Font-svgEmbeddableFile: "themes/ShareTechMono-Regular.woff2";
+    --turtle-color-cursor: #e8913a;
+    --turtle-color-background: #1e2228;
+    --turtle-color-foreground: #e0e0e0;
+    --insert-Font-size: 13;
+}
+
+#editor {
+    --ui-color-form-background: #2a2e38;
+}
+
+div.popup {
+    border: var(--ui-measure-border-thin) solid var(--ui-color-border1);
+    box-shadow: 0 0.2rem 1.5rem #00000060;
+}
+
+#bar {
+    background: var(--ui-color-background2);
+    border-bottom: 1px solid #ffffff10;
+}
+
+#flowchartArea::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 1px 1px, #ffffff10 1px, transparent 0);
+    background-size: 1.5rem 1.5rem;
+}
+
+input[type="text"], textarea, #man tbody td:first-child, #man code{
+    font-family: "Share Tech Mono";
+}
