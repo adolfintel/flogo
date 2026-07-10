@@ -1495,7 +1495,7 @@ let turtle_stage = null,
 let turtle_x, turtle_y, turtle_rot
 let turtle_cursorColor = "#00a000",
     turtle_backgroundColor = "#ffffff",
-    turtle_foregroundColor = "#000000"
+    turtle_palette = ["#000000"]
 
 function turtle_init() {
     if (!turtle_initialized) {
@@ -1710,29 +1710,34 @@ function turtle_limitPoints() {
     }
 }
 
-export function setTurtleColors(cursor, background, foreground) {
+function turtle_colorFromPalette(i) {
+    return i < 0 || i >= turtle_palette.length ? turtle_palette[0] : turtle_palette[i]
+}
+
+export function setTurtleColors(cursor, background, palette) {
     turtle_backgroundColor = background
-    turtle_foregroundColor = foreground
+    turtle_palette = palette
     turtle_cursorColor = cursor
     if (turtle_initialized) {
         const c = turtle_cursor.children[0]
         if (typeof cursor !== "undefined") {
             c.fill(cursor)
         }
-        turtle_drawing.children.forEach(line => line.stroke(foreground))
+        turtle_drawing.children.forEach(line => line.stroke(turtle_colorFromPalette(line.flogo_color)))
     }
 }
 
-export function Move(expression = null, draw = true) {
+export function Move(expression = null, draw = true, color = 0) {
     this.expression = expression
     this.draw = draw
+    this.color = color
 }
 Move.prototype = {
     constructor: Move,
     tick: function() {
         interpreter.currentInstruction = this
         if (typeof interpreter.uiBridge.turtle_show !== "undefined") interpreter.uiBridge.turtle_show()
-        if (this.expression === null || this.draw === null) throw "Incomplete instruction"
+        if (this.expression === null || this.draw === null || this.color === null) throw "Incomplete instruction"
         const dist = evaluateExpression(this.expression)
         if (typeof dist !== "number") throw "Not a number"
         if (!turtle_initialized) turtle_init()
@@ -1748,16 +1753,17 @@ Move.prototype = {
                     lastLinePoints = null
                 }
             }
-            if (lastLinePoints !== null) {
+            if (lastLinePoints !== null && lastLine.flogo_color === this.color) {
                 lastLine.points(lastLinePoints.concat(turtle_x + dx, turtle_y + dy))
             } else {
                 const l = new Konva.Line({
                     points: [turtle_x, turtle_y, turtle_x + dx, turtle_y + dy],
-                    stroke: turtle_foregroundColor,
+                    stroke: turtle_colorFromPalette(this.color),
                     strokeWidth: 1,
                     strokeScaleEnabled: false,
                     perfectDrawEnabled: false,
                 })
+                l.flogo_color = this.color
                 turtle_drawing.add(l)
             }
             turtle_nPoints++
@@ -1775,12 +1781,13 @@ Move.prototype = {
             type: type,
             expression: this.expression,
             draw: this.draw,
+            color: this.color
         }
     },
 }
 Move.fromSimpleObject = function(o) {
     if (o.type !== this.prototype.type) throw "Not a " + this.prototype.type
-    return new Move(o.expression, o.draw)
+    return new Move(o.expression, o.draw, o.color)
 }
 registerInstructionType(Move, "Move", "Graphics")
 

@@ -84,7 +84,8 @@
     --flowchart-scrollbar-thickness: 4;
     --turtle-color-cursor: #ff4020;
     --turtle-color-background: #e9d7d7;
-    --turtle-color-foreground: #a61b45;
+    --turtle-color-foreground-0: #a61b45;
+    --turtle-color-foreground-10: #404040;
     --toast-background: #000000c0;
     --toast-color: #ffffff;
 }

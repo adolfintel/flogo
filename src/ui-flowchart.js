@@ -1256,8 +1256,21 @@ FlogoLang.Move.prototype.createDrawable = function() {
     if (Theming.BLOCK_TEXT_WRAP_MODE !== "new" && text.width() > Theming.BLOCK_TEXT_MAX_WIDTH * Theming.BLOCK_FONT_SIZE) {
         text.width(Theming.BLOCK_TEXT_MAX_WIDTH * Theming.BLOCK_FONT_SIZE)
     }
-    const tw = text.width(),
-        th = text.height()
+    const th = text.height()
+    let tw = text.width()
+    let colorPreview = null
+    if (this.draw === true && this.expression !== null) {
+        colorPreview = new Konva.Rect({
+            x: tw + Theming.PADDING_BASE / 2,
+            y: th / 2 - Theming.BLOCK_FONT_SIZE / 2,
+            width: Theming.BLOCK_FONT_SIZE,
+            height: Theming.BLOCK_FONT_SIZE,
+            fill: Theming.TURTLE_PALETTE[this.color < 0 || this.color >= Theming.TURTLE_PALETTE.length ? 0 : this.color],
+            stroke: Theming.TURTLE_MOVE_COLOR2,
+            strokeWidth: Theming.BLOCK_OUTLINE_THICKNESS
+        })
+        tw += Theming.BLOCK_FONT_SIZE + Theming.PADDING_BASE
+    }
     const rect = new Konva.Line({
         points: [0, 0, tw, 0, tw + Theming.PADDING_BASE, th / 2, tw, th, 0, th, Theming.PADDING_BASE, th / 2],
         fill: Theming.TURTLE_MOVE_COLOR1,
@@ -1275,6 +1288,9 @@ FlogoLang.Move.prototype.createDrawable = function() {
     })
     group.add(rect)
     group.add(text)
+    if (colorPreview !== null) {
+        group.add(colorPreview)
+    }
     group.on("dblclick", e => block_dblclick(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("click", e => block_click(this, e, group.flogo_parentInstruction, group.flogo_parentPos))
     group.on("touchstart", e => block_touchstart(this, e, group.flogo_parentInstruction, group.flogo_parentPos))

@@ -61,7 +61,7 @@
     --flowchart-Padding-spaceBetweenInstructions: 22;
     --turtle-color-cursor: #ffff40;
     --turtle-color-background: #222e46;
-    --turtle-color-foreground: #ffffff;
+    --turtle-color-foreground-0: #ffffff;
 }
 
 #variablesArea *[contenteditable] {

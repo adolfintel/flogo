@@ -134,7 +134,17 @@
     --insert-Tall-Padding-spaceBetweenInstructions: 20;
     --turtle-color-cursor: #009000;
     --turtle-color-background: #404040;
-    --turtle-color-foreground: #f0f0f0;
+    --turtle-color-foreground-0: #f0f0f0;
+    --turtle-color-foreground-1: #808080;
+    --turtle-color-foreground-2: #e02030;
+    --turtle-color-foreground-3: #f07020;
+    --turtle-color-foreground-4: #f0da20;
+    --turtle-color-foreground-5: #30c080;
+    --turtle-color-foreground-6: #73d7ee;
+    --turtle-color-foreground-7: #2080e0;
+    --turtle-color-foreground-8: #9060c0;
+    --turtle-color-foreground-9: #ffafc7;
+    --turtle-color-foreground-10: #613915;
     --crash-Padding-spaceFromInstruction: 10;
     --layout-large-threshold: 80;
     --layout-small-threshold: 55;

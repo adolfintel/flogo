@@ -44,6 +44,7 @@ export let ASSIGN_COLOR1,
     TURTLE_HOME_COLOR1,
     TURTLE_HOME_COLOR2,
     TURTLE_HOME_COLOR3,
+    TURTLE_PALETTE,
     ERROR_COLOR1,
     ERROR_COLOR2,
     ERROR_COLOR3,
@@ -130,10 +131,23 @@ export async function loadTheme(name, saveToStorage = true) {
     TALL_INSERT_SPACE_BETWEEN_INSTRUCTIONS = Number(Utils.getCSSVal("--insert-Tall-Padding-spaceBetweenInstructions", 20))
     CRASH_SPACE_FROM_INSTRUCTION = Number(Utils.getCSSVal("--crash-Padding-spaceFromInstruction", 10))
     document.querySelector('meta[name="theme-color"]').setAttribute("content", Utils.getCSSVal("--browser-theme-color", "#000000"))
+    TURTLE_PALETTE = []
+    let i = 0
+    while (true) {
+        const nextColor = Utils.getCSSVal("--turtle-color-foreground-" + i, null)
+        if (nextColor === null) {
+            break
+        }
+        TURTLE_PALETTE.push(nextColor)
+        i++
+    }
+    if (TURTLE_PALETTE.length === 0) {
+        TURTLE_PALETTE = ["#000000"];
+    }
     FlogoLang.setTurtleColors(
         Utils.getCSSVal("--turtle-color-cursor", "#00a000"),
         Utils.getCSSVal("--turtle-color-background", "#ffffff"),
-        Utils.getCSSVal("--turtle-color-foreground", "#000000")
+        TURTLE_PALETTE
     )
     if (saveToStorage) {
         Platform.storage.theme = name

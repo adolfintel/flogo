@@ -17,7 +17,12 @@ function confirm() {
     for (let i = 0; i < e.length; i++) {
         if (e[i].getAttribute("flogo_attr") !== null) {
             let v
-            if (e[i].tagName === "INPUT" && e[i].type === "checkbox") {
+            if (e[i].tagName === "INPUT" && e[i].type === "radio") {
+                if (e[i].checked) {
+                    v = Number(e[i].value)
+                    if (v !== e[i].flogo_originalValue) changed = true
+                }
+            } else if (e[i].tagName === "INPUT" && e[i].type === "checkbox") {
                 v = e[i].checked
                 if (v !== e[i].flogo_originalValue) changed = true
             } else {
@@ -25,7 +30,9 @@ function confirm() {
                 if (v !== e[i].flogo_originalValue) changed = true
                 if (v === "") v = null
             }
-            instructionBeingEdited[e[i].getAttribute("flogo_attr")] = v
+            if (typeof v !== "undefined") {
+                instructionBeingEdited[e[i].getAttribute("flogo_attr")] = v
+            }
         }
     }
     if (changed) {
@@ -86,7 +93,13 @@ Flowchart.callbacks.ui_edit = (instruction, evt, parent, posInParent) => {
     for (let i = 0; i < d.length; i++) {
         if (d[i].getAttribute("flogo_attr") !== null) {
             let v = instructionBeingEdited[d[i].getAttribute("flogo_attr")]
-            if (d[i].tagName === "INPUT" && d[i].type === "checkbox") {
+            if (d[i].tagName === "INPUT" && d[i].type === "radio") {
+                if (d[i].value === String(v)) {
+                    d[i].checked = true
+                } else {
+                    d[i].checked = false
+                }
+            } else if (d[i].tagName === "INPUT" && d[i].type === "checkbox") {
                 d[i].checked = v
             } else {
                 if (v === null) v = ""
