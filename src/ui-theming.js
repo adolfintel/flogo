@@ -258,6 +258,15 @@ export function getPreferredTheme() {
     }
 }
 
+export function hasPreferredTheme() {
+    return typeof Platform.storage.theme !== "undefined"
+}
+
+export function deletePreferredTheme() {
+    delete Platform.storage.theme
+    loadTheme(getPreferredTheme(), false)
+}
+
 function autoLayout(first = false) {
     requestAnimationFrame(autoLayout)
     const va = document.getElementById("variablesArea"),

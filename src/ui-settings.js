@@ -23,7 +23,11 @@ export function show() {
     selectTab("program_metadata")
     document.getElementById("metadata_title").value = FlogoLang.metadata.title
     document.getElementById("metadata_author").value = FlogoLang.metadata.author
-    document.getElementById("style_theme_select").value = Theming.getCurrentTheme()
+    if (Theming.hasPreferredTheme()) {
+        document.getElementById("style_theme_select").value = Theming.getCurrentTheme()
+    } else {
+        document.getElementById("style_theme_select").value = "default_auto"
+    }
     document.getElementById("settings_fps").checked = FpsCounter.isVisible()
     document.getElementById("settings_altTurboTSlice").checked = FlogoLang.interpreter.getAltTurboTSlice()
     document.getElementById("settings_unlimitedConsole").checked = Console.isUnlimited()
@@ -89,7 +93,12 @@ document.getElementById("settings_updateMetadata").onclick = () => {
 }
 
 document.getElementById("style_theme_select").onchange = () => {
-    Theming.loadTheme(document.getElementById("style_theme_select").value)
+    const newTheme = document.getElementById("style_theme_select").value
+    if (newTheme === "default_auto") {
+        Theming.deletePreferredTheme()
+    } else {
+        Theming.loadTheme(newTheme)
+    }
 }
 
 document.getElementById("settings_fps").onchange = () => {
