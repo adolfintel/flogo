@@ -143,3 +143,34 @@ div.toast {
         margin-top: var(--ui-measure-spacer-large);
     }
 }
+
+/* SHARE AS URL */
+#share {
+    width: 100%;
+    max-width: 30rem;
+    max-height: 20rem;
+    overflow-y: auto;
+    background: var(--ui-color-background1);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    padding: var(--ui-measure-spacer-medium);
+
+    div.autoVert {
+        gap: var(--ui-measure-spacer-medium);
+    }
+
+    p {
+        font-weight: bold;
+        margin: 0;
+    }
+
+    textarea {
+        word-break: break-all;
+        height:7rem;
+    }
+
+    #share_buttons {
+        text-align: center;
+    }
+}

@@ -2222,6 +2222,43 @@ export async function download(name) {
     a.click()
 }
 
+export async function saveAsBase64(minimizeMetadata = true) {
+    let json = save()
+    json = JSON.parse(json)
+    if (minimizeMetadata) {
+        json.metadata.modified = []
+    }
+    json = JSON.stringify(json)
+    const stream = new Blob([json], {
+        type: 'application/json'
+    }).stream()
+    const compStream = stream.pipeThrough(new CompressionStream("gzip"))
+    const compResp = await new Response(compStream)
+    const blob = await compResp.blob()
+    const dataURL = await new Promise((resolve, _) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.readAsDataURL(blob)
+    })
+    return dataURL.split(",")[1]
+}
+
+export async function loadFromBase64(data) {
+    try {
+        data = "data:application/octet-stream;base64," + data
+        const blob = await (await fetch(data)).blob()
+        const json = await decompress(new Blob(["flogo1", blob]))
+        try {
+            load(json)
+            return null
+        } catch (e) {
+            return e
+        }
+    } catch (e) {
+        return "Not a Flogo program"
+    }
+}
+
 async function decompress(blob) {
     if (blob.size < 6) throw ""
     const head = await blob.slice(0, 6).text()

@@ -107,3 +107,16 @@ export function stopLoading() {
 export function isLoading() {
     return document.getElementById("loadOverlay").style.display !== "none"
 }
+
+export function getBaseURL() {
+    let r
+    if (Platform.isElectron) {
+        r = "https://flogo.fdossena.com/"
+    } else {
+        r = location.origin + location.pathname
+    }
+    if (!r.endsWith("/")) {
+        r += "/"
+    }
+    return r
+}

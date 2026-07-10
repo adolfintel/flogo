@@ -82,6 +82,7 @@
                 <button id="newProgram" title="New"><span class="icon material-icons-sharp">note_add</span></button>
                 <button id="loadProgram" title="Load"><span class="icon material-icons-sharp">folder_open</span></button>
                 <button id="saveProgram" title="Save"><span class="icon material-icons-sharp">save_as</span></button>
+                <button id="shareProgram" title="Share"><span class="icon material-icons-sharp">share</span></button>
                 <input type="file" id="filePicker" accept=".flogo">
             </span>
             <span class="group">
@@ -460,6 +461,16 @@
                 <div class="settings_tab_buttons">
                     <button class="closePopup">Close</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div id="share" class="popup noAutoClose">
+        <div class="autoVert">
+            <p>Copy this link to share the program with someone</p>
+            <textarea id="share_url" readonly></textarea>
+            <div id="share_buttons">
+                <button class="important" id="share_copy">Copy link</button>
+                <button class="closePopup">Close</button>
             </div>
         </div>
     </div>

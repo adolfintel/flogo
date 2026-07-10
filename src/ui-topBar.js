@@ -14,6 +14,7 @@ function updateControls() {
         document.getElementById("newProgram").disabled = true
         document.getElementById("loadProgram").disabled = true
         document.getElementById("saveProgram").disabled = true
+        document.getElementById("shareProgram").disabled = true
         document.getElementById("openSettings").disabled = true
         document.getElementById("openManual").disabled = true
     }
@@ -28,6 +29,7 @@ function updateControls() {
         document.getElementById("newProgram").disabled = false
         document.getElementById("loadProgram").disabled = false
         document.getElementById("saveProgram").disabled = false
+        document.getElementById("shareProgram").disabled = false
         document.getElementById("openSettings").disabled = false
         document.getElementById("openManual").disabled = false
         document.getElementById("undo").disabled = !History.canUndo()
@@ -106,6 +108,10 @@ document.getElementById("loadProgram").onclick = () => {
 document.getElementById("saveProgram").onclick = () => {
     collapse()
     Actions.saveProgram()
+}
+document.getElementById("shareProgram").onclick = () => {
+    collapse()
+    Actions.shareProgram()
 }
 document.getElementById("runProgram").onclick = () => {
     collapse()

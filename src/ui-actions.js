@@ -156,6 +156,25 @@ export async function loadProgram(triggeredFromKeyboardShortcut = false) {
     }
 }
 
+export async function shareProgram() {
+    Popups.close(true)
+    VariablesEditor.cancelAllEdits()
+    const urlArea = document.getElementById("share_url")
+    urlArea.onfocus = () => {
+        Utils.selectContents(urlArea)
+    }
+    urlArea.innerText = ""
+    Popups.show("share", true)
+    const json = await FlogoLang.saveAsBase64()
+    const url = Utils.getBaseURL() + "?program=" + encodeURIComponent(json)
+    urlArea.innerText = url
+    document.getElementById("share_copy").onclick = () => {
+        navigator.clipboard.writeText(url)
+        Popups.close(true)
+        Popups.toast("Link copied")
+    }
+}
+
 document.body.addEventListener("dragover", e => e.preventDefault())
 document.body.addEventListener("drop", async e => {
     e.preventDefault()
@@ -201,7 +220,8 @@ document.body.addEventListener("drop", async e => {
     }
 })
 
-let pendingPWAFileOpenRequest = null
+let pendingPWAFileOpenRequest = null,
+    pendingSharedProgramRequest = null
 
 async function pendingOpenRequestHandler() {
     if (Platform.isElectron) {
@@ -235,7 +255,21 @@ async function pendingOpenRequestHandler() {
         }
         requestAnimationFrame(pendingOpenRequestHandler)
     } else {
-        if (pendingPWAFileOpenRequest !== null) {
+        if (pendingSharedProgramRequest !== null) {
+            Utils.startLoading()
+            try {
+                const e = await FlogoLang.loadFromBase64(pendingSharedProgramRequest)
+                if (e !== null) {
+                    document.getElementById("loadError_details").innerText = "Broken link"
+                    Popups.show("loadError", true)
+                } else {
+                    resetUI()
+                    Popups.toast("Program loaded")
+                }
+            } catch (e) {}
+            Utils.stopLoading()
+            pendingSharedProgramRequest = null
+        } else if (pendingPWAFileOpenRequest !== null) {
             Utils.startLoading()
             try {
                 const e = await FlogoLang.loadFromFile(await pendingPWAFileOpenRequest.getFile())
@@ -287,6 +321,8 @@ if (!Platform.isElectron) {
             e.preventDefault()
         }
     })
+    pendingSharedProgramRequest = new URL(window.location.href).searchParams.get("program")
+    window.history.replaceState(null, "", Utils.getBaseURL())
     if ("launchQueue" in window) {
         window.launchQueue.setConsumer(launchParams => {
             if (launchParams.files && launchParams.files.length) {
