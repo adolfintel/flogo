@@ -48,6 +48,10 @@
         }
     }
 
+    div.autoVert {
+        gap: var(--ui-measure-spacer-small);
+    }
+
     #editor_Input {
         width: 20rem;
     }
