@@ -60,6 +60,7 @@ function resetUI() {
     if (!Platform.isElectron) {
         Platform.clipboard.clear()
     }
+    Utils.updateWindowTitle()
 }
 
 export async function newProgram(triggeredFromKeyboardShortcut = false, force = false) {
