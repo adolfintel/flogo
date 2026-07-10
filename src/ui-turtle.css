@@ -34,8 +34,18 @@
 }
 
 #editor_Move {
+    #editor_Move_draw_container {
+        display: flex;
+
+        &>* {
+            align-self: center;
+        }
+    }
+
     #editor_Move_color {
-        display: none;
+        visibility: hidden;
+        flex-grow: 1;
+        text-align: right;
 
         input[type="radio"] {
             appearance: none;
@@ -64,10 +74,14 @@
                 border-radius: 999rem;
                 background: var(--ui-color-background1);
             }
+
+            &:focus:checked::after {
+                border: var(--ui-measure-border-medium) solid var(--ui-color-accent1);
+            }
         }
     }
 
     &:has(#editor_Move_draw:checked) #editor_Move_color {
-        display: block;
+        visibility: visible;
     }
 }
