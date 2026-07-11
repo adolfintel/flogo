@@ -68,6 +68,16 @@
     --turtle-color-cursor: #000000;
     --turtle-color-background: #ffffff;
     --turtle-color-foreground-0: #000000;
+    --turtle-color-foreground-1: #303030;
+    --turtle-color-foreground-2: #404040;
+    --turtle-color-foreground-3: #505050;
+    --turtle-color-foreground-4: #606060;
+    --turtle-color-foreground-5: #707070;
+    --turtle-color-foreground-6: #909090;
+    --turtle-color-foreground-7: #a0a0a0;
+    --turtle-color-foreground-8: #b0b0b0;
+    --turtle-color-foreground-9: #d0d0d0;
+    --turtle-color-foreground-10: #e0e0e0;
     --toast-background: #000000;
     --toast-color: #ffffff;
 }
