@@ -105,31 +105,36 @@ export function saveProgram(triggeredFromKeyboardShortcut = false) {
 
 export async function loadProgram(triggeredFromKeyboardShortcut = false) {
     Popups.close(true)
-    const realLoadProgram = () => {
+    const realLoadProgram = async () => {
         const state = FlogoLang.interpreter.getState()
         if (state === "running" || state === "paused") {
             stopProgram()
         }
-        const l = document.getElementById("filePicker")
-        l.onchange = async () => {
-            if (Platform.isElectron) {
-                if (History.isEmpty()) {
-                    Utils.startLoading()
-                    const e = await FlogoLang.loadFromFile(l.files[0])
-                    if (e !== null) {
-                        document.getElementById("loadError_details").innerText = e
-                        Popups.show("loadError", true)
-                    } else {
-                        resetUI()
-                        Popups.toast("Program loaded")
-                    }
-                    Utils.stopLoading()
-                } else {
-                    flogoElectronAPI.newWindow(l.files[0])
-                }
-            } else {
+        let selectedFile
+        try {
+            selectedFile = await Platform.loadBlob({
+                name: "Flogo Program",
+                extensions: ["flogo"]
+            })
+        } catch (e) {
+            switch (e) {
+                case "type":
+                    e = "Not a Flogo program";
+                    break
+                case "open":
+                    e = "Can't open file";
+                    break
+                case "cancel":
+                    return
+            }
+            document.getElementById("loadError_details").innerText = e
+            Popups.show("loadError", true)
+            return
+        }
+        if (Platform.isElectron) {
+            if (History.isEmpty()) {
                 Utils.startLoading()
-                const e = await FlogoLang.loadFromFile(l.files[0])
+                const e = await FlogoLang.loadFromFile(selectedFile)
                 if (e !== null) {
                     document.getElementById("loadError_details").innerText = e
                     Popups.show("loadError", true)
@@ -138,19 +143,30 @@ export async function loadProgram(triggeredFromKeyboardShortcut = false) {
                     Popups.toast("Program loaded")
                 }
                 Utils.stopLoading()
+            } else {
+                flogoElectronAPI.newWindow(selectedFile)
             }
-            l.value = "" //workaround: some chromium-based browsers don't trigger the onchange event on the input if selecting the same file
+        } else {
+            Utils.startLoading()
+            const e = await FlogoLang.loadFromFile(selectedFile)
+            if (e !== null) {
+                document.getElementById("loadError_details").innerText = e
+                Popups.show("loadError", true)
+            } else {
+                resetUI()
+                Popups.toast("Program loaded")
+            }
+            Utils.stopLoading()
         }
-        l.click()
     }
     if (Platform.isElectron) {
-        realLoadProgram()
+        await realLoadProgram()
     } else {
         if (History.isEmpty()) {
-            realLoadProgram()
+            await realLoadProgram()
         } else {
             if (await Popups.confirm("Load another program?", "All unsaved changes will be lost", triggeredFromKeyboardShortcut === true ? null : document.getElementById("loadProgram"))) {
-                realLoadProgram()
+                await realLoadProgram()
             }
         }
     }

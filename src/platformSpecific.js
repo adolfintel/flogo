@@ -65,3 +65,35 @@ if (isElectron) {
 }
 
 export const clipboard = c
+
+export function saveBlob(name, blob, fileType) {
+    if (isElectron) {
+        return flogoElectronAPI.saveFile(name, blob, fileType)
+    } else {
+        const a = document.createElement("a")
+        if (typeof blob === "string") {
+            a.href = blob
+        } else {
+            a.href = URL.createObjectURL(blob)
+        }
+        a.download = name
+        a.click()
+        return null
+    }
+}
+
+export async function loadBlob(fileType) {
+    if (isElectron) {
+        return flogoElectronAPI.loadFile(fileType)
+    } else {
+        return await new Promise((resolve, _) => {
+            const filePicker = document.createElement("input")
+            filePicker.type = "file"
+            filePicker.accept = ".flogo"
+            filePicker.onchange = () => {
+                resolve(filePicker.files[0])
+            }
+            filePicker.click()
+        })
+    }
+}

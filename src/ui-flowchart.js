@@ -2228,10 +2228,10 @@ export async function downloadSVG(name, background = true) {
         const blob = new Blob([out], {
             type: "image/svg+xml;charset=utf-8",
         })
-        const a = document.createElement("a")
-        a.href = URL.createObjectURL(blob)
-        a.download = name
-        a.click()
+        Platform.saveBlob(name, blob, {
+            name: "SVG Image",
+            extensions: ["svg"]
+        })
     }
     let embeddableFontURL = Utils.getCSSVal("--flowchart-Font-svgEmbeddableFile", null)
     if (embeddableFontURL !== null) {
@@ -2291,7 +2291,7 @@ export function downloadPNG(name, background = true, superSampling = 2) {
         }
     }
     stage.draw()
-    const out = tempCanvas.toDataURL("image/png")
+    const dataURL = tempCanvas.toDataURL("image/png")
     if (rect !== null) {
         rect.destroy()
     }
@@ -2308,8 +2308,8 @@ export function downloadPNG(name, background = true, superSampling = 2) {
         }
     }
     if (!name.endsWith(".png")) name += ".png"
-    const a = document.createElement("a")
-    a.href = out
-    a.download = name
-    a.click()
+    Platform.saveBlob(name, dataURL, {
+        name: "PNG Image",
+        extensions: ["png"]
+    })
 }

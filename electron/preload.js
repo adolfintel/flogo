@@ -25,8 +25,8 @@ contextBridge.exposeInMainWorld("flogoElectronAPI", {
     openBrowser: (url) => {
         ipcRenderer.send("open-browser", url)
     },
-    readFile: async (path) => {
-        const data = await ipcRenderer.invoke("read-file-blob", path)
+    loadFile: async (fileType) => {
+        const data = await ipcRenderer.invoke("read-file-blob", fileType)
         if (typeof data === "string") {
             throw data
         }
@@ -35,6 +35,21 @@ contextBridge.exposeInMainWorld("flogoElectronAPI", {
             type: "application/octet-stream"
         })
         return blob
+    },
+    saveFile: async (name, blob, fileType) => {
+        let base64
+        if (typeof blob === "string") {
+            base64 = blob.split(",")[1]
+        } else {
+            const dataURL = await new Promise((resolve, _) => {
+                const reader = new FileReader()
+                reader.onloadend = () => resolve(reader.result)
+                reader.readAsDataURL(blob)
+            })
+            base64 = dataURL.split(",")[1]
+        }
+        const r = await ipcRenderer.invoke('save-file-blob', name, base64, fileType)
+        return r
     },
     electronStore: {
         read: (key) => {

@@ -1,6 +1,7 @@
 import {
     app,
     BrowserWindow,
+    dialog,
     ipcMain,
     screen,
     Menu,
@@ -73,16 +74,27 @@ ipcMain.on("open-browser", (event, url) => {
     event.returnValue = "success"
 })
 
-ipcMain.handle("read-file-blob", (event, path) => {
+ipcMain.handle("read-file-blob", (event, fileType) => {
+    let filters = []
+    if (typeof fileType !== "undefined") {
+        filters.push(fileType)
+    }
+    filters.push({
+        name: "All files",
+        extensions: ["*"]
+    })
+    let path = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
+        filters: filters,
+        multiSelections: false
+    })
+    if (typeof path === "undefined") return "cancel"
+    path = path[0]
     /*
-     * Files are only opened if:
-     * - They have the .flogo extension (case insensitive)
-     * - They have the magic string "flogo1" at the beginning
+     * Files are only opened if they have the magic string "flogo1" at the beginning
      *
-     * Returns "open" if the file can't be opened or if something went wrong while reading it, "type" if it doesn't have the flogo1 string, otherwise it returns an object {buffer:...base64...}
+     * Returns "open" if the file can't be opened or if something went wrong while reading it, "type" if it doesn't have the flogo1 string, "cancel" if the user cancelled the dialog, otherwise it returns an object {buffer:...base64...}
      */
     try {
-        if (!path.toLowerCase().endsWith(".flogo")) return "type"
         const info = fs.statSync(path)
         if (info.size < 6) return "type"
         const buffer = Buffer.alloc(6, 0)
@@ -102,6 +114,29 @@ ipcMain.handle("read-file-blob", (event, path) => {
         }
     } catch (e) {
         return "open"
+    }
+})
+
+ipcMain.handle("save-file-blob", (event, name, base64, fileType) => {
+    let filters = []
+    if (typeof fileType !== "undefined") {
+        filters.push(fileType)
+    }
+    filters.push({
+        name: "All files",
+        extensions: ["*"]
+    })
+    const result = dialog.showSaveDialogSync(BrowserWindow.getFocusedWindow(), {
+        defaultPath: name,
+        filters: filters
+    })
+    if (result === "") return "cancel"
+    const buffer = Buffer.from(base64, "base64")
+    try {
+        fs.writeFileSync(result, buffer)
+        return null
+    } catch (e) {
+        return "save"
     }
 })
 

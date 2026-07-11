@@ -1673,7 +1673,7 @@ export function downloadTurtleImage(name = "Turtle drawing", background = true, 
         }
     }
     turtle_stage.draw()
-    const out = tempCanvas.toDataURL("image/png")
+    const dataURL = tempCanvas.toDataURL("image/png")
     if (rect !== null) {
         rect.destroy()
     }
@@ -1683,10 +1683,10 @@ export function downloadTurtleImage(name = "Turtle drawing", background = true, 
     turtle_stage.scale(oldSScale)
     turtle_stage.draw()
     if (!name.endsWith(".png")) name += ".png"
-    const a = document.createElement("a")
-    a.href = out
-    a.download = name
-    a.click()
+    Platform.saveBlob(name, dataURL, {
+        name: "PNG Image",
+        extensions: ["png"]
+    })
 }
 
 let turtle_nPoints = 0
@@ -2214,10 +2214,10 @@ export async function download(name) {
     }
     if (!name.endsWith(".flogo")) name += ".flogo"
     const blob = await compress(save())
-    const a = document.createElement("a")
-    a.href = URL.createObjectURL(blob)
-    a.download = name
-    a.click()
+    Platform.saveBlob(name, blob, {
+        name: "Flogo Program",
+        extensions: ["flogo"]
+    })
 }
 
 export async function saveAsBase64(minimizeMetadata = true) {
