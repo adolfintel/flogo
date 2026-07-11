@@ -5,9 +5,7 @@
  */
 
 import jsep from 'jsep'
-import {
-    storage
-} from './platformSpecific.js'
+import * as Platform from './platformSpecific.js'
 
 //-------- VARIABLES AND TYPE SYSTEM --------
 /* Flogo is strongly and statically typed, but uses JS underneath so some checks are required to make sure that values are of the correct type and can't change over time, that variables aren't re-decleared, etc.
@@ -2092,13 +2090,13 @@ export let metadata
 
 function getAuthorUUID() {
     if (navigator.doNotTrack != 1) {
-        if (typeof storage.authorId === "undefined") {
-            storage.authorId = crypto.randomUUID()
+        if (typeof Platform.storage.authorId === "undefined") {
+            Platform.storage.authorId = crypto.randomUUID()
         }
-        return storage.authorId
+        return Platform.storage.authorId
     } else {
-        if (typeof storage.authorId !== "undefined") {
-            delete storage.authorId
+        if (typeof Platform.storage.authorId !== "undefined") {
+            delete Platform.storage.authorId
         }
         return ""
     }
