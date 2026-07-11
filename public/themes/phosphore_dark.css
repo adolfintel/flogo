@@ -1,0 +1,118 @@
+@font-face {
+    font-family: "Share Tech Mono";
+    src: url("./ShareTechMono-Regular.woff2");
+}
+
+:root {
+    --flowchart-Font-family: "Share Tech Mono";
+    --flowchart-Font-svgEmbeddableFile: "themes/ShareTechMono-Regular.woff2";
+    --flowchart-Block-font-size: 16;
+    --flowchart-Line-font-size: 12;
+    --flowchart-Padding-base: 6;
+    --flowchart-Padding-spaceBetweenInstructions: 24;
+    --browser-theme-color: #002000;
+    --ui-color-background1: #000000;
+    --ui-color-background2: #003000;
+    --ui-color-text: #ffffff;
+    --ui-color-accent1: #000000;
+    --ui-color-accent2: #000000;
+    --ui-color-text-accent: #ffffff;
+    --ui-color-border1: #00ff00;
+    --ui-color-border2: #00ff00;
+    --ui-color-disabled: #00a000;
+    --ui-color-form-background: #006000;
+    --ui-color-form-highlighted: #004000;
+    --ui-color-form-text: #ffffff;
+    --ui-color-form-border: #00ff0060;
+    --ui-color-form-border-selected: #00ff00;
+    --ui-color-form-disabled: #008000;
+    --ui-measure-border-thin: 0.1rem;
+    --ui-measure-border-medium: 0.1rem;
+    --ui-measure-border-thick: 0.15rem;
+    --ui-measure-spacer-small: 0.25rem;
+    --ui-measure-spacer-medium: 0.5rem;
+    --ui-measure-spacer-large: 0.75rem;
+    --ui-measure-form-padding-base: 0.35rem 0.5rem;
+    --ui-measure-form-font-size: 0.9rem;
+    --ui-measure-border-radius: 0;
+    --flowchart-Assign-color1: #00000000;
+    --flowchart-Assign-color2: #00ff00;
+    --flowchart-Assign-color3: #00ff00;
+    --flowchart-Output-color1: #00000000;
+    --flowchart-Output-color2: #00ff00;
+    --flowchart-Output-color3: #00ff00;
+    --flowchart-Input-color1: #00000000;
+    --flowchart-Input-color2: #00ff00;
+    --flowchart-Input-color3: #00ff00;
+    --flowchart-If-color1: #00000000;
+    --flowchart-If-color2: #00ff00;
+    --flowchart-If-color3: #00ff00;
+    --flowchart-DoWhile-color1: #00000000;
+    --flowchart-DoWhile-color2: #00ff00;
+    --flowchart-DoWhile-color3: #00ff00;
+    --flowchart-While-color1: #00000000;
+    --flowchart-While-color2: #00ff00;
+    --flowchart-While-color3: #00ff00;
+    --flowchart-For-color1: #00000000;
+    --flowchart-For-color2: #00ff00;
+    --flowchart-For-color3: #00ff00;
+    --flowchart-Breakpoint-color1: #00000000;
+    --flowchart-Breakpoint-color2: #00ff00;
+    --flowchart-Breakpoint-color3: #00ff00;
+    --flowchart-Comment-color1: #00000000;
+    --flowchart-Comment-color2: #00ff00;
+    --flowchart-Comment-color3: #00ff00;
+    --flowchart-Comment-dashLength: 10;
+    --flowchart-Comment-text-maxLength: 350;
+    --flowchart-Turtle-Move-color1: #00000000;
+    --flowchart-Turtle-Move-color2: #00ff00;
+    --flowchart-Turtle-Move-color3: #00ff00;
+    --flowchart-Turtle-Turn-color1: #00000000;
+    --flowchart-Turtle-Turn-color2: #00ff00;
+    --flowchart-Turtle-Turn-color3: #00ff00;
+    --flowchart-Turtle-Home-color1: #00000000;
+    --flowchart-Turtle-Home-color2: #00ff00;
+    --flowchart-Turtle-Home-color3: #00ff00;
+    --flowchart-Error-color1: #c00000;
+    --flowchart-Error-color2: #c00000;
+    --flowchart-Error-color3: #000000;
+    --flowchart-Round-color1: #00000000;
+    --flowchart-Round-color2: #00ff00;
+    --flowchart-Round-color3: #00ff00;
+    --flowchart-Block-outline-thickness: 1.75;
+    --flowchart-Block-highlight-color1: #00ff00;
+    --flowchart-Block-highlight-color2: #00ff00;
+    --flowchart-Block-highlight-color3: #000000;
+    --flowchart-Line-color: #00ff00;
+    --flowchart-Line-selected-color: #008000;
+    --flowchart-selected-color1: #00ff00;
+    --flowchart-selected-color2: #00ff00;
+    --flowchart-selected-color3: #000000;
+    --turtle-color-background: #000000;
+    --turtle-color-foreground-0: #ffffff;
+    --turtle-color-foreground-1: #808080;
+    --turtle-color-foreground-2: #ff0000;
+    --turtle-color-foreground-3: #ff8000;
+    --turtle-color-foreground-4: #ffff00;
+    --turtle-color-foreground-5: #00ff00;
+    --turtle-color-foreground-6: #00ffff;
+    --turtle-color-foreground-7: #0080ff;
+    --turtle-color-foreground-8: #8000ff;
+    --turtle-color-foreground-9: #ff8080;
+    --turtle-color-foreground-10: #800000;
+}
+
+div.popup {
+    border-color: var(--ui-color-border1) !important;
+}
+
+#insertWide,
+#insertTall {
+    background: #000000;
+}
+
+#settings {
+    --ui-color-background1: #003000;
+    --ui-color-background2: #000000;
+
+}
