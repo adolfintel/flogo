@@ -1,8 +1,8 @@
 #turtleArea {
     min-width: 25rem;
     min-height: 25rem;
-    width: 45vw;
-    height: 45vh;
+    width: 25rem;
+    height: 25rem;
     top: 5rem;
     left: 5rem;
     background: var(--turtle-color-background);
