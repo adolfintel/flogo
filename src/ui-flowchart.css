@@ -103,6 +103,59 @@
     #editor_Comment textarea {
         height: 12rem;
     }
+
+    #editor_Move {
+        #editor_Move_draw_container {
+            display: flex;
+
+            &>* {
+                align-self: center;
+            }
+        }
+
+        #editor_Move_color {
+            visibility: hidden;
+            flex-grow: 1;
+            text-align: right;
+
+            input[type="radio"] {
+                appearance: none;
+                display: inline-block;
+                width: 1.25rem;
+                height: 1.25rem;
+                border: var(--ui-measure-border-thin) solid var(--ui-color-border1);
+                border-radius: 999rem;
+                position: relative;
+
+                &:focus {
+                    box-shadow: none !important;
+                }
+
+                &:checked::after {
+                    display: block;
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    width: 0.35rem;
+                    height: 0.35rem;
+                    margin: auto;
+                    border-radius: 999rem;
+                    background: var(--ui-color-background1);
+                }
+
+                &:focus:checked::after {
+                    border: var(--ui-measure-border-medium) solid var(--ui-color-accent1);
+                }
+            }
+        }
+
+        &:has(#editor_Move_draw:checked) #editor_Move_color {
+            visibility: visible;
+        }
+    }
 }
 
 #editor2 {
