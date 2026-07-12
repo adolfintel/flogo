@@ -155,6 +155,6 @@ You should have received a copy of the GNU Affero General Public License along w
 __Credits:__
 * [Emanuele Magon](https://github.com/e-magon): for the help with the macOS version
 * [Material Design Icons](https://marella.github.io/material-design-icons): Icons used throughout the application (Apache-2.0 License)
-* Fonts distributed under the [SIL Open Font License](https://openfontlicense.org/): Noto Sans, Roboto Mono, Monoton, Caveat, Cinzel
+* Fonts distributed under the [SIL Open Font License](https://openfontlicense.org/): Noto Sans, Roboto Mono, Monoton, Caveat, Cinzel, Share Tech Mono
 * Some themes use graphics from [SVG Repo](https://www.svgrepo.com/) (CC0)
 * The Flogo program file icon is modified from [KDE Breeze Icons](https://github.com/KDE/breeze-icons) (LGPL 2.1)
