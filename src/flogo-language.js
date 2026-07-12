@@ -2220,13 +2220,8 @@ export async function download(name) {
     })
 }
 
-export async function saveAsBase64(minimizeMetadata = true) {
+export async function saveAsBase64() {
     let json = save()
-    json = JSON.parse(json)
-    if (minimizeMetadata) {
-        json.metadata.modified = []
-    }
-    json = JSON.stringify(json)
     const stream = new Blob([json], {
         type: 'application/json'
     }).stream()
