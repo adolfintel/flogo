@@ -62,6 +62,7 @@
     --turtle-color-cursor: #ffff40;
     --turtle-color-background: #222e46;
     --turtle-color-foreground-0: #ffffff;
+    --insert-Text-color: #c0c0c0;
 }
 
 #variablesArea *[contenteditable] {

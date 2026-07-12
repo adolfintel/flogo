@@ -75,6 +75,7 @@
     --turtle-color-background: #1e2228;
     --turtle-color-foreground-0: #e0e0e0;
     --insert-Font-size: 13;
+    --insert-Text-color: #ffffff;
 }
 
 #editor {

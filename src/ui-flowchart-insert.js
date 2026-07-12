@@ -67,13 +67,13 @@ function prepareWide() {
         text: "Clipboard",
         fontSize: Theming.INSERT_FONT_SIZE,
         fontFamily: Theming.INSERT_FONT,
-        fill: Theming.LINE_COLOR,
+        fill: Theming.INSERT_TEXT_COLOR,
     })
     const paste = new Konva.Text({
         text: "paste",
         fontFamily: "Material Icons Sharp",
         fontSize: Theming.INSERT_FONT_SIZE * 2,
-        fill: Theming.LINE_COLOR,
+        fill: Theming.INSERT_TEXT_COLOR,
     })
     paste.on("click tap", () => {
         if (Platform.clipboard.isEmpty()) return
@@ -88,7 +88,7 @@ function prepareWide() {
             text: category,
             fontSize: Theming.INSERT_FONT_SIZE,
             fontFamily: Theming.INSERT_FONT,
-            fill: Theming.LINE_COLOR,
+            fill: Theming.INSERT_TEXT_COLOR,
         })
         const col = []
         categories[category].forEach(classref => {
@@ -142,13 +142,13 @@ function prepareTall() {
         text: "Clipboard",
         fontSize: Theming.INSERT_FONT_SIZE,
         fontFamily: Theming.INSERT_FONT,
-        fill: Theming.LINE_COLOR,
+        fill: Theming.INSERT_TEXT_COLOR,
     })
     let paste = new Konva.Text({
         text: "paste",
         fontFamily: "Material Icons Sharp",
         fontSize: Theming.INSERT_FONT_SIZE * 2,
-        fill: Theming.LINE_COLOR,
+        fill: Theming.INSERT_TEXT_COLOR,
     })
     paste.on("click tap", () => {
         if (Platform.clipboard.isEmpty()) return 0
@@ -163,7 +163,7 @@ function prepareTall() {
             text: category,
             fontSize: Theming.INSERT_FONT_SIZE,
             fontFamily: Theming.INSERT_FONT,
-            fill: Theming.LINE_COLOR,
+            fill: Theming.INSERT_TEXT_COLOR,
         })
         const row = []
         categories[category].forEach(classref => {

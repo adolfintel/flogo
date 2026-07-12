@@ -80,6 +80,7 @@ export let ASSIGN_COLOR1,
     SMALL_LAYOUT_THRESHOLD = 55, //<=55rem, the app will not allow you to keep both bars expanded at the same time
     INSERT_FONT,
     INSERT_FONT_SIZE,
+    INSERT_TEXT_COLOR,
     WIDE_INSERT_SPACE_BELOW_LABEL,
     WIDE_INSERT_SPACE_BETWEEN_COLUMNS,
     WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS,
@@ -123,6 +124,7 @@ export async function loadTheme(name, saveToStorage = true) {
     SMALL_LAYOUT_THRESHOLD = Number(Utils.getCSSVal("--layout-small-threshold", 55))
     INSERT_FONT = Utils.getCSSVal("font-family", "")
     INSERT_FONT_SIZE = Number(Utils.getCSSVal("--insert-Font-size", 14))
+    INSERT_TEXT_COLOR = Utils.getCSSVal("--insert-Text-color", "#ffffff")
     WIDE_INSERT_SPACE_BETWEEN_COLUMNS = Number(Utils.getCSSVal("--insert-Wide-Padding-betweenColumns", 18))
     WIDE_INSERT_SPACE_BELOW_LABEL = Number(Utils.getCSSVal("--insert-Wide-Padding-belowLabel", 20))
     WIDE_INSERT_SPACE_BETWEEN_INSTRUCTIONS = Number(Utils.getCSSVal("--insert-Wide-Padding-spaceBetweenInstructions", 20))
