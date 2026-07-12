@@ -1478,7 +1478,7 @@ registerInstructionType(Output, "Output", "Interaction")
  * - hideTurtleCursor(): hides the turtle, leaving only the drawing visible
  * - showTurtleCursor(): shows a previously hidden turtle
  * - isTurtleCursorVisible(): tells whether the cursor is visible
- * - setTurtleColors(cursor, background, foreground): sets the colors used for turtle graphics
+ * - setTurtleColors(cursor, background, palette): sets the colors used for turtle graphics (palette is an array of colors that can be used to draw. Note that in the UI this is currently hardcoded to 11 colors, but there is no limit in the code here)
  * - downloadTurtleImage(name): saves the current drawing to a file
  *
  * There's also a setting that you might want to change:
@@ -2128,6 +2128,8 @@ clearMetadata()
  * - save(updateMetadata, varsToSkip): returns the current program as a JSON string. updateMetadata (default true) can be set to false if you don't want the uuid and timestamp of saving to be added to the metadata. varsToSkip is an optional array of variables that can be skipped when saving (used to exclude temporary variables created by the variables editor in the UI)
  * - download(name): same as save() but you can pass it a filename and it will start a compressed file download (Note: async function)
  * - loadFromFile(f): loads a program from a file, making sure that it is actually a valid Flogo program. This function is asynchronous and returns null if the program was loaded, or a string containing an error message if something went wrong
+ * - saveAsBase64(): same as save, but returns a compressed base64 string that is used in the UI to create share links. Note that the returned string is not URL-encoded
+ * - loadFromBase64(data): same as load, but accepts a compressed base64 string from a share link. Note that the data string must not be URL-encoded
  *
  */
 
