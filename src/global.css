@@ -151,7 +151,7 @@
     --layout-small-threshold: 55;
     --layout-consoleArea-width: 24rem;
     --layout-variablesArea-width: 19rem;
-    --toast-background: #ffffffd0;
+    --toast-background: #e0e0e0;
     --toast-color: #000000;
     --toast-animation-duration: 0.4s;
 }

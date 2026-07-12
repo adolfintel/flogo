@@ -5,6 +5,7 @@
     --turtle-color-cursor: #00a000;
     --turtle-color-background: #20202040;
     --turtle-color-foreground-0: #ffffff;
+    --toast-background: #ffffffb0;
 }
 
 #editor {
