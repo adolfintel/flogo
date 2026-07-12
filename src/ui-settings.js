@@ -160,6 +160,30 @@ document.getElementById("license_close").onclick = () => {
     document.getElementById("licenseViewer").classList.remove("visible")
 }
 
+let heartClickCounter = 0,
+    heartLastClickT = 0
+document.getElementById("about_heart").onclick = () => {
+    const t = Date.now()
+    if (t - heartLastClickT > 500) {
+        heartClickCounter = 1
+    } else {
+        heartClickCounter++
+    }
+    heartLastClickT = t
+    if (heartClickCounter === 7) {
+        heartClickCounter = 0
+        heartLastClickT = 0
+        Popups.close(true)
+        let json = FlogoLang.save(false)
+        json = JSON.parse(json)
+        json.metadata.created = new Date(json.metadata.created).toString()
+        json.metadata.modified = json.metadata.modified.map(d => [new Date(d[0]).toString(), d[1]])
+        json = JSON.stringify(json, null, 2)
+        document.getElementById("jsonViewer_text").value = json
+        Popups.show("jsonViewer", true)
+    }
+}
+
 if (typeof Platform.storage.altTurboTSlice !== "undefined") {
     FlogoLang.interpreter.setAltTurboTSlice(Platform.storage.altTurboTSlice === "true")
 }

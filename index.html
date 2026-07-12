@@ -455,7 +455,7 @@
                     <div><img src="images/logo_large.webp" id="about_logo" alt="Logo"></div>
                     <div>Flogo – Version <span id="versionNumber"></span><span id="versionTypeBadge"></span></div>
                     <div id="devBuildInfo"></div>
-                    <div>Made with ❤️ by <a href="https://fdossena.com" target="_blank">Federico Dossena</a></div>
+                    <div>Made with <span id="about_heart">❤️</span> by <a href="https://fdossena.com" target="_blank">Federico Dossena</a></div>
                     <div>Distributed under the <a id="showLicense">GNU AGPL v3</a> license</div>
                     <div><a href="https://fdossena.com/?p=flogo/index.frag" target="_blank">Website</a> | <a href="https://github.com/adolfintel/flogo" target="_blank">GitHub</a></div>
                 </div>
@@ -473,6 +473,12 @@
                 <button class="important" id="share_copy">Copy link</button>
                 <button class="closePopup">Close</button>
             </div>
+        </div>
+    </div>
+    <div id="jsonViewer" class="popup noAutoClose">
+        <div class="autoVert">
+            <textarea id="jsonViewer_text" readonly></textarea>
+            <button class="closePopup">Close</button>
         </div>
     </div>
     <div id="toasts"></div>
