@@ -44,6 +44,7 @@
 
     #settings_tabs {
         display: grid;
+        margin-top: -1px;
 
         div.settings_tab {
             background: var(--ui-color-background1);
