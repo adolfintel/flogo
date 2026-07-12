@@ -15,6 +15,7 @@ import * as FpsCounter from "./ui-fpsCounter.js"
 import * as TopBar from "./ui-topBar.js"
 import * as Settings from "./ui-settings.js"
 import * as KeyboardShortcuts from "./ui-keyboardShortcuts.js"
+import * as Manual from "./ui-manual.js"
 
 window.addEventListener("load", async () => {
     await document.fonts.ready
@@ -22,6 +23,7 @@ window.addEventListener("load", async () => {
     await Theming.loadTheme(Theming.getPreferredTheme(), false)
     Actions.init()
     KeyboardShortcuts.init()
+    Manual.init()
 })
 
 //TODO: reimplement crash screen and program recovery
