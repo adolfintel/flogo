@@ -215,6 +215,7 @@ const createWindow = (openThis, initialZoom) => {
     })
     win.on("close", async (e) => {
         e.preventDefault()
+        win.focus()
         win.webContents.executeJavaScript("electron_closeWindow()")
     })
     if (!isMac) {
