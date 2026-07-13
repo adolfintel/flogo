@@ -105,17 +105,21 @@ export function saveProgram(triggeredFromKeyboardShortcut = false) {
 
 export async function loadProgram(triggeredFromKeyboardShortcut = false) {
     Popups.close(true)
-    const realLoadProgram = () => {
+    const realLoadProgram = async () => {
         const state = FlogoLang.interpreter.getState()
         if (state === "running" || state === "paused") {
             stopProgram()
         }
-        const l = document.getElementById("filePicker")
-        l.onchange = async () => {
+        try {
+            const file = await Platform.loadBlob({
+                name: "Flogo Program",
+                extensions: ["flogo"]
+            })
+            if (file === null) return
             if (Platform.isElectron) {
                 if (History.isEmpty()) {
                     Utils.startLoading()
-                    const e = await FlogoLang.loadFromFile(l.files[0])
+                    const e = await FlogoLang.loadFromFile(file.blob)
                     if (e !== null) {
                         document.getElementById("loadError_details").innerText = e
                         Popups.show("loadError", true)
@@ -125,11 +129,11 @@ export async function loadProgram(triggeredFromKeyboardShortcut = false) {
                     }
                     Utils.stopLoading()
                 } else {
-                    flogoElectronAPI.newWindow(l.files[0])
+                    flogoElectronAPI.newWindow(file.path)
                 }
             } else {
                 Utils.startLoading()
-                const e = await FlogoLang.loadFromFile(l.files[0])
+                const e = await FlogoLang.loadFromFile(file)
                 if (e !== null) {
                     document.getElementById("loadError_details").innerText = e
                     Popups.show("loadError", true)
@@ -139,18 +143,31 @@ export async function loadProgram(triggeredFromKeyboardShortcut = false) {
                 }
                 Utils.stopLoading()
             }
-            l.value = "" //workaround: some chromium-based browsers don't trigger the onchange event on the input if selecting the same file
+        } catch (e) {
+            console.log(e)
+            switch (e) {
+                case "type":
+                    e = "Not a Flogo program";
+                    break
+                case "open":
+                    e = "Loading failed";
+                    break
+                default:
+                    return
+            }
+            document.getElementById("loadError_details").innerText = e
+            Popups.show("loadError", true)
         }
-        l.click()
+
     }
     if (Platform.isElectron) {
-        realLoadProgram()
+        await realLoadProgram()
     } else {
         if (History.isEmpty()) {
-            realLoadProgram()
+            await realLoadProgram()
         } else {
             if (await Popups.confirm("Load another program?", "All unsaved changes will be lost", triggeredFromKeyboardShortcut === true ? null : document.getElementById("loadProgram"))) {
-                realLoadProgram()
+                await realLoadProgram()
             }
         }
     }

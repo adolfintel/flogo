@@ -74,6 +74,45 @@ ipcMain.on("open-browser", (event, url) => {
     event.returnValue = "success"
 })
 
+ipcMain.handle("open-file-blob", (event, fileType) => {
+    let filters = []
+    if (typeof fileType !== "undefined") {
+        filters.push(fileType)
+    }
+    filters.push({
+        name: "All files",
+        extensions: ["*"]
+    })
+    let path = dialog.showOpenDialogSync(BrowserWindow.getFocusedWindow(), {
+        filters: filters,
+        multiSelections: false
+    })
+    if (typeof path === "undefined") return "cancel"
+    path = path[0]
+    try {
+        const info = fs.statSync(path)
+        if (info.size < 6) return "type"
+        const buffer = Buffer.alloc(6, 0)
+        const fd = fs.openSync(path, "r")
+        fs.readSync(fd, buffer, 0, 6)
+        const head = buffer.toString("utf8")
+        if (head !== "flogo1") {
+            fs.close(fd)
+            return "type"
+        }
+        const fileBuffer = Buffer.alloc(info.size)
+        buffer.copy(fileBuffer)
+        fs.readSync(fd, fileBuffer, 6, info.size - 6)
+        fs.close(fd)
+        return {
+            path: path,
+            buffer: fileBuffer.toString("base64")
+        }
+    } catch (e) {
+        return "open"
+    }
+})
+
 ipcMain.handle("read-file-blob", (event, path) => {
     /*
      * Files are only opened if:

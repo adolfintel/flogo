@@ -81,3 +81,30 @@ export function saveBlob(name, blob, fileType) {
         return null
     }
 }
+
+export async function loadBlob(fileType) {
+    /*
+     * Shows an open file dialog.
+     * On web/pwa it simply returns a File
+     * On electron returns an object that contains path and blob
+     * In case of errors, it throws a string with the error message
+    */
+    if (isElectron) {
+        return await flogoElectronAPI.openFile(fileType)
+    } else {
+        return await new Promise((resolve, _) => {
+            const filePicker = document.createElement("input")
+            filePicker.type = "file"
+            if (!isWebKit && typeof fileType !== "undefined") {
+                let ext = ""
+                fileType.extensions.forEach(e => ext += "." + e + ",")
+                if (ext.endsWith(",")) ext = ext.substring(0, ext.length - 1)
+                filePicker.accept = ext
+            }
+            filePicker.onchange = () => {
+                resolve(filePicker.files[0])
+            }
+            filePicker.click()
+        })
+    }
+}

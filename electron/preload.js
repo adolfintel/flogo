@@ -17,13 +17,29 @@ contextBridge.exposeInMainWorld("flogoElectronAPI", {
     },
     newWindow: (file) => {
         if (typeof file !== "undefined") {
-            ipcRenderer.send("new-window", webUtils.getPathForFile(file))
+            if (file instanceof File) {
+                file = webUtils.getPathForFile(file)
+            }
+            ipcRenderer.send("new-window", file)
         } else {
             ipcRenderer.send("new-window")
         }
     },
     openBrowser: (url) => {
         ipcRenderer.send("open-browser", url)
+    },
+    openFile: async (fileType) => {
+        const data = await ipcRenderer.invoke("open-file-blob", fileType)
+        if (typeof data === "string") {
+            throw data
+        }
+        const binaryData = Buffer.from(data.buffer, "base64")
+        return {
+            path: data.path,
+            blob: new Blob([binaryData], {
+                type: "application/octet-stream"
+            })
+        }
     },
     readFile: async (path) => {
         const data = await ipcRenderer.invoke("read-file-blob", path)

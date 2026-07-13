@@ -137,10 +137,6 @@ document.getElementById("openSettings").onclick = () => {
     Settings.show()
 }
 
-if (Platform.isWebKit) { //webkit-based browsers don't support file filters with multiple types
-    document.getElementById("filePicker").removeAttribute("accept")
-}
-
 let pixelRatio = 0
 
 function pixelRatioChangeHandler() {
