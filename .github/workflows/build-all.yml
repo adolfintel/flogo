@@ -75,6 +75,27 @@ jobs:
           name: flogo-win-arm64-v${{ env.VERSION }}.exe
           path: release/*.exe
 
+  # Windows signed EXEs (only for master branch, handled by OSSign)
+  build-win-signed:
+    runs-on: windows-latest
+    needs: build-win-x64
+    if: github.ref == 'refs/heads/master'
+    steps:
+      # Dispatch a request to the OSSign repo for starting the signature workflow
+      - name: Dispatch to OSSign
+        id: dispatch
+        uses: ossign/actions/workflow/dispatch@main
+        with:
+
+          # You receive the username and token from OSSign after your application has been approved
+          # Keep this token secret
+          username: ${{ secrets.OSSIGN_USER }}
+          token: ${{ secrets.OSSIGN_TOKEN }}
+
+          # If you want to keep the workflow running until you have the signed file, you can change this to false
+          # Bear in mind that it might sometimes take a while before the dispatch is approved, and this will keep the workflow running and billing if you are using a non-free runner
+          dispatch_only: true
+
   # macOS Intel
   build-mac-intel:
     runs-on: macos-latest
