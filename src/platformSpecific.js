@@ -81,19 +81,3 @@ export function saveBlob(name, blob, fileType) {
         return null
     }
 }
-
-export async function loadBlob(fileType) {
-    if (isElectron) {
-        return flogoElectronAPI.loadFile(fileType)
-    } else {
-        return await new Promise((resolve, _) => {
-            const filePicker = document.createElement("input")
-            filePicker.type = "file"
-            filePicker.accept = ".flogo"
-            filePicker.onchange = () => {
-                resolve(filePicker.files[0])
-            }
-            filePicker.click()
-        })
-    }
-}

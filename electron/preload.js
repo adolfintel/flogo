@@ -25,8 +25,8 @@ contextBridge.exposeInMainWorld("flogoElectronAPI", {
     openBrowser: (url) => {
         ipcRenderer.send("open-browser", url)
     },
-    loadFile: async (fileType) => {
-        const data = await ipcRenderer.invoke("read-file-blob", fileType)
+    readFile: async (path) => {
+        const data = await ipcRenderer.invoke("read-file-blob", path)
         if (typeof data === "string") {
             throw data
         }
