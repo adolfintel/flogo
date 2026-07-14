@@ -88,9 +88,14 @@ export async function loadBlob(fileType) {
      * On web/pwa it simply returns a File
      * On electron returns an object that contains path and blob
      * In case of errors, it throws a string with the error message
-    */
+     * If the dialog is cancelled, the promise will not resolve
+     */
     if (isElectron) {
-        return await flogoElectronAPI.openFile(fileType)
+        const ret = await flogoElectronAPI.openFile(fileType)
+        if (typeof ret === "string") {
+            if (ret !== "cancel") throw ret
+        }
+        return ret
     } else {
         return await new Promise((resolve, _) => {
             const filePicker = document.createElement("input")
