@@ -198,16 +198,13 @@ document.body.addEventListener("drop", async e => {
     if (Utils.isLoading()) {
         return
     }
+    Popups.close(true)
+    const intState = FlogoLang.interpreter.getState()
+    if (intState === "running" || intState === "paused") {
+        stopProgram()
+    }
     if (e.dataTransfer.items) {
-        if (e.dataTransfer.items.length !== 1) return
-        if (e.dataTransfer.items[0].kind !== "file") return
-        Popups.close(true)
-        const intState = FlogoLang.interpreter.getState()
-        if (intState === "running" || intState === "paused") {
-            stopProgram()
-        }
-        const f = e.dataTransfer.items[0].getAsFile() //workaround: for some reason this becomes undefined in chromium inside loadDraggedProgram, so I save it to this variable
-        const loadDraggedProgram = async () => {
+        const loadDraggedProgram = async (f) => {
             Utils.startLoading()
             const e2 = await FlogoLang.loadFromFile(f)
             if (e2 !== null) {
@@ -220,17 +217,26 @@ document.body.addEventListener("drop", async e => {
             Utils.stopLoading()
         }
         if (Platform.isElectron) {
-            if (History.isEmpty()) {
-                loadDraggedProgram()
-            } else {
-                flogoElectronAPI.newWindow(f)
+            let first = true
+            for (let i = 0; i < e.dataTransfer.items.length; i++) {
+                const f = e.dataTransfer.items[i]
+                if (f.kind !== "file") continue
+                if (first && History.isEmpty()) {
+                    loadDraggedProgram(f.getAsFile())
+                } else {
+                    flogoElectronAPI.newWindow(f.getAsFile())
+                }
+                first = false
             }
         } else {
+            if (e.dataTransfer.items.length !== 1) return
+            if (e.dataTransfer.items[0].kind !== "file") return
+            const f = e.dataTransfer.items[0].getAsFile()
             if (History.isEmpty()) {
-                loadDraggedProgram()
+                loadDraggedProgram(f)
             } else {
                 if (await Popups.confirm("Load another program?", "All unsaved changes will be lost", null)) {
-                    loadDraggedProgram()
+                    loadDraggedProgram(f)
                 }
             }
         }
