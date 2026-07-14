@@ -5,11 +5,11 @@ import * as Popups from "./ui-popup.js"
 FlogoLang.interpreter.uiBridge.turtle_containerId = "turtle_canvas"
 
 export function show() {
-    document.getElementById("turtleArea").classList.add("visible")
+    Windowing.show(document.getElementById("turtleArea"))
 }
 
 export function hide() {
-    document.getElementById("turtleArea").classList.remove("visible")
+    Windowing.hide(document.getElementById("turtleArea"))
 }
 
 FlogoLang.interpreter.uiBridge.turtle_show = show

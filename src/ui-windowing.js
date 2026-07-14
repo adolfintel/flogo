@@ -151,3 +151,13 @@ function limitAllWindowsWithinBounds(minVis) {
 }
 
 window.addEventListener('resize', () => limitAllWindowsWithinBounds())
+
+export function show(w) {
+    if (w.classList.contains("visible")) return
+    w.classList.add("visible")
+    limitWindowWithinBounds(w)
+}
+
+export function hide(w) {
+    w.classList.remove("visible")
+}
