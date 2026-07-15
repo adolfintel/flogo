@@ -1757,7 +1757,7 @@ Move.prototype = {
                 const l = new Konva.Line({
                     points: [turtle_x, turtle_y, turtle_x + dx, turtle_y + dy],
                     stroke: turtle_colorFromPalette(this.color),
-                    strokeWidth: 1,
+                    strokeWidth: 1.25,
                     strokeScaleEnabled: false,
                     perfectDrawEnabled: false,
                 })
