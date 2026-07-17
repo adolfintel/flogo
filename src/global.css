@@ -147,19 +147,10 @@
     --turtle-color-foreground-9: #ffafc7;
     --turtle-color-foreground-10: #613915;
     --crash-Padding-spaceFromInstruction: 10;
-    --layout-large-threshold: 80;
-    --layout-small-threshold: 55;
-    --layout-consoleArea-width: 24rem;
     --layout-variablesArea-width: 19rem;
     --toast-background: #e0e0e0;
     --toast-color: #000000;
     --toast-animation-duration: 0.4s;
-}
-
-@media all and (max-width:35rem) {
-    :root {
-        --layout-consoleArea-width: 19rem;
-    }
 }
 
 /* BASIC RULES */

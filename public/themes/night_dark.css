@@ -74,7 +74,6 @@ div.popup {
     border-radius: 0;
 }
 
-#variablesArea,
-#consoleArea {
+#variablesArea {
     background: #000000;
 }

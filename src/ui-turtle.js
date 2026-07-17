@@ -45,7 +45,7 @@ function showCursor() {
     Popups.close()
 }
 
-Windowing.registerWindowEvents(document.getElementById("turtleArea"), true)
+Windowing.create(document.getElementById("turtleArea"), true)
 
 document.getElementById("turtle_openMenu").onclick = openMenu
 document.getElementById("turtle_hide").onclick = hide

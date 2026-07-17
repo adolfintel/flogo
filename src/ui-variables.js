@@ -656,9 +656,8 @@ export function cancelAllEdits() {
 }
 
 function toggleVariablesArea() {
-    const va = document.getElementById("variablesArea")
-    va.classList.toggle("expanded")
-    //workaround: there is a 1 frame "jitter" in the layout when flowchartArea is resized because konva won't redraw until the frame after our layout shift. To workaround this, we add a transform that moves the old content in the new place, and remove it the very next frame after konva has drawn the new content in the correct spot. This issue is not visible in the right side, so toggleConsoleArea doesn't have this code
+    document.getElementById("variablesArea").classList.toggle("expanded")
+    //workaround: there is a 1 frame "jitter" in the layout when flowchartArea is resized because konva won't redraw until the frame after our layout shift. To workaround this, we add a transform that moves the old content in the new place, and remove it the very next frame after konva has drawn the new content in the correct spot
     const fc = document.getElementById("flowchartArea")
     fc.classList.toggle("variablesExpanded")
     if (fc.classList.contains("variablesExpanded")) {
@@ -671,8 +670,10 @@ function toggleVariablesArea() {
             fc.style.transform = ""
         })
     })
-    va.flogo_toggledAt = Date.now() //used by autoLayout in ui-theming
 }
 
 document.getElementById("variablesExpander").onclick = toggleVariablesArea
 document.getElementById("variablesExpander").ontouchstart = toggleVariablesArea
+if (window.matchMedia("(min-width: 45rem)").matches) {
+    toggleVariablesArea()
+}

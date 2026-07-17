@@ -105,18 +105,13 @@ button.danger:focus {
     --ui-color-background2: #e0e0e0;
 }
 
-#variablesExpander,
-#consoleExpander {
+#variablesExpander {
     background: #ffffff;
     border: var(--ui-measure-border-medium) solid #000000;
 }
 
 #variablesExpander {
     border-left: none;
-}
-
-#consoleExpander {
-    border-right: none;
 }
 
 #man {

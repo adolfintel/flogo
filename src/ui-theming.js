@@ -76,8 +76,6 @@ export let ASSIGN_COLOR1,
     SCROLLBAR_THICKNESS,
     SCROLLBAR_COLOR,
     SCROLLBAR_PADDING,
-    LARGE_LAYOUT_THRESHOLD = 80, //>=80rem, the app will start with both side bars expanded
-    SMALL_LAYOUT_THRESHOLD = 55, //<=55rem, the app will not allow you to keep both bars expanded at the same time
     INSERT_FONT,
     INSERT_FONT_SIZE,
     INSERT_TEXT_COLOR,
@@ -120,8 +118,6 @@ export async function loadTheme(name, saveToStorage = true) {
         await loadTheme(getDefaultTheme(), false)
         return
     }
-    LARGE_LAYOUT_THRESHOLD = Number(Utils.getCSSVal("--layout-large-threshold", 80))
-    SMALL_LAYOUT_THRESHOLD = Number(Utils.getCSSVal("--layout-small-threshold", 55))
     INSERT_FONT = Utils.getCSSVal("font-family", "")
     INSERT_FONT_SIZE = Number(Utils.getCSSVal("--insert-Font-size", 14))
     INSERT_TEXT_COLOR = Utils.getCSSVal("--insert-Text-color", "#ffffff")
@@ -268,39 +264,3 @@ export function deletePreferredTheme() {
     delete Platform.storage.theme
     loadTheme(getPreferredTheme(), false)
 }
-
-function autoLayout(first = false) {
-    requestAnimationFrame(autoLayout)
-    const va = document.getElementById("variablesArea"),
-        fc = document.getElementById("flowchartArea"),
-        ca = document.getElementById("consoleArea")
-    if (first === true) {
-        va.flogo_toggledAt = 0
-        ca.flogo_toggledAt = 0
-        if (window.matchMedia("(min-width:" + LARGE_LAYOUT_THRESHOLD + "rem)").matches) {
-            va.classList.add("expanded")
-            ca.classList.add("expanded")
-            fc.classList.add("variablesExpanded")
-            fc.classList.add("consoleExpanded")
-        }
-    } else {
-        if (window.matchMedia("(max-width:" + SMALL_LAYOUT_THRESHOLD + "rem)").matches) {
-            if (va.classList.contains("expanded") && ca.classList.contains("expanded")) {
-                if (va.flogo_toggledAt > ca.flogo_toggledAt) {
-                    ca.classList.remove("expanded")
-                    fc.classList.remove("consoleExpanded")
-                } else if (ca.flogo_toggledAt > va.flogo_toggledAt) {
-                    va.classList.remove("expanded")
-                    fc.classList.remove("variablesExpanded")
-                } else {
-                    ca.classList.remove("expanded")
-                    va.classList.remove("expanded")
-                    fc.classList.remove("variablesExpanded")
-                    fc.classList.remove("consoleExpanded")
-                }
-            }
-        }
-    }
-}
-
-autoLayout(true)

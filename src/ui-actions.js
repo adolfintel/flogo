@@ -31,6 +31,7 @@ export function stopProgram() {
     } else if (state === "stopped" || state === "crashed") {
         FlogoLang.resetVariables()
         Console.reset()
+        Console.hide()
         FlogoLang.clearTurtle()
         Turtle.hide()
     }
@@ -52,6 +53,7 @@ function resetUI() {
     Flowchart.cancelSelection()
     VariablesEditor.init()
     Console.reset()
+    Console.hide()
     FlogoLang.clearTurtle()
     Turtle.hide()
     History.clear()

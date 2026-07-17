@@ -1,12 +1,42 @@
 import * as FlogoLang from "./flogo-language.js"
 import * as Utils from "./ui-utils.js"
+import * as Windowing from "./ui-windowing.js"
+import * as Popups from "./ui-popup.js"
+import * as Platform from "./platformSpecific.js"
+import * as Actions from "./ui-actions.js"
+
+Windowing.create(document.getElementById("consoleArea"), true)
+
+export function hide() {
+    Windowing.hide(document.getElementById("consoleArea"))
+}
+
+export function show() {
+    Windowing.show(document.getElementById("consoleArea"))
+}
+
+function openMenu() {
+    const bBounds = document.getElementById("console_openMenu").getBoundingClientRect()
+    const menu = document.getElementById("consoleMenu")
+    Popups.show(menu)
+    const bounds = menu.getBoundingClientRect()
+    menu.style.top = bBounds.y + "px"
+    menu.style.left = (bBounds.left + bBounds.width - bounds.width) + "px"
+}
+
+document.getElementById("console_openMenu").onclick = openMenu
+document.getElementById("console_hide").onclick = () => {
+    if (!document.getElementById("input").disabled) {
+        Actions.stopProgram()
+        Popups.toast("Program stopped")
+    }
+    hide()
+}
 
 FlogoLang.interpreter.uiBridge.input = (variable, type, callback) => {
+    show()
     const input = document.getElementById("input")
     const btn = document.getElementById("input_send")
-    if (!document.getElementById("consoleArea").classList.contains("expanded")) {
-        toggleConsoleArea()
-    }
     enable()
     input.focus()
     btn.onclick = () => {
@@ -50,6 +80,7 @@ document.getElementById("input").onkeydown = e => {
 }
 
 FlogoLang.interpreter.uiBridge.output = (text, newLine) => {
+    show()
     const log = document.getElementById("log")
     const prev = log.firstChild
     if (prev !== null && prev.classList.contains("output") && prev.flogo_appendable) {
@@ -65,9 +96,6 @@ FlogoLang.interpreter.uiBridge.output = (text, newLine) => {
         log.prepend(d)
     }
     if (LOG_MAX_MESSAGES > 0) limitMessages()
-    if (!document.getElementById("consoleArea").classList.contains("expanded")) {
-        toggleConsoleArea()
-    }
 }
 
 let LOG_MAX_MESSAGES = 1000
@@ -129,19 +157,11 @@ function save() {
     const blob = new Blob([out], {
         type: "text/plain",
     })
-    const a = document.createElement("a")
-    a.href = URL.createObjectURL(blob)
-    a.download = "Flogo Output.txt"
-    a.click()
+    Platform.saveBlob("Flogo Output.txt", blob, {
+        name: "Text File",
+        extensions: ["txt"]
+    })
+    Popups.close()
 }
 
-function toggleConsoleArea() {
-    const ca = document.getElementById("consoleArea")
-    ca.classList.toggle("expanded")
-    document.getElementById("flowchartArea").classList.toggle("consoleExpanded")
-    ca.flogo_toggledAt = Date.now() //used by autoLayout in ui-theming
-}
-
-document.getElementById("console_save").onclick = save
-document.getElementById("consoleExpander").onclick = toggleConsoleArea
-document.getElementById("consoleExpander").ontouchstart = toggleConsoleArea
+document.getElementById("consoleMenu_save").onclick = save

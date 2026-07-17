@@ -2,7 +2,7 @@
     position: fixed;
     top: 2.5rem;
     left: var(--layout-variablesArea-width);
-    right: var(--layout-consoleArea-width);
+    right: 0;
     bottom: 0;
     overflow: hidden;
     background: var(--ui-color-background1);
@@ -11,10 +11,6 @@
 
     &.variablesExpanded {
         left: var(--layout-variablesArea-width);
-    }
-
-    &.consoleExpanded {
-        right: var(--layout-consoleArea-width);
     }
 }
 

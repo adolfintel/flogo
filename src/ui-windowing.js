@@ -1,7 +1,26 @@
 import * as Utils from "./ui-utils.js"
 
-export function registerWindowEvents(w, canResize = false) {
-    if (w.flogo_windowEventsInitialized) return
+let windows = []
+
+function updateZIndexes() {
+    let zIndex = 199
+    windows.forEach(w => {
+        w.style.zIndex = zIndex
+        zIndex++
+    })
+}
+
+export function focus(w) {
+    const pos = windows.indexOf(w)
+    if (pos !== -1) {
+        windows.splice(pos, 1)
+    }
+    windows.push(w)
+    updateZIndexes()
+}
+
+export function create(w, canResize = false) {
+    if (windows.includes(w)) return
     let resizing = false
     if (canResize) {
         w.onmousedown = e => {
@@ -99,6 +118,7 @@ export function registerWindowEvents(w, canResize = false) {
     }
     const bar = w.querySelectorAll("div.window_bar")[0]
     bar.ontouchstart = bar.onmousedown = e => {
+        focus(w)
         const wBounds = w.getBoundingClientRect()
         e.preventDefault()
         const offX = Utils.extractCoordFromEvent(e, "clientX") - wBounds.x,
@@ -125,7 +145,14 @@ export function registerWindowEvents(w, canResize = false) {
             e.stopImmediatePropagation()
         }
     })
-    w.flogo_windowEventsInitialized = true
+    windows.push(w)
+    w.addEventListener("touchstart", () => {
+        focus(w)
+    })
+    w.addEventListener("mousedown", () => {
+        focus(w)
+    })
+    focus(w)
 }
 
 function limitWindowWithinBounds(w, minVis = 64) {
@@ -153,9 +180,9 @@ function limitAllWindowsWithinBounds(minVis) {
 window.addEventListener('resize', () => limitAllWindowsWithinBounds())
 
 export function show(w) {
-    if (w.classList.contains("visible")) return
     w.classList.add("visible")
     limitWindowWithinBounds(w)
+    focus(w)
 }
 
 export function hide(w) {

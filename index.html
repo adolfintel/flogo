@@ -116,20 +116,25 @@
         </div>
     </div>
     <div id="variablesExpander" class="expander"><span id="variablesExpander_icon" class="icon material-icons-sharp">list</span><span class="text">Variables</span></div>
-    <div id="consoleArea">
-        <div id="logWrapper">
-            <div class="sideHeader">
-                Console
-                <button id="console_save" title="Save text"><span class="icon material-icons-sharp">download</span></button>
+    <div id="consoleArea" class="window">
+        <div class="window_bar">
+            <div class="window_title">Console</div>
+            <div class="window_buttons">
+                <button id="console_openMenu"><span class="icon material-icons-sharp">menu</span></button>
+                <button id="console_hide"><span class="icon material-icons-sharp">close</span></button>
             </div>
-            <div id="log"></div>
         </div>
-        <div id="inputArea">
-            <textarea id="input" disabled></textarea>
-            <button id="input_send" disabled><span class="icon material-icons-sharp">send</span></button>
+        <div id="consoleArea_contents" class="window_contents">
+            <div id="log"></div>
+            <div id="inputArea">
+                <textarea id="input" disabled></textarea>
+                <button id="input_send" disabled><span class="icon material-icons-sharp">send</span></button>
+            </div>
         </div>
     </div>
-    <div id="consoleExpander" class="expander"><span id="consoleExpander_icon" class="icon material-icons-sharp">chat_bubble</span><span class="text">Console</span></div>
+    <div id="consoleMenu" class="popup">
+        <div id="consoleMenu_save"><span class="icon material-icons-sharp">download</span>Save text</div>
+    </div>
     <div id="turtleArea" class="window">
         <div class="window_bar">
             <div class="window_title">Turtle graphics</div>

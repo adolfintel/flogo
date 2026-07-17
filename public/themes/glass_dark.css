@@ -47,8 +47,6 @@ div.popup {
 
 #flowchartArea {
     transition: left 0.15s, right 0.15s;
-    transform: none !important;
-    /*neutralizes the 1 frame jitter workaround in ui-console.js -> toggleConsoleArea*/
     top: 0;
 }
 
@@ -68,23 +66,6 @@ div.popup {
 
 #variablesExpander {
     transition: left 0.3s;
-}
-
-#consoleArea {
-    transition: right 0.3s, display 0.3s allow-discrete, width 0.3s;
-    right: calc(var(--layout-consoleArea-width) * -1);
-
-    &.expanded {
-        right: 0;
-
-        @starting-style {
-            right: calc(var(--layout-consoleArea-width) * -1);
-        }
-    }
-}
-
-#consoleExpander {
-    transition: right 0.3s;
 }
 
 div.toast {

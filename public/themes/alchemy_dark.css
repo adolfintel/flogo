@@ -77,8 +77,7 @@
     background: #a04040;
 }
 
-#variablesArea,
-#consoleArea {
+#variablesArea {
     border-color: var(--ui-color-border2);
 }
 
