@@ -54,6 +54,8 @@ It is also possible to cross-build for other platforms with the following comman
 * `npm run electron:build-win-arm64`: Windows (ARM, unpacked)
 * `npm run electron:build-win-x64-installer`: Windows (x64, exe installer)
 * `npm run electron:build-win-arm64-installer`: Windows (ARM, exe installer)
+* `npm run electron:build-win-x64-portable`: Windows (x64, portable exe)
+* `npm run electron:build-win-arm64-portable`: Windows (ARM, portable exe)
 * `npm run electron:build-linux-x64`: GNU/Linux (x64, unpacked)
 * `npm run electron:build-linux-arm64`: GNU/Linux (ARM, unpacked)
 * `npm run electron:build-linux-x64-appimage`: GNU/Linux (x64, AppImage)

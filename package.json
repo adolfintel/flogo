@@ -17,6 +17,8 @@
     "electron:build-win-arm64": "vite build --mode electron && electron-builder --win --arm64 --dir",
     "electron:build-win-x64-installer": "vite build --mode electron && electron-builder --win --x64",
     "electron:build-win-arm64-installer": "vite build --mode electron && electron-builder --win --arm64",
+    "electron:build-win-x64-portable": "vite build --mode electron && electron-builder --win portable --x64",
+    "electron:build-win-arm64-portable": "vite build --mode electron && electron-builder --win portable --arm64",
     "electron:build-linux-x64": "vite build --mode electron && electron-builder --linux --x64 --dir",
     "electron:build-linux-arm64": "vite build --mode electron && electron-builder --linux --arm64 --dir",
     "electron:build-linux-x64-appimage": "vite build --mode electron && electron-builder --linux AppImage --x64",
@@ -81,6 +83,9 @@
           "icon": "electron/icons/winicon_file.ico"
         }
       ]
+    },
+    "portable": {
+      "artifactName": "${productName}-portable-${version}-${arch}.exe"
     },
     "nsis":{
       "oneClick": false,

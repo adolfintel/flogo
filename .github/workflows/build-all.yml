@@ -75,10 +75,78 @@ jobs:
           name: flogo-win-arm64-v${{ env.VERSION }}.exe
           path: release/*.exe
 
+  # Windows 64-bit portable (single exe, no installation)
+  build-win-x64-portable:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get Version
+        run: |
+            $version = node -p "require('./package.json').version"
+            echo "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Build and Package Windows x64 portable
+        run: npm run electron:build-win-x64-portable
+        env:
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+
+      - name: Upload Artifacts Windows x64 portable
+        uses: actions/upload-artifact@v4
+        with:
+          name: flogo-win-x64-portable-v${{ env.VERSION }}.exe
+          path: release/*.exe
+
+  # Windows 64-bit ARM portable (single exe, no installation)
+  build-win-arm64-portable:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get Version
+        run: |
+            $version = node -p "require('./package.json').version"
+            echo "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Build and Package Windows ARM64 portable
+        run: npm run electron:build-win-arm64-portable
+        env:
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+
+      - name: Upload Artifacts Windows ARM64 portable
+        uses: actions/upload-artifact@v4
+        with:
+          name: flogo-win-arm64-portable-v${{ env.VERSION }}.exe
+          path: release/*.exe
+
   # Windows signed EXEs (only for master branch, handled by OSSign)
   build-win-signed:
     runs-on: windows-latest
-    needs: build-win-x64
+    needs:
+      - build-win-x64
+      - build-win-x64-portable
     if: github.ref == 'refs/heads/master'
     steps:
       # Dispatch a request to the OSSign repo for starting the signature workflow
