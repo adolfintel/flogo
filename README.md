@@ -120,6 +120,8 @@ Don't forget to download some <a href="#example-programs">Example programs</a> t
 #### <img src=".github/windows.png" height="32"> Windows 10/11
 [Windows (x64)](https://downloads.fdossena.com/geth.php?r=flogo-win) 👈 This is probably the one you want  
 [Windows (ARM)](https://downloads.fdossena.com/geth.php?r=flogo-win-arm)  
+[Windows (Portable, x64)](https://downloads.fdossena.com/geth.php?r=flogo-win-portable) 👈 You can keep this one on your flash drive  
+[Windows (Portable ARM)](https://downloads.fdossena.com/geth.php?r=flogo-win-arm-portable)  
 
 #### <img src=".github/linux.png" height="32"> Linux
 [Linux (AppImage for all distros, x64)](https://downloads.fdossena.com/geth.php?r=flogo-linux-appimage) 👈 This is probably the one you want  
